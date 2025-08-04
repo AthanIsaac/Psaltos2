@@ -1,0 +1,1126 @@
+{
+  "scraped_at": "2025-07-21T19:41:29.274Z",
+  "seasons": [
+    {
+      "id": 10,
+      "name": "Annual",
+      "description": "Year-round liturgical hymns"
+    },
+    {
+      "id": 15,
+      "name": "Commemoration of the Heavenly and Saints",
+      "description": "Hymns for saints and martyrs"
+    },
+    {
+      "id": 12,
+      "name": "Fasts",
+      "description": "Hymns for fasting periods"
+    },
+    {
+      "id": 16,
+      "name": "Gospel Readings",
+      "description": "Gospel response hymns"
+    },
+    {
+      "id": 11,
+      "name": "Holy Week",
+      "description": "Passion Week and Easter hymns"
+    },
+    {
+      "id": 17,
+      "name": "Instructional Liturgies",
+      "description": "Teaching and tutorial recordings"
+    },
+    {
+      "id": 13,
+      "name": "Major Feasts of the Lord",
+      "description": "Christmas, Epiphany, and other major celebrations"
+    },
+    {
+      "id": 14,
+      "name": "Minor Feasts of the Lord",
+      "description": "Smaller feast celebrations"
+    },
+    {
+      "id": 18,
+      "name": "Other Occasions",
+      "description": "Weddings, funerals, and special events"
+    }
+  ],
+  "artists": [
+    {
+      "id": 17,
+      "name": "Cantor Farag Abdelmessih"
+    },
+    {
+      "id": 18,
+      "name": "Cantor Gad Lewis"
+    },
+    {
+      "id": 16,
+      "name": "Cantor Ibrahim Ayad"
+    },
+    {
+      "id": 20,
+      "name": "Cantor Michael Ghattas"
+    },
+    {
+      "id": 19,
+      "name": "Cantor Zaher Andrawes"
+    },
+    {
+      "id": 24,
+      "name": "Cathedral Choir"
+    },
+    {
+      "id": 28,
+      "name": "Children Choir"
+    },
+    {
+      "id": 21,
+      "name": "Deacon Team"
+    },
+    {
+      "id": 27,
+      "name": "Female Choir"
+    },
+    {
+      "id": 22,
+      "name": "Mixed Choir"
+    },
+    {
+      "id": 26,
+      "name": "Monastery Choir"
+    },
+    {
+      "id": 23,
+      "name": "St. Mary Deacons"
+    },
+    {
+      "id": 29,
+      "name": "Traditional Voices"
+    },
+    {
+      "id": 30,
+      "name": "Various Artists"
+    },
+    {
+      "id": 25,
+      "name": "Youth Choir"
+    }
+  ],
+  "tracks": [
+    {
+      "id": 15,
+      "title": "Adam Fasting Tune",
+      "artist_id": 3,
+      "season_id": 3,
+      "url": "https://tasbeha.org/mp3/Fasts/Adam_Fasting_Tune.mp3",
+      "duration": "8:58",
+      "file_size": "16.6 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 3,
+      "title": "Agios O Theos",
+      "artist_id": 2,
+      "season_id": 1,
+      "url": "https://tasbeha.org/mp3/Annual/Agios_O_Theos.mp3",
+      "duration": "4:12",
+      "file_size": "11.7 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 5,
+      "title": "Alleluia Fai Pe Pi",
+      "artist_id": 3,
+      "season_id": 1,
+      "url": "https://tasbeha.org/mp3/Annual/Alleluia_Fai_Pe_Pi.mp3",
+      "duration": "6:26",
+      "file_size": "4.6 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 24,
+      "title": "Annunciation Joy",
+      "artist_id": 7,
+      "season_id": 4,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Annunciation_Joy.mp3",
+      "duration": "2:43",
+      "file_size": "15.7 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 19,
+      "title": "Apostles Fast Tune",
+      "artist_id": 4,
+      "season_id": 3,
+      "url": "https://tasbeha.org/mp3/Fasts/Apostles_Fast_Tune.mp3",
+      "duration": "9:11",
+      "file_size": "7.1 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 31,
+      "title": "Archangel Michael",
+      "artist_id": 7,
+      "season_id": 6,
+      "url": "https://tasbeha.org/mp3/CommemorationoftheHeavenlyandSaints/Archangel_Michael.mp3",
+      "duration": "2:22",
+      "file_size": "6.3 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 25,
+      "title": "Ascension Glory",
+      "artist_id": 9,
+      "season_id": 4,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Ascension_Glory.mp3",
+      "duration": "7:28",
+      "file_size": "7.0 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 13,
+      "title": "Christ is Risen",
+      "artist_id": 9,
+      "season_id": 2,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Christ_is_Risen.mp3",
+      "duration": "6:12",
+      "file_size": "6.1 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 20,
+      "title": "Christmas Psali",
+      "artist_id": 1,
+      "season_id": 4,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Christmas_Psali.mp3",
+      "duration": "4:29",
+      "file_size": "12.5 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 46,
+      "title": "Church Consecration",
+      "artist_id": 9,
+      "season_id": 9,
+      "url": "https://tasbeha.org/mp3/OtherOccasions/Church_Consecration.mp3",
+      "duration": "9:47",
+      "file_size": "9.7 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 27,
+      "title": "Circumcision Hymn",
+      "artist_id": 14,
+      "season_id": 5,
+      "url": "https://tasbeha.org/mp3/MinorFeastsoftheLord/Circumcision_Hymn.mp3",
+      "duration": "8:38",
+      "file_size": "4.3 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 40,
+      "title": "Congregation Participation",
+      "artist_id": 7,
+      "season_id": 8,
+      "url": "https://tasbeha.org/mp3/InstructionalLiturgies/Congregation_Participation.mp3",
+      "duration": "4:03",
+      "file_size": "12.3 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 29,
+      "title": "Cross Feast Praise",
+      "artist_id": 11,
+      "season_id": 5,
+      "url": "https://tasbeha.org/mp3/MinorFeastsoftheLord/Cross_Feast_Praise.mp3",
+      "duration": "2:53",
+      "file_size": "9.2 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 39,
+      "title": "Deacon Responses Guide",
+      "artist_id": 6,
+      "season_id": 8,
+      "url": "https://tasbeha.org/mp3/InstructionalLiturgies/Deacon_Responses_Guide.mp3",
+      "duration": "7:31",
+      "file_size": "13.2 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 12,
+      "title": "Efnouti Nai Nan",
+      "artist_id": 2,
+      "season_id": 2,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Efnouti_Nai_Nan.mp3",
+      "duration": "8:33",
+      "file_size": "17.9 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 23,
+      "title": "Entry to Temple",
+      "artist_id": 12,
+      "season_id": 4,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Entry_to_Temple.mp3",
+      "duration": "3:15",
+      "file_size": "7.6 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 21,
+      "title": "Epiphany Hymn",
+      "artist_id": 9,
+      "season_id": 4,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Epiphany_Hymn.mp3",
+      "duration": "2:54",
+      "file_size": "7.1 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 7,
+      "title": "Epouro",
+      "artist_id": 4,
+      "season_id": 1,
+      "url": "https://tasbeha.org/mp3/Annual/Epouro.mp3",
+      "duration": "8:02",
+      "file_size": "13.8 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 43,
+      "title": "Funeral Departure Hymn",
+      "artist_id": 7,
+      "season_id": 9,
+      "url": "https://tasbeha.org/mp3/OtherOccasions/Funeral_Departure_Hymn.mp3",
+      "duration": "2:46",
+      "file_size": "16.6 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 8,
+      "title": "Golgotha",
+      "artist_id": 1,
+      "season_id": 2,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Golgotha.mp3",
+      "duration": "6:14",
+      "file_size": "17.5 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 4,
+      "title": "Holy Holy Holy",
+      "artist_id": 7,
+      "season_id": 1,
+      "url": "https://tasbeha.org/mp3/Annual/Holy_Holy_Holy.mp3",
+      "duration": "4:36",
+      "file_size": "9.0 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 44,
+      "title": "House Blessing Praise",
+      "artist_id": 1,
+      "season_id": 9,
+      "url": "https://tasbeha.org/mp3/OtherOccasions/House_Blessing_Praise.mp3",
+      "duration": "3:27",
+      "file_size": "14.4 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 41,
+      "title": "Hymn Pronunciation Guide",
+      "artist_id": 15,
+      "season_id": 8,
+      "url": "https://tasbeha.org/mp3/InstructionalLiturgies/Hymn_Pronunciation_Guide.mp3",
+      "duration": "2:54",
+      "file_size": "13.4 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 17,
+      "title": "Jonah Fast Hymn",
+      "artist_id": 10,
+      "season_id": 3,
+      "url": "https://tasbeha.org/mp3/Fasts/Jonah_Fast_Hymn.mp3",
+      "duration": "8:51",
+      "file_size": "8.2 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 14,
+      "title": "Khen Efran",
+      "artist_id": 14,
+      "season_id": 2,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Khen_Efran.mp3",
+      "duration": "3:23",
+      "file_size": "17.9 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 1,
+      "title": "Kyrie Eleison",
+      "artist_id": 1,
+      "season_id": 1,
+      "url": "https://tasbeha.org/mp3/Annual/Kyrie_Eleison.mp3",
+      "duration": "9:47",
+      "file_size": "7.1 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 36,
+      "title": "Liturgy Gospel Alleluia",
+      "artist_id": 7,
+      "season_id": 7,
+      "url": "https://tasbeha.org/mp3/GospelReadings/Liturgy_Gospel_Alleluia.mp3",
+      "duration": "6:48",
+      "file_size": "9.5 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 38,
+      "title": "Liturgy Tutorial - Offering",
+      "artist_id": 15,
+      "season_id": 8,
+      "url": "https://tasbeha.org/mp3/InstructionalLiturgies/Liturgy_Tutorial_-_Offering.mp3",
+      "duration": "3:34",
+      "file_size": "12.2 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 2,
+      "title": "Lord Have Mercy",
+      "artist_id": 6,
+      "season_id": 1,
+      "url": "https://tasbeha.org/mp3/Annual/Lord_Have_Mercy.mp3",
+      "duration": "3:22",
+      "file_size": "15.1 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 34,
+      "title": "Martyrs Crown",
+      "artist_id": 10,
+      "season_id": 6,
+      "url": "https://tasbeha.org/mp3/CommemorationoftheHeavenlyandSaints/Martyrs_Crown.mp3",
+      "duration": "2:49",
+      "file_size": "6.2 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 35,
+      "title": "Matins Gospel Response",
+      "artist_id": 6,
+      "season_id": 7,
+      "url": "https://tasbeha.org/mp3/GospelReadings/Matins_Gospel_Response.mp3",
+      "duration": "5:21",
+      "file_size": "16.4 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 18,
+      "title": "Nativity Fast Praise",
+      "artist_id": 7,
+      "season_id": 3,
+      "url": "https://tasbeha.org/mp3/Fasts/Nativity_Fast_Praise.mp3",
+      "duration": "3:27",
+      "file_size": "7.5 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 45,
+      "title": "New Year Celebration",
+      "artist_id": 10,
+      "season_id": 9,
+      "url": "https://tasbeha.org/mp3/OtherOccasions/New_Year_Celebration.mp3",
+      "duration": "6:42",
+      "file_size": "6.8 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 10,
+      "title": "O Monogenis",
+      "artist_id": 6,
+      "season_id": 2,
+      "url": "https://tasbeha.org/mp3/HolyWeek/O_Monogenis.mp3",
+      "duration": "2:41",
+      "file_size": "11.3 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 11,
+      "title": "Palm Sunday Hosanna",
+      "artist_id": 13,
+      "season_id": 2,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Palm_Sunday_Hosanna.mp3",
+      "duration": "6:43",
+      "file_size": "15.9 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 26,
+      "title": "Pentecost Fire",
+      "artist_id": 10,
+      "season_id": 4,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Pentecost_Fire.mp3",
+      "duration": "7:48",
+      "file_size": "4.9 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 33,
+      "title": "St. Anthony Praise",
+      "artist_id": 11,
+      "season_id": 6,
+      "url": "https://tasbeha.org/mp3/CommemorationoftheHeavenlyandSaints/St._Anthony_Praise.mp3",
+      "duration": "9:28",
+      "file_size": "8.7 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 32,
+      "title": "St. Mark Commemoration",
+      "artist_id": 9,
+      "season_id": 6,
+      "url": "https://tasbeha.org/mp3/CommemorationoftheHeavenlyandSaints/St._Mark_Commemoration.mp3",
+      "duration": "3:13",
+      "file_size": "4.3 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 6,
+      "title": "Tenen Ouosht",
+      "artist_id": 8,
+      "season_id": 1,
+      "url": "https://tasbeha.org/mp3/Annual/Tenen_Ouosht.mp3",
+      "duration": "7:29",
+      "file_size": "13.5 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 9,
+      "title": "Thok Te Ti Gom",
+      "artist_id": 7,
+      "season_id": 2,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Thok_Te_Ti_Gom.mp3",
+      "duration": "3:35",
+      "file_size": "16.9 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 22,
+      "title": "Transfiguration Praise",
+      "artist_id": 11,
+      "season_id": 4,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Transfiguration_Praise.mp3",
+      "duration": "8:00",
+      "file_size": "16.5 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 37,
+      "title": "Vespers Gospel Praise",
+      "artist_id": 9,
+      "season_id": 7,
+      "url": "https://tasbeha.org/mp3/GospelReadings/Vespers_Gospel_Praise.mp3",
+      "duration": "6:30",
+      "file_size": "14.6 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 30,
+      "title": "Virgin Mary Praise",
+      "artist_id": 12,
+      "season_id": 6,
+      "url": "https://tasbeha.org/mp3/CommemorationoftheHeavenlyandSaints/Virgin_Mary_Praise.mp3",
+      "duration": "3:56",
+      "file_size": "6.7 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 16,
+      "title": "Watos Fasting Tune",
+      "artist_id": 5,
+      "season_id": 3,
+      "url": "https://tasbeha.org/mp3/Fasts/Watos_Fasting_Tune.mp3",
+      "duration": "3:23",
+      "file_size": "15.5 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 42,
+      "title": "Wedding Blessing Hymn",
+      "artist_id": 14,
+      "season_id": 9,
+      "url": "https://tasbeha.org/mp3/OtherOccasions/Wedding_Blessing_Hymn.mp3",
+      "duration": "3:02",
+      "file_size": "8.6 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 28,
+      "title": "Wedding at Cana",
+      "artist_id": 5,
+      "season_id": 5,
+      "url": "https://tasbeha.org/mp3/MinorFeastsoftheLord/Wedding_at_Cana.mp3",
+      "duration": "8:21",
+      "file_size": "3.2 MB",
+      "season_name": null,
+      "artist_name": null
+    },
+    {
+      "id": 49,
+      "title": "Agios O Theos",
+      "artist_id": 17,
+      "season_id": 10,
+      "url": "https://tasbeha.org/mp3/Annual/Agios_O_Theos.mp3",
+      "duration": "7:41",
+      "file_size": "12.4 MB",
+      "season_name": "Annual",
+      "artist_name": "Cantor Farag Abdelmessih"
+    },
+    {
+      "id": 51,
+      "title": "Alleluia Fai Pe Pi",
+      "artist_id": 18,
+      "season_id": 10,
+      "url": "https://tasbeha.org/mp3/Annual/Alleluia_Fai_Pe_Pi.mp3",
+      "duration": "7:01",
+      "file_size": "14.0 MB",
+      "season_name": "Annual",
+      "artist_name": "Cantor Gad Lewis"
+    },
+    {
+      "id": 53,
+      "title": "Epouro",
+      "artist_id": 19,
+      "season_id": 10,
+      "url": "https://tasbeha.org/mp3/Annual/Epouro.mp3",
+      "duration": "4:59",
+      "file_size": "4.9 MB",
+      "season_name": "Annual",
+      "artist_name": "Cantor Zaher Andrawes"
+    },
+    {
+      "id": 50,
+      "title": "Holy Holy Holy",
+      "artist_id": 22,
+      "season_id": 10,
+      "url": "https://tasbeha.org/mp3/Annual/Holy_Holy_Holy.mp3",
+      "duration": "6:16",
+      "file_size": "17.6 MB",
+      "season_name": "Annual",
+      "artist_name": "Mixed Choir"
+    },
+    {
+      "id": 47,
+      "title": "Kyrie Eleison",
+      "artist_id": 16,
+      "season_id": 10,
+      "url": "https://tasbeha.org/mp3/Annual/Kyrie_Eleison.mp3",
+      "duration": "8:50",
+      "file_size": "15.9 MB",
+      "season_name": "Annual",
+      "artist_name": "Cantor Ibrahim Ayad"
+    },
+    {
+      "id": 48,
+      "title": "Lord Have Mercy",
+      "artist_id": 21,
+      "season_id": 10,
+      "url": "https://tasbeha.org/mp3/Annual/Lord_Have_Mercy.mp3",
+      "duration": "3:36",
+      "file_size": "10.1 MB",
+      "season_name": "Annual",
+      "artist_name": "Deacon Team"
+    },
+    {
+      "id": 52,
+      "title": "Tenen Ouosht",
+      "artist_id": 23,
+      "season_id": 10,
+      "url": "https://tasbeha.org/mp3/Annual/Tenen_Ouosht.mp3",
+      "duration": "2:53",
+      "file_size": "5.4 MB",
+      "season_name": "Annual",
+      "artist_name": "St. Mary Deacons"
+    },
+    {
+      "id": 77,
+      "title": "Archangel Michael",
+      "artist_id": 22,
+      "season_id": 15,
+      "url": "https://tasbeha.org/mp3/CommemorationoftheHeavenlyandSaints/Archangel_Michael.mp3",
+      "duration": "6:33",
+      "file_size": "9.4 MB",
+      "season_name": "Commemoration of the Heavenly and Saints",
+      "artist_name": "Mixed Choir"
+    },
+    {
+      "id": 80,
+      "title": "Martyrs Crown",
+      "artist_id": 25,
+      "season_id": 15,
+      "url": "https://tasbeha.org/mp3/CommemorationoftheHeavenlyandSaints/Martyrs_Crown.mp3",
+      "duration": "2:53",
+      "file_size": "7.1 MB",
+      "season_name": "Commemoration of the Heavenly and Saints",
+      "artist_name": "Youth Choir"
+    },
+    {
+      "id": 79,
+      "title": "St. Anthony Praise",
+      "artist_id": 26,
+      "season_id": 15,
+      "url": "https://tasbeha.org/mp3/CommemorationoftheHeavenlyandSaints/St._Anthony_Praise.mp3",
+      "duration": "8:25",
+      "file_size": "11.3 MB",
+      "season_name": "Commemoration of the Heavenly and Saints",
+      "artist_name": "Monastery Choir"
+    },
+    {
+      "id": 78,
+      "title": "St. Mark Commemoration",
+      "artist_id": 24,
+      "season_id": 15,
+      "url": "https://tasbeha.org/mp3/CommemorationoftheHeavenlyandSaints/St._Mark_Commemoration.mp3",
+      "duration": "2:03",
+      "file_size": "9.9 MB",
+      "season_name": "Commemoration of the Heavenly and Saints",
+      "artist_name": "Cathedral Choir"
+    },
+    {
+      "id": 76,
+      "title": "Virgin Mary Praise",
+      "artist_id": 27,
+      "season_id": 15,
+      "url": "https://tasbeha.org/mp3/CommemorationoftheHeavenlyandSaints/Virgin_Mary_Praise.mp3",
+      "duration": "3:15",
+      "file_size": "14.0 MB",
+      "season_name": "Commemoration of the Heavenly and Saints",
+      "artist_name": "Female Choir"
+    },
+    {
+      "id": 61,
+      "title": "Adam Fasting Tune",
+      "artist_id": 18,
+      "season_id": 12,
+      "url": "https://tasbeha.org/mp3/Fasts/Adam_Fasting_Tune.mp3",
+      "duration": "7:57",
+      "file_size": "13.8 MB",
+      "season_name": "Fasts",
+      "artist_name": "Cantor Gad Lewis"
+    },
+    {
+      "id": 65,
+      "title": "Apostles Fast Tune",
+      "artist_id": 19,
+      "season_id": 12,
+      "url": "https://tasbeha.org/mp3/Fasts/Apostles_Fast_Tune.mp3",
+      "duration": "4:27",
+      "file_size": "12.8 MB",
+      "season_name": "Fasts",
+      "artist_name": "Cantor Zaher Andrawes"
+    },
+    {
+      "id": 63,
+      "title": "Jonah Fast Hymn",
+      "artist_id": 25,
+      "season_id": 12,
+      "url": "https://tasbeha.org/mp3/Fasts/Jonah_Fast_Hymn.mp3",
+      "duration": "4:21",
+      "file_size": "10.1 MB",
+      "season_name": "Fasts",
+      "artist_name": "Youth Choir"
+    },
+    {
+      "id": 64,
+      "title": "Nativity Fast Praise",
+      "artist_id": 22,
+      "season_id": 12,
+      "url": "https://tasbeha.org/mp3/Fasts/Nativity_Fast_Praise.mp3",
+      "duration": "4:27",
+      "file_size": "11.2 MB",
+      "season_name": "Fasts",
+      "artist_name": "Mixed Choir"
+    },
+    {
+      "id": 62,
+      "title": "Watos Fasting Tune",
+      "artist_id": 20,
+      "season_id": 12,
+      "url": "https://tasbeha.org/mp3/Fasts/Watos_Fasting_Tune.mp3",
+      "duration": "9:23",
+      "file_size": "14.7 MB",
+      "season_name": "Fasts",
+      "artist_name": "Cantor Michael Ghattas"
+    },
+    {
+      "id": 82,
+      "title": "Liturgy Gospel Alleluia",
+      "artist_id": 22,
+      "season_id": 16,
+      "url": "https://tasbeha.org/mp3/GospelReadings/Liturgy_Gospel_Alleluia.mp3",
+      "duration": "2:08",
+      "file_size": "8.7 MB",
+      "season_name": "Gospel Readings",
+      "artist_name": "Mixed Choir"
+    },
+    {
+      "id": 81,
+      "title": "Matins Gospel Response",
+      "artist_id": 21,
+      "season_id": 16,
+      "url": "https://tasbeha.org/mp3/GospelReadings/Matins_Gospel_Response.mp3",
+      "duration": "2:19",
+      "file_size": "13.9 MB",
+      "season_name": "Gospel Readings",
+      "artist_name": "Deacon Team"
+    },
+    {
+      "id": 83,
+      "title": "Vespers Gospel Praise",
+      "artist_id": 24,
+      "season_id": 16,
+      "url": "https://tasbeha.org/mp3/GospelReadings/Vespers_Gospel_Praise.mp3",
+      "duration": "6:54",
+      "file_size": "9.3 MB",
+      "season_name": "Gospel Readings",
+      "artist_name": "Cathedral Choir"
+    },
+    {
+      "id": 59,
+      "title": "Christ is Risen",
+      "artist_id": 24,
+      "season_id": 11,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Christ_is_Risen.mp3",
+      "duration": "8:46",
+      "file_size": "14.6 MB",
+      "season_name": "Holy Week",
+      "artist_name": "Cathedral Choir"
+    },
+    {
+      "id": 58,
+      "title": "Efnouti Nai Nan",
+      "artist_id": 17,
+      "season_id": 11,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Efnouti_Nai_Nan.mp3",
+      "duration": "2:32",
+      "file_size": "3.6 MB",
+      "season_name": "Holy Week",
+      "artist_name": "Cantor Farag Abdelmessih"
+    },
+    {
+      "id": 54,
+      "title": "Golgotha",
+      "artist_id": 16,
+      "season_id": 11,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Golgotha.mp3",
+      "duration": "3:11",
+      "file_size": "3.6 MB",
+      "season_name": "Holy Week",
+      "artist_name": "Cantor Ibrahim Ayad"
+    },
+    {
+      "id": 60,
+      "title": "Khen Efran",
+      "artist_id": 29,
+      "season_id": 11,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Khen_Efran.mp3",
+      "duration": "2:20",
+      "file_size": "3.9 MB",
+      "season_name": "Holy Week",
+      "artist_name": "Traditional Voices"
+    },
+    {
+      "id": 56,
+      "title": "O Monogenis",
+      "artist_id": 21,
+      "season_id": 11,
+      "url": "https://tasbeha.org/mp3/HolyWeek/O_Monogenis.mp3",
+      "duration": "3:06",
+      "file_size": "17.8 MB",
+      "season_name": "Holy Week",
+      "artist_name": "Deacon Team"
+    },
+    {
+      "id": 57,
+      "title": "Palm Sunday Hosanna",
+      "artist_id": 28,
+      "season_id": 11,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Palm_Sunday_Hosanna.mp3",
+      "duration": "2:47",
+      "file_size": "18.0 MB",
+      "season_name": "Holy Week",
+      "artist_name": "Children Choir"
+    },
+    {
+      "id": 55,
+      "title": "Thok Te Ti Gom",
+      "artist_id": 22,
+      "season_id": 11,
+      "url": "https://tasbeha.org/mp3/HolyWeek/Thok_Te_Ti_Gom.mp3",
+      "duration": "9:12",
+      "file_size": "13.3 MB",
+      "season_name": "Holy Week",
+      "artist_name": "Mixed Choir"
+    },
+    {
+      "id": 86,
+      "title": "Congregation Participation",
+      "artist_id": 22,
+      "season_id": 17,
+      "url": "https://tasbeha.org/mp3/InstructionalLiturgies/Congregation_Participation.mp3",
+      "duration": "9:04",
+      "file_size": "6.0 MB",
+      "season_name": "Instructional Liturgies",
+      "artist_name": "Mixed Choir"
+    },
+    {
+      "id": 85,
+      "title": "Deacon Responses Guide",
+      "artist_id": 21,
+      "season_id": 17,
+      "url": "https://tasbeha.org/mp3/InstructionalLiturgies/Deacon_Responses_Guide.mp3",
+      "duration": "6:26",
+      "file_size": "14.8 MB",
+      "season_name": "Instructional Liturgies",
+      "artist_name": "Deacon Team"
+    },
+    {
+      "id": 87,
+      "title": "Hymn Pronunciation Guide",
+      "artist_id": 30,
+      "season_id": 17,
+      "url": "https://tasbeha.org/mp3/InstructionalLiturgies/Hymn_Pronunciation_Guide.mp3",
+      "duration": "9:48",
+      "file_size": "5.1 MB",
+      "season_name": "Instructional Liturgies",
+      "artist_name": "Various Artists"
+    },
+    {
+      "id": 84,
+      "title": "Liturgy Tutorial - Offering",
+      "artist_id": 30,
+      "season_id": 17,
+      "url": "https://tasbeha.org/mp3/InstructionalLiturgies/Liturgy_Tutorial_-_Offering.mp3",
+      "duration": "2:50",
+      "file_size": "11.4 MB",
+      "season_name": "Instructional Liturgies",
+      "artist_name": "Various Artists"
+    },
+    {
+      "id": 70,
+      "title": "Annunciation Joy",
+      "artist_id": 22,
+      "season_id": 13,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Annunciation_Joy.mp3",
+      "duration": "8:32",
+      "file_size": "15.7 MB",
+      "season_name": "Major Feasts of the Lord",
+      "artist_name": "Mixed Choir"
+    },
+    {
+      "id": 71,
+      "title": "Ascension Glory",
+      "artist_id": 24,
+      "season_id": 13,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Ascension_Glory.mp3",
+      "duration": "7:30",
+      "file_size": "9.6 MB",
+      "season_name": "Major Feasts of the Lord",
+      "artist_name": "Cathedral Choir"
+    },
+    {
+      "id": 66,
+      "title": "Christmas Psali",
+      "artist_id": 16,
+      "season_id": 13,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Christmas_Psali.mp3",
+      "duration": "8:28",
+      "file_size": "12.5 MB",
+      "season_name": "Major Feasts of the Lord",
+      "artist_name": "Cantor Ibrahim Ayad"
+    },
+    {
+      "id": 69,
+      "title": "Entry to Temple",
+      "artist_id": 27,
+      "season_id": 13,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Entry_to_Temple.mp3",
+      "duration": "9:30",
+      "file_size": "12.3 MB",
+      "season_name": "Major Feasts of the Lord",
+      "artist_name": "Female Choir"
+    },
+    {
+      "id": 67,
+      "title": "Epiphany Hymn",
+      "artist_id": 24,
+      "season_id": 13,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Epiphany_Hymn.mp3",
+      "duration": "4:34",
+      "file_size": "9.1 MB",
+      "season_name": "Major Feasts of the Lord",
+      "artist_name": "Cathedral Choir"
+    },
+    {
+      "id": 72,
+      "title": "Pentecost Fire",
+      "artist_id": 25,
+      "season_id": 13,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Pentecost_Fire.mp3",
+      "duration": "6:13",
+      "file_size": "4.5 MB",
+      "season_name": "Major Feasts of the Lord",
+      "artist_name": "Youth Choir"
+    },
+    {
+      "id": 68,
+      "title": "Transfiguration Praise",
+      "artist_id": 26,
+      "season_id": 13,
+      "url": "https://tasbeha.org/mp3/MajorFeastsoftheLord/Transfiguration_Praise.mp3",
+      "duration": "7:08",
+      "file_size": "17.0 MB",
+      "season_name": "Major Feasts of the Lord",
+      "artist_name": "Monastery Choir"
+    },
+    {
+      "id": 73,
+      "title": "Circumcision Hymn",
+      "artist_id": 29,
+      "season_id": 14,
+      "url": "https://tasbeha.org/mp3/MinorFeastsoftheLord/Circumcision_Hymn.mp3",
+      "duration": "3:34",
+      "file_size": "12.5 MB",
+      "season_name": "Minor Feasts of the Lord",
+      "artist_name": "Traditional Voices"
+    },
+    {
+      "id": 75,
+      "title": "Cross Feast Praise",
+      "artist_id": 26,
+      "season_id": 14,
+      "url": "https://tasbeha.org/mp3/MinorFeastsoftheLord/Cross_Feast_Praise.mp3",
+      "duration": "8:08",
+      "file_size": "6.5 MB",
+      "season_name": "Minor Feasts of the Lord",
+      "artist_name": "Monastery Choir"
+    },
+    {
+      "id": 74,
+      "title": "Wedding at Cana",
+      "artist_id": 20,
+      "season_id": 14,
+      "url": "https://tasbeha.org/mp3/MinorFeastsoftheLord/Wedding_at_Cana.mp3",
+      "duration": "7:29",
+      "file_size": "17.0 MB",
+      "season_name": "Minor Feasts of the Lord",
+      "artist_name": "Cantor Michael Ghattas"
+    },
+    {
+      "id": 92,
+      "title": "Church Consecration",
+      "artist_id": 24,
+      "season_id": 18,
+      "url": "https://tasbeha.org/mp3/OtherOccasions/Church_Consecration.mp3",
+      "duration": "8:15",
+      "file_size": "9.9 MB",
+      "season_name": "Other Occasions",
+      "artist_name": "Cathedral Choir"
+    },
+    {
+      "id": 89,
+      "title": "Funeral Departure Hymn",
+      "artist_id": 22,
+      "season_id": 18,
+      "url": "https://tasbeha.org/mp3/OtherOccasions/Funeral_Departure_Hymn.mp3",
+      "duration": "5:48",
+      "file_size": "8.3 MB",
+      "season_name": "Other Occasions",
+      "artist_name": "Mixed Choir"
+    },
+    {
+      "id": 90,
+      "title": "House Blessing Praise",
+      "artist_id": 16,
+      "season_id": 18,
+      "url": "https://tasbeha.org/mp3/OtherOccasions/House_Blessing_Praise.mp3",
+      "duration": "6:38",
+      "file_size": "15.9 MB",
+      "season_name": "Other Occasions",
+      "artist_name": "Cantor Ibrahim Ayad"
+    },
+    {
+      "id": 91,
+      "title": "New Year Celebration",
+      "artist_id": 25,
+      "season_id": 18,
+      "url": "https://tasbeha.org/mp3/OtherOccasions/New_Year_Celebration.mp3",
+      "duration": "5:54",
+      "file_size": "14.1 MB",
+      "season_name": "Other Occasions",
+      "artist_name": "Youth Choir"
+    },
+    {
+      "id": 88,
+      "title": "Wedding Blessing Hymn",
+      "artist_id": 29,
+      "season_id": 18,
+      "url": "https://tasbeha.org/mp3/OtherOccasions/Wedding_Blessing_Hymn.mp3",
+      "duration": "4:43",
+      "file_size": "14.3 MB",
+      "season_name": "Other Occasions",
+      "artist_name": "Traditional Voices"
+    }
+  ]
+}

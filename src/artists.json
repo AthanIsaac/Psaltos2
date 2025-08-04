@@ -1,35 +1,149 @@
-[
-    {
-        "artistName": "Mikhail Girgis Elbatanony",
-        "img": "https://live.staticflickr.com/65535/54119640654_17c56a3427_m.jpg"
-    },
-    {
-        "artistName": "Ibrahim Ayad",
-        "img": "https://live.staticflickr.com/65535/54119764350_e8403576f1_w.jpg"
-    },
-    {
-        "artistName": "Gad Lewis",
-        "img": "https://live.staticflickr.com/65535/54119640674_a21fb5d677_m.jpg"
-    },
-    {
-        "artistName": "Farag Abdelmassih",
-        "img": "https://live.staticflickr.com/65535/54119303791_2e8a42fbe3_w.jpg"
-    },
-    {
-        "artistName": "Fahim Girgis",
-        "img": "https://live.staticflickr.com/65535/54119576388_3034d21226_h.jpg"
-    },
-    {
-        "artistName": "Sadek Attallah",
-        "img": "https://live.staticflickr.com/65535/54119640729_fe17cbb429_n.jpg"
-    },
-    {
-        "artistName": "Tawfik Youssef",
-        "img": "https://live.staticflickr.com/65535/54119303711_d99628c626_m.jpg"
-    },
-    {
-        "artistName": "Wissa Attia",
-        "img": "https://live.staticflickr.com/65535/54119640664_fbcd7efd57.jpg"
-    }
-
-]
+{
+    "artists": [
+        {
+            "artistName": "Mikhail Girgis Elbatanony",
+            "img": "https://live.staticflickr.com/65535/54119640654_17c56a3427_m.jpg"
+        },
+        {
+            "artistName": "Ibrahim Ayad",
+            "img": "https://live.staticflickr.com/65535/54119764350_e8403576f1_w.jpg"
+        },
+        {
+            "artistName": "Gad Lewis",
+            "img": "https://live.staticflickr.com/65535/54119640674_a21fb5d677_m.jpg"
+        },
+        {
+            "artistName": "Farag Abdelmassih",
+            "img": "https://live.staticflickr.com/65535/54119303791_2e8a42fbe3_w.jpg"
+        },
+        {
+            "artistName": "Fahim Girgis",
+            "img": "https://live.staticflickr.com/65535/54119576388_3034d21226_h.jpg"
+        },
+        {
+            "artistName": "Sadek Attallah",
+            "img": "https://live.staticflickr.com/65535/54119640729_fe17cbb429_n.jpg"
+        },
+        {
+            "artistName": "Tawfik Youssef",
+            "img": "https://live.staticflickr.com/65535/54119303711_d99628c626_m.jpg"
+        },
+        {
+            "artistName": "Wissa Attia",
+            "img": "https://live.staticflickr.com/65535/54119640664_fbcd7efd57.jpg"
+        }
+    ],
+    "hymns": [
+        {
+            "name": "Agios",
+            "artist": 2,
+            "season": "Nativity",
+            "tune": "Joyful",
+            "mp3": "https://media.tasbeha.org/mp3/Hymns/Annual/Congregation_Responses/Cantor_Gad_Lewis/17_The_Trisagion.mp3"
+        },
+        {
+            "name": "The seven tunes",
+            "artist": 1,
+            "season": [
+                "Nativity",
+                "Resurrection"
+            ],
+            "tune": "Joyful",
+            "mp3": "https://media.tasbeha.org/mp3/Hymns/Major_Feasts_of_the_Lord/Nativity/Ibrahim_Ayad/04_The_Seven_Ways-Tunes.1530.mp3"
+        },
+        {
+            "name": "Psalm 150",
+            "artist": 1,
+            "season": "Annual",
+            "tune": "Annual",
+            "mp3": null
+        },
+        {
+            "name": "Psalm 150 for distribution",
+            "artist": 1,
+            "season": "Nativity",
+            "tune": "Kiahk",
+            "mp3": null
+        },
+        {
+            "name": "Verses of Cymbals",
+            "artist": 1,
+            "season": "Annual",
+            "tune": null,
+            "mp3": null
+        },
+        {
+            "name": "TenGosht",
+            "artist": 1,
+            "season": "Annual",
+            "tune": null,
+            "mp3": null
+        },
+        {
+            "name": "Concluding Canon",
+            "artist": 1,
+            "season": "Annual",
+            "tune": null,
+            "mp3": null
+        },
+        {
+            "name": "Tenou Osht",
+            "artist": 1,
+            "season": "Annual",
+            "tune": null,
+            "mp3": null
+        },
+        {
+            "name": "Shere Maria",
+            "artist": 1,
+            "season": "Annual",
+            "tune": null,
+            "mp3": null
+        },
+        {
+            "name": "Pi epnevma",
+            "artist": 1,
+            "season": [
+                "Pentecost",
+                "Marriage"
+            ],
+            "tune": null,
+            "mp3": null
+        },
+        {
+            "name": "Alleluia Fai Pe Pi",
+            "artist": 2,
+            "season": "Annual",
+            "tune": null,
+            "mp3": null
+        },
+        {
+            "name": "Azpazesthe",
+            "artist": 1,
+            "season": "Annual",
+            "tune": null,
+            "mp3": null
+        },
+        {
+            "name": "Xristos Anesti",
+            "artist": 2,
+            "season": "Resurrection",
+            "tune": "Joyful",
+            "mp3": null
+        },
+        {
+            "name": "E Parthenon",
+            "artist": 1,
+            "season": "Nativity",
+            "tune": "Joyful",
+            "mp3": null
+        },
+        {
+            "name": "Oran enshosho",
+            "artist": 2,
+            "season": "Epiphany",
+            "tune": "Joyful",
+            "mp3": null
+        }
+    ]
+}

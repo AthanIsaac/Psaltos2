@@ -10,9 +10,6 @@ body {
 }
 
 body::before {
-    background-image:
-        url('./img/backgroundPattern.png');
-    background-repeat: repeat;
     position: absolute;
     left: 0;
     top: 0;

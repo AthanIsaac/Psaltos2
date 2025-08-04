@@ -1,0 +1,106 @@
+{
+  "seasons": 9,
+  "artists": 15,
+  "tracks": 92,
+  "timestamp": "2025-07-08T22:19:46.659Z",
+  "season_breakdown": [
+    {
+      "name": "Annual",
+      "track_count": 7
+    },
+    {
+      "name": "Holy Week",
+      "track_count": 7
+    },
+    {
+      "name": "Major Feasts of the Lord",
+      "track_count": 7
+    },
+    {
+      "name": "Commemoration of the Heavenly and Saints",
+      "track_count": 5
+    },
+    {
+      "name": "Fasts",
+      "track_count": 5
+    },
+    {
+      "name": "Other Occasions",
+      "track_count": 5
+    },
+    {
+      "name": "Instructional Liturgies",
+      "track_count": 4
+    },
+    {
+      "name": "Gospel Readings",
+      "track_count": 3
+    },
+    {
+      "name": "Minor Feasts of the Lord",
+      "track_count": 3
+    }
+  ],
+  "top_artists": [
+    {
+      "name": "Mixed Choir",
+      "track_count": 8
+    },
+    {
+      "name": "Cathedral Choir",
+      "track_count": 6
+    },
+    {
+      "name": "Cantor Ibrahim Ayad",
+      "track_count": 4
+    },
+    {
+      "name": "Deacon Team",
+      "track_count": 4
+    },
+    {
+      "name": "Youth Choir",
+      "track_count": 4
+    },
+    {
+      "name": "Monastery Choir",
+      "track_count": 3
+    },
+    {
+      "name": "Traditional Voices",
+      "track_count": 3
+    },
+    {
+      "name": "Cantor Farag Abdelmessih",
+      "track_count": 2
+    },
+    {
+      "name": "Cantor Gad Lewis",
+      "track_count": 2
+    },
+    {
+      "name": "Cantor Zaher Andrawes",
+      "track_count": 2
+    },
+    {
+      "name": "Cantor Michael Ghattas",
+      "track_count": 2
+    },
+    {
+      "name": "Female Choir",
+      "track_count": 2
+    },
+    {
+      "name": "Various Artists",
+      "track_count": 2
+    },
+    {
+      "name": "St. Mary Deacons",
+      "track_count": 1
+    },
+    {
+      "name": "Children Choir",
+      "track_count": 1
+    }
+  ]
+}

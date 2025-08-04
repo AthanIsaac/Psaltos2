@@ -6,13 +6,25 @@
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
-    "@wavesurfer/react": "^1.0.7",
+    "@wavesurfer/react": "^1.0.11",
+    "0g": "^0.4.2",
+    "axios": "^1.10.0",
+    "better-sqlite3": "^12.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "firebase": "^11.10.0",
+    "lucide-react": "^0.525.0",
+    "mongoose": "^8.16.1",
+    "mypackage": "^0.1.0",
+    "nodemon": "^3.1.10",
     "postcss": "^8.4.47",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.23.1",
-    "react-scripts": "^5.0.1",
-    "wavesurfer.js": "^7.8.8",
+    "react-scripts": "5.0.1",
+    "sqlite3": "^5.1.7",
+    "underscore": "^1.13.7",
+    "wavesurfer.js": "^7.10.1",
     "web-vitals": "^4.2.3"
   },
   "scripts": {
@@ -38,5 +50,18 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "database.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NahomeYo/Psaltos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NahomeYo/Psaltos/issues"
+  },
+  "homepage": "https://github.com/NahomeYo/Psaltos#readme"
 }
