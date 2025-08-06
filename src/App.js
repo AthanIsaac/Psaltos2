@@ -19,7 +19,7 @@ import SundayTesbaha from "./img/tasbeha.jpg";
 import Weekday from "./img/weekdayTasbeha.jpg";
 import SundayVespers from "./img/vespers.jpg"
 import ArtistIcon from "./img/icons/artistIcon.js";
-import HymnsData from "./output.json";
+import HymnsData from "./hymns.json";
 import ArtistData from "./artists.json";
 import { useEffect, useState } from "react";
 
@@ -127,7 +127,7 @@ function App() {
         {hymns.map((hymn, index) => (
           <div key={index} style={{width: 1000}}>
             <HeaderComponent placeHolder={hymn.name} />
-            <Audio/>
+            <Audio hymn={hymn}/>
             <br/>
             <br/>
 
