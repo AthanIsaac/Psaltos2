@@ -1,105 +1,78 @@
-.previousSong path,
-.audioDownload path,
-.nextSong path,
-.pauseButton path,
-.playButton path,
-.fifteenRewind path,
-.fifteenForward path,
-.speaker path {
-    fill: var(--fourthy-color);
-}
-
-.audioContainer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 0px 30px;
-}
-
-.playOption {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 30px;
-}
-
-.audioControl {
-    overflow: hidden;
-    background: none;
-    border: none;
-}
-
-/* Enhanced Audio Player Styles */
-.enhanced-audio-player {
-    width: 100%;
+/* Audio Player Container */
+.audio-player-container {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 20px;
-    background: linear-gradient(135deg, var(--fifthly-color) 0%, var(--fourthy-color) 100%);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(44, 71, 92, 0.1);
-    border: 2px solid var(--primary-color);
-}
-
-.audio-controls-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.main-controls {
-    display: flex;
     align-items: center;
     gap: 15px;
+    width: 100%;
+    min-height: 120px;
+    justify-content: center;
 }
 
-.control-btn {
+/* Audio Controls */
+.audio-controls-centered {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none;
-    background: transparent;
+    gap: 20px;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(44, 71, 92, 0.9) 0%, rgba(34, 55, 70, 0.9) 100%);
+    border-radius: 25px;
+    box-shadow: 0 4px 20px rgba(44, 71, 92, 0.3);
+    border: 2px solid #1a3a4a;
+    min-height: 60px;
+    flex-shrink: 0;
+}
+
+.audio-control-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    padding: 5px;
+    padding: 8px;
+    border-radius: 50%;
+    background: rgba(26, 58, 74, 0.8);
+    border: 2px solid #1a3a4a;
 }
 
-.control-btn:hover:not(:disabled) {
+.audio-control-btn:hover:not([disabled]) {
     transform: translateY(-2px);
-    filter: brightness(1.1);
+    background: rgba(26, 58, 74, 1);
+    box-shadow: 0 6px 15px rgba(26, 58, 74, 0.4);
 }
 
-.control-btn:active:not(:disabled) {
+.audio-control-btn:active:not([disabled]) {
     transform: translateY(0);
 }
 
-.control-btn:disabled {
+.audio-control-btn[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
 }
 
-.control-btn img {
+.audio-control-btn img {
+    filter: brightness(0) saturate(100%) invert(100%);
     transition: all 0.3s ease;
 }
 
-.skip-btn img {
-    width: 46px;
-    height: 45px;
+.play-pause-btn {
+    background: rgba(26, 58, 74, 0.9);
+    padding: 12px;
+    border: 3px solid #1a3a4a;
 }
 
-.play-pause-btn img {
-    width: auto;
-    height: auto;
+.play-pause-btn:hover:not([disabled]) {
+    background: rgba(26, 58, 74, 1);
+    box-shadow: 0 8px 20px rgba(26, 58, 74, 0.5);
 }
 
+/* Loading Spinner */
 .loading-spinner {
     width: 24px;
     height: 24px;
-    border: 3px solid var(--fifthly-color);
-    border-top: 3px solid transparent;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid white;
     border-radius: 50%;
     animation: spin 1s linear infinite;
 }
@@ -109,14 +82,22 @@
     100% { transform: rotate(360deg); }
 }
 
+/* Time Display */
 .time-display-section {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     font-family: 'Intel-light', monospace;
     font-size: var(--small);
     color: var(--primary-color);
     font-weight: 600;
+    background: rgba(239, 249, 255, 0.9);
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 2px solid var(--primary-color);
+    min-height: 20px;
+    flex-shrink: 0;
 }
 
 .time-display {
@@ -128,59 +109,71 @@
     color: var(--secondary-color);
 }
 
-.speed-control {
+/* Speed Control */
+.speed-control-section {
     display: flex;
     align-items: center;
-    gap: 10px;
-}
-
-.speed-control label {
-    font-family: 'Intel-light';
+    justify-content: center;
+    gap: 12px;
+    font-family: 'Intel-light', monospace;
     font-size: var(--small);
     color: var(--primary-color);
     font-weight: 600;
-}
-
-.speed-dropdown {
-    padding: 8px 12px;
-    border: 2px solid var(--primary-color);
+    background: rgba(239, 249, 255, 0.9);
+    padding: 8px 16px;
     border-radius: 20px;
-    background: var(--fifthly-color);
+    border: 2px solid var(--primary-color);
+    min-height: 20px;
+    flex-shrink: 0;
+}
+
+.speed-label {
     color: var(--primary-color);
-    font-family: 'Intel-light';
-    font-size: var(--small);
     font-weight: 600;
+    margin-right: 4px;
+}
+
+.speed-buttons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.speed-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    outline: none;
+    padding: 4px 8px;
+    border-radius: 12px;
+    background: rgba(44, 71, 92, 0.1);
+    border: 1px solid rgba(44, 71, 92, 0.3);
+    color: var(--primary-color);
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 32px;
+    text-align: center;
 }
 
-.speed-dropdown:hover {
-    background: var(--fourthy-color);
-    border-color: var(--secondary-color);
+.speed-btn:hover:not([disabled]) {
+    background: rgba(44, 71, 92, 0.2);
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
 }
 
-.speed-dropdown:focus {
-    border-color: var(--secondary-color);
-    box-shadow: 0 0 0 3px rgba(44, 71, 92, 0.1);
+.speed-btn:active:not([disabled]) {
+    transform: translateY(0);
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    .audio-controls-container {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .main-controls {
-        order: 1;
-    }
-    
-    .time-display-section {
-        order: 2;
-    }
-    
-    .speed-control {
-        order: 3;
-    }
+.speed-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(44, 71, 92, 0.3);
+}
+
+.speed-btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
 }

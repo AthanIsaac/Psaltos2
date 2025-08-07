@@ -23,8 +23,8 @@ body::before {
 }
 
 .mainLogo {
-    width: 180px;
-    height: 180px;
+    width: 140px;
+    height: 140px;
 }
 
 .titleContainer {
@@ -153,7 +153,7 @@ body::before {
     margin: 0px 140px;
     display: flex;
     flex-direction: column;
-    gap: 50px;
+    gap: 30px;
     justify-content: flex-start;
     align-items: center;
 }
@@ -169,7 +169,7 @@ nav {
     justify-content: flex-start;
     align-items: center;
     gap: 60px;
-    padding: 30px 0px;
+    padding: 20px 0px;
 }
 
 nav li {
@@ -370,16 +370,16 @@ nav li a h2 {
     background: linear-gradient(0deg, rgba(185, 204, 217, 1) 0%, rgba(136, 158, 174, 1) 100%);
     position: relative;
     justify-content: flex-start;
-    gap: 20px;
-    padding: 0px 50px 0px 50px;
+    gap: 15px;
+    padding: 0px 40px 0px 40px;
     border-radius: 200px 0px 100px 0px;
-    border-bottom: solid var(--fifthly-color) 20px;
+    border-bottom: solid var(--fifthly-color) 15px;
 }
 
 .TabList>span:first-child {
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding: 15px;
     align-items: center;
     justify-content: space-between;
 }
@@ -426,7 +426,7 @@ nav ul li h2 {
 .deaf {
     width: 40px;
     height: 50px;
-    margin: 50px 0px;
+    margin: 20px 0px;
 }
 
 .footer {
@@ -435,7 +435,7 @@ nav ul li h2 {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 40px 0px;
+    margin: 30px 0px;
 }
 
 .footer nav {
@@ -467,8 +467,8 @@ fade {
     align-items: flex-start;
     justify-content: center;
     flex-wrap: wrap;
-    padding: 50px 0px;
-    gap: 40px;
+    padding: 30px 0px;
+    gap: 30px;
 }
 
 .seasonItem {
@@ -483,17 +483,21 @@ fade {
 }
 
 .seasonItem:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
 }
 
 .selectedSeasonItem {
-    transform: scale(1.1);
-    box-shadow: 0 10px 30px rgba(44, 71, 92, 0.3);
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(44, 71, 92, 0.2);
     border-radius: 20px;
     padding: 20px;
     background: linear-gradient(135deg,
         rgba(239, 249, 255, 0.9) 0%,
         rgba(181, 203, 213, 0.8) 100%);
+}
+
+.selectedSeasonItem:hover {
+    transform: scale(1.07);
 }
 
 .seasonItem:hover::before {
@@ -542,4 +546,58 @@ fade {
     line-height: 1.2;
     word-wrap: break-word;
     hyphens: auto;
+}
+
+.seasonCategorySection {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.seasonCategorySection h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(44, 71, 92, 0.3);
+    border-bottom: 2px solid var(--primary-color);
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+}
+
+.seasonCategorySection:last-child {
+    margin-bottom: 0;
+}
+
+.season-filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.season-filter-button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    fontSize: 14px;
+    transition: all 0.3s ease;
+    text-transform: capitalize;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.season-filter-button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.season-filter-button.active {
+    background: var(--primary-color);
+    color: white;
+    font-weight: bold;
+}
+
+.season-filter-button.inactive {
+    background: rgba(255,255,255,0.3);
+    color: var(--primary-color);
+    font-weight: normal;
 }
