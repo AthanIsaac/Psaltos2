@@ -28,3 +28,159 @@
     background: none;
     border: none;
 }
+
+/* Enhanced Audio Player Styles */
+.enhanced-audio-player {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--fifthly-color) 0%, var(--fourthy-color) 100%);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(44, 71, 92, 0.1);
+    border: 2px solid var(--primary-color);
+}
+
+.audio-controls-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.main-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.control-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 5px;
+}
+
+.control-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.control-btn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.control-btn img {
+    transition: all 0.3s ease;
+}
+
+.skip-btn img {
+    width: 46px;
+    height: 45px;
+}
+
+.play-pause-btn img {
+    width: auto;
+    height: auto;
+}
+
+.loading-spinner {
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--fifthly-color);
+    border-top: 3px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.time-display-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Intel-light', monospace;
+    font-size: var(--small);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.time-display {
+    min-width: 45px;
+    text-align: center;
+}
+
+.time-separator {
+    color: var(--secondary-color);
+}
+
+.speed-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.speed-control label {
+    font-family: 'Intel-light';
+    font-size: var(--small);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.speed-dropdown {
+    padding: 8px 12px;
+    border: 2px solid var(--primary-color);
+    border-radius: 20px;
+    background: var(--fifthly-color);
+    color: var(--primary-color);
+    font-family: 'Intel-light';
+    font-size: var(--small);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+.speed-dropdown:hover {
+    background: var(--fourthy-color);
+    border-color: var(--secondary-color);
+}
+
+.speed-dropdown:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(44, 71, 92, 0.1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .audio-controls-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .main-controls {
+        order: 1;
+    }
+    
+    .time-display-section {
+        order: 2;
+    }
+    
+    .speed-control {
+        order: 3;
+    }
+}

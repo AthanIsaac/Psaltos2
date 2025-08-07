@@ -22,6 +22,7 @@ import ArtistIcon from "./img/icons/artistIcon.js";
 import HymnsData from "./hymns.json";
 import ArtistData from "./artists.json";
 import { useEffect, useState } from "react";
+import { pointer } from "@testing-library/user-event/dist/cjs/pointer/index.js";
 
 function App() {
   const [hymnData, setHymnData] = useState([]);
@@ -32,6 +33,7 @@ function App() {
   const [selectedHymn, setSelectedHymn] = useState([]);
   const [selectedSeason, setSelectedSeason] = useState();
   const [selectedArtist, setSelectedArtist] = useState();
+  const [expandedHymns, setExpandedHymns] = useState(new Set());
 
   useEffect(() => {
     const getData = async () => {
@@ -109,12 +111,18 @@ function App() {
 
     return (
       <div className="seasonContainer">
-        {seasons.map((season, index) => (
-          <div key={index} className="seasonItem" onClick={() => setSelectedSeason(season)}>
-            {seasonRender(season)}
-            <HeaderComponent placeHolder={season} />
+        {!selectedSeason ?
+          seasons.map((season, index) => (
+            <div key={index} className="seasonItem" onClick={() => setSelectedSeason(season)}>
+              {seasonRender(season)}
+              <HeaderComponent placeHolder={season} />
+            </div>
+          )) :
+          <div className="seasonItem selectedSeasonItem" onClick={() => setSelectedSeason()}>
+            {seasonRender(selectedSeason)}
+            <HeaderComponent placeHolder={selectedSeason} />
           </div>
-        ))}
+        }
       </div>
     );
   };
@@ -122,17 +130,45 @@ function App() {
     // we have selected an artist and season so display all the hymns for that season from the selected artist
     const hymns = [...new Set(hymnData.filter(hymn => hymn.artist === selectedArtist.artistName && hymn.season === selectedSeason))];
 
-    return (
-      <div >
-        {hymns.map((hymn, index) => (
-          <div key={index} style={{width: 1000}}>
-            <HeaderComponent placeHolder={hymn.name} />
-            <Audio hymn={hymn}/>
-            <br/>
-            <br/>
+    const toggleHymnExpansion = (hymnId) => {
+      setExpandedHymns(prev => {
+        const newSet = new Set(prev);
+        if (newSet.has(hymnId)) {
+          newSet.delete(hymnId);
+        } else {
+          newSet.add(hymnId);
+        }
+        return newSet;
+      });
+    };
 
-          </div>
-        ))}
+    return (
+      <div>
+        {hymns.map((hymn, index) => {
+          const hymnId = `${hymn.name}-${index}`;
+          const isExpanded = expandedHymns.has(hymnId);
+          
+          return (
+            <div key={index} style={{width: 1000, marginBottom: '20px'}}>
+              <div
+                className="hymnTitleBackground expandable-hymn-title"
+                onClick={() => toggleHymnExpansion(hymnId)}
+                style={{cursor: 'pointer'}}
+              >
+                <HeaderComponent placeHolder={hymn.name} />
+                <div className="expand-indicator">
+                  {isExpanded ? '▼' : '▶'}
+                </div>
+              </div>
+              
+              {isExpanded && (
+                <div className="hymn-content-expanded">
+                  <Audio hymn={hymn} autoLoad={true} />
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
     );
   };
@@ -147,7 +183,7 @@ function App() {
   );
 
   const renderArtist = (artist) => (
-    <div className="cantorTab001" onClick={() => {
+    <div className="artist-card" onClick={() => {
       setSelectedArtist(artist);
     }}>
       <div className="cantorContainer">
@@ -167,8 +203,8 @@ function App() {
   );
 
   const renderSingleArtist = () => (
-    <div className="cantorTab003" onClick={() => {
-      setSelectedArtist(); 
+    <div className="selected-artist" style={{cursor:'pointer' }} onClick={() => {
+      setSelectedArtist();
       setSelectedSeason();
     }}>
        <div className="cantorContainer">
@@ -203,7 +239,7 @@ function App() {
       case 'Sunday Vespers Praise':
         return <img src={SundayVespers} alt="Sunday Tasbeha" />;
       default:
-        return null;
+        return <img src={SundayTesbaha} alt="Sunday Tasbeha" />;
     }
   };
 
@@ -228,12 +264,13 @@ function App() {
 
   return (
     <div className="mainContainer">
+      <div className="backgroundOverlay"></div>
       <div className="contents">
         <Navbar />
         <img className="Jesus" src={jesus} alt="Jesus" />
         <div className="titleContainer">
-          <img className="mainLogo" src={logo} alt="logo" />
-          <span>Psaltos</span>
+            <img className="mainLogo" src={logo} alt="logo" />
+            <span>Psaltos</span>
         </div>
         <div className="searchBarContainer">
           <div className="searchBar">

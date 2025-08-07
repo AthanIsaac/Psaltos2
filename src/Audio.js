@@ -1,11 +1,18 @@
 import WavesurferPlayer from '@wavesurfer/react'
 import { useState, useRef, useEffect } from 'react'
+import playButtonIcon from './img/icons/playButton.svg'
+import pauseButtonIcon from './img/icons/pauseButton.svg'
+import forwardIcon from './img/icons/15Forward.svg'
+import rewindIcon from './img/icons/15Rewind.svg'
 
-function Audio({ hymn }) {
+function Audio({ hymn, autoLoad = false }) {
     const [wavesurfer, setWavesurfer] = useState(null)
     const [isPlaying, setIsPlaying] = useState(false)
     const [isLoaded, setIsLoaded] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [currentTime, setCurrentTime] = useState(0)
+    const [duration, setDuration] = useState(0)
+    const [playbackSpeed, setPlaybackSpeed] = useState(1)
     const canvasRef = useRef(null)
 
     // Handle cases where hymn or hymn.mp3 might be undefined
@@ -14,6 +21,14 @@ function Audio({ hymn }) {
     // Use our backend API to proxy the audio request
     const backendUrl = 'http://localhost:5001'
     const audioUrl = originalUrl ? `${backendUrl}/api/audio/proxy?url=${encodeURIComponent(originalUrl)}` : null
+
+    // Auto-load audio when autoLoad prop is true
+    useEffect(() => {
+        if (autoLoad && !isLoaded && !isLoading && originalUrl) {
+            setIsLoading(true)
+            setIsLoaded(true)
+        }
+    }, [autoLoad, isLoaded, isLoading, originalUrl])
 
     // Draw flat wave placeholder
     useEffect(() => {
@@ -45,6 +60,7 @@ function Audio({ hymn }) {
         setWavesurfer(ws)
         setIsLoading(false)
         setIsLoaded(true)
+        setDuration(ws.getDuration())
         
         // If user clicked play before audio was loaded, start playing now
         if (isPlaying) {
@@ -52,6 +68,40 @@ function Audio({ hymn }) {
         } else {
             setIsPlaying(false)
         }
+    }
+
+    const onTimeUpdate = (currentTime) => {
+        setCurrentTime(currentTime)
+    }
+
+    const skipForward = () => {
+        if (wavesurfer && isLoaded) {
+            wavesurfer.skip(10)
+        }
+    }
+
+    const skipBackward = () => {
+        if (wavesurfer && isLoaded) {
+            wavesurfer.skip(-10)
+        }
+    }
+
+    const handleSpeedChange = (speed) => {
+        setPlaybackSpeed(speed)
+        if (wavesurfer && isLoaded) {
+            wavesurfer.setPlaybackRate(speed)
+        }
+    }
+
+    const formatTime = (time) => {
+        if (time && !isNaN(time)) {
+            const minutes = Math.floor(time / 60)
+            const formatMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`
+            const seconds = Math.floor(time % 60)
+            const formatSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`
+            return `${formatMinutes}:${formatSeconds}`
+        }
+        return '00:00'
     }
 
     const onPlayPause = () => {
@@ -71,8 +121,10 @@ function Audio({ hymn }) {
         return <div>No audio available</div>
     }
 
+    const speedOptions = [0.5, 0.75, 1, 1.25, 1.5, 2]
+
     return (
-        <>
+        <div>
             {!isLoaded ? (
                 // Show flat wave placeholder
                 <div style={{ position: 'relative', width: '100%', height: '100px', backgroundColor: 'transparent' }}>
@@ -107,12 +159,66 @@ function Audio({ hymn }) {
                     onReady={onReady}
                     onPlay={() => setIsPlaying(true)}
                     onPause={() => setIsPlaying(false)}
+                    onTimeupdate={onTimeUpdate}
+                    barWidth={3}
+                    barRadius={10}
                 />
             )}
-            <button onClick={onPlayPause} disabled={isLoading}>
-                {isLoading ? 'Loading...' : (isPlaying ? 'Pause' : 'Play')}
-            </button>
-        </>
+            <div>
+                <div >
+                    <span
+                        onClick={skipBackward}
+                        disabled={!isLoaded}
+                        title="Skip back 10 seconds"
+                    >
+                        <img src={rewindIcon} alt="Rewind 15 seconds" width="46" height="45" />
+                    </span>
+
+                    <span
+                        onClick={onPlayPause}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <div className="loading-spinner"></div>
+                        ) : isPlaying ? (
+                            <img src={pauseButtonIcon} alt="Pause" width="65" height="65" />
+                        ) : (
+                            <img src={playButtonIcon} alt="Play" width="51" height="51" />
+                        )}
+                    </span>
+
+                    <span
+                        onClick={skipForward}
+                        disabled={!isLoaded}
+                        title="Skip forward 10 seconds"
+                    >
+                        <img src={forwardIcon} alt="Forward 15 seconds" width="46" height="45" />
+                    </span>
+                </div>
+
+                <div className="time-display-section">
+                    <span className="time-display">{formatTime(currentTime)}</span>
+                    <span className="time-separator">/</span>
+                    <span className="time-display">{formatTime(duration)}</span>
+                </div>
+
+                {/* <div className="speed-control">
+                    <label htmlFor="speed-select">Speed:</label>
+                    <select
+                        id="speed-select"
+                        className="speed-dropdown"
+                        value={playbackSpeed}
+                        onChange={(e) => handleSpeedChange(parseFloat(e.target.value))}
+                    >
+                        {speedOptions.map(speed => (
+                            <option key={speed} value={speed}>
+                                {speed}x
+                            </option>
+                        ))}
+                    </select>
+                </div> */}
+            </div>
+        </div>
     )
 }
 

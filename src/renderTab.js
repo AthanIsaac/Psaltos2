@@ -43,7 +43,7 @@ export const CantorTab = ({ artists }) => {
 
                 <div className="list">
                     {artists.slice(click, click + 4).map((artist, index) => (
-                        <div key={index} onClick={() => console.log(`Selected: ${artist}`)} className="cantorTab001">
+                        <div key={index} onClick={() => console.log(`Selected: ${artist}`)} className="artist-card">
                             <div className="cantorContainer">
                                 <div className="topRow">{profilePic(artist)}</div>
                                 <div className="artist">
@@ -98,7 +98,7 @@ export const profilePic = (artist) => {
 export const RenderTab = ({ filteredHymns }) => {
     const renderHymns = () => {
         return filteredHymns.map((selectedHymn, index) => (
-            <div key={index} className="cantorTab002" onClick={() => console.log(`Selected Hymn: ${selectedHymn.name}`)}>
+            <div key={index} className="hymn-item" onClick={() => console.log(`Selected Hymn: ${selectedHymn.name}`)}>
                 <div className="cantorContainer">
                     <div className="topRow">{profilePic(selectedHymn.artist)}</div>
                     <div className="artist">

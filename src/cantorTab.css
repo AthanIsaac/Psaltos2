@@ -21,12 +21,13 @@
     height: 25px;
 }
 
-.cantorTab001 {
+.artist-card {
     overflow: visible;
     position: relative;
+    cursor: pointer;
 }
 
-.cantorTab001 .cantorContainer {
+.artist-card .cantorContainer {
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -35,31 +36,33 @@
     background: var(--primary-color);
     border-radius: 30px;
     margin-bottom: 3vw;
+    min-height: 220px;
+    height: 220px;
 }
 
-.cantorTab001 .artist {
+.artist-card .artist {
     padding-left: 10px;
     width: min-content;
 }
 
-.cantorTab001 .artist span .artistIcon,
-.cantorTab001 .artist span p {
+.artist-card .artist span .artistIcon,
+.artist-card .artist span p {
     fill: var(--fifthly-color);
     color: var(--fifthly-color);
 }
 
-.cantorTab001 .artist span .artistIcon {
+.artist-card .artist span .artistIcon {
     width: 30px;
     height: 30px;
 }
 
-.cantorTab001 .cantorContainer .topRow {
+.artist-card .cantorContainer .topRow {
     background: #678399;
     border-radius: 0px 0px 80px 0px;
     padding-bottom: 10px;
 }
 
-.cantorTab001 .cantorContainer .topRow img {
+.artist-card .cantorContainer .topRow img {
     border-radius: 0px 0px 80px 0px;
     border: solid var(--fifthly-color);
     border-right: solid var(--fifthly-color) 20px;
@@ -70,18 +73,18 @@
     height: 120px;
 }
 
-.cantorTab001 b {
+.artist-card b {
     white-space: wrap;
     text-align: left;
     color: var(--fourthy-color);
 }
 
-.cantorTab002 {
+.hymn-item {
     position: relative;
     width: 100%;
 }
 
-.cantorTab002 .cantorContainer {
+.hymn-item .cantorContainer {
     background: var(--primary-color);
     border-radius: 60px;
     overflow: hidden;
@@ -93,14 +96,14 @@
     align-items: center;
 }
 
-.cantorTab001 .robe,
-.cantorTab002 .robe {
+.artist-card .robe,
+.hymn-item .robe {
     position: absolute;
     right: 0;
     top: -1px;
 }
 
-.cantorTab003 .cantorContainer {
+.selected-artist .cantorContainer {
     background: radial-gradient(circle, rgba(103, 131, 153, 1) 0%, rgba(44, 71, 92, 1) 100%);
     border-radius: 60px;
     overflow: hidden;
@@ -113,7 +116,7 @@
     margin-bottom: 1vw;
 }
 
-.cantorTab003 .topRow {
+.selected-artist .topRow {
     display: flex;
     gap: 20px;
     margin: 0;
@@ -126,7 +129,7 @@
     overflow: visible;
 }
 
-.cantorTab004 .cantorContainer {
+.artist-sidebar .cantorContainer {
     background: var(--primary-color);
     border-radius: 30px 0px 0px 30px;
     overflow: hidden;
@@ -238,7 +241,7 @@
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    align-items: top;
+    align-items: stretch;
     justify-content: space-between;
     overflow-x: visible;
 }
