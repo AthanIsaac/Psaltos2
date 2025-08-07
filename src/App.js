@@ -22,7 +22,6 @@ import ArtistIcon from "./img/icons/artistIcon.js";
 import HymnsData from "./hymns.json";
 import ArtistData from "./artists.json";
 import { useEffect, useState } from "react";
-import { pointer } from "@testing-library/user-event/dist/cjs/pointer/index.js";
 
 function App() {
   const [hymnData, setHymnData] = useState([]);
@@ -30,10 +29,12 @@ function App() {
   const [artistData, setArtistData] = useState([]);
   const [filteredHymns, setFilteredHymns] = useState([]);
   const [typing, setTyping] = useState(false);
-  const [selectedHymn, setSelectedHymn] = useState([]);
+  const [selectedHymn, setSelectedHymn] = useState(null);
   const [selectedSeason, setSelectedSeason] = useState();
   const [selectedArtist, setSelectedArtist] = useState();
   const [expandedHymns, setExpandedHymns] = useState(new Set());
+  const [browseMode, setBrowseMode] = useState('cantor'); // 'cantor' or 'season'
+  const [click, setClick] = useState(0); // Move this hook to top level
 
   useEffect(() => {
     const getData = async () => {
@@ -63,11 +64,22 @@ function App() {
     setFilteredHymns(searchMatch);
   };
 
+  const resetSelections = () => {
+    setSelectedArtist();
+    setSelectedSeason();
+    setSelectedHymn(null);
+    setExpandedHymns(new Set());
+    setClick(0);
+  };
+
+  const toggleBrowseMode = () => {
+    resetSelections();
+    setBrowseMode(browseMode === 'cantor' ? 'season' : 'cantor');
+  };
+
   // const artistEdit = (hymn) => hymn?.artist?.substring(7) || hymn?.artist || "";
 
   const ArtistList = () => {
-    const [click, setClick] = useState(0);
-
     const nextFour = () => {
       setClick(prevClick => Math.min(prevClick + 4, artistData.length - 4));
     }
@@ -173,6 +185,107 @@ function App() {
     );
   };
 
+  // New functions for season-first browsing mode
+  const renderAllSeasons = () => {
+    const allSeasons = [...new Set(hymnData.map(hymn => hymn.season))];
+    
+    return (
+      <div className="TabList">
+        <span>
+          <HeaderComponent placeHolder="seasons" />
+          <p>Choose a liturgical season to explore hymns and their cantors</p>
+        </span>
+        <div className="seasonContainer">
+          {allSeasons.map((season, index) => (
+            <div key={index} className="seasonItem" onClick={() => setSelectedSeason(season)}>
+              {seasonRender(season)}
+              <HeaderComponent placeHolder={season} />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderHymnsForSeason = () => {
+    const hymnsInSeason = [...new Set(hymnData.filter(hymn => hymn.season === selectedSeason).map(hymn => hymn.name))];
+    
+    return (
+      <div className="TabList">
+        <span>
+          <HeaderComponent placeHolder={`${selectedSeason} Hymns`} />
+          <p>Select a hymn to see all cantors who have recorded it</p>
+          <button onClick={() => setSelectedSeason()} style={{marginTop: '10px', padding: '10px 20px', borderRadius: '20px', border: 'none', background: 'var(--primary-color)', color: 'white', cursor: 'pointer'}}>
+            ← Back to Seasons
+          </button>
+        </span>
+        <div className="seasonContainer">
+          {hymnsInSeason.map((hymnName, index) => (
+            <div key={index} className="seasonItem" onClick={() => setSelectedHymn(hymnName)}>
+              <div style={{width: '100%', height: '160px', background: 'linear-gradient(135deg, rgba(66, 96, 119, 0.8) 0%, rgba(44, 71, 92, 0.8) 100%)', borderRadius: '30px', border: 'var(--primary-color) solid 4px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <HeaderComponent placeHolder={hymnName} />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
+  const renderCantorsForHymn = () => {
+    const cantorsForHymn = hymnData.filter(hymn => hymn.name === selectedHymn && hymn.season === selectedSeason);
+    
+    return (
+      <div className="TabList">
+        <span>
+          <HeaderComponent placeHolder={`Cantors for "${selectedHymn}"`} />
+          <p>Listen to different interpretations of this hymn</p>
+          <button onClick={() => setSelectedHymn(null)} style={{marginTop: '10px', padding: '10px 20px', borderRadius: '20px', border: 'none', background: 'var(--primary-color)', color: 'white', cursor: 'pointer'}}>
+            ← Back to Hymns
+          </button>
+        </span>
+        <div>
+          {cantorsForHymn.map((hymn, index) => {
+            const hymnId = `${hymn.name}-${hymn.artist}-${index}`;
+            const isExpanded = expandedHymns.has(hymnId);
+            
+            const toggleHymnExpansion = (hymnId) => {
+              setExpandedHymns(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(hymnId)) {
+                  newSet.delete(hymnId);
+                } else {
+                  newSet.add(hymnId);
+                }
+                return newSet;
+              });
+            };
+            
+            return (
+              <div key={index} style={{width: '100%', marginBottom: '20px'}}>
+                <div
+                  className="hymnTitleBackground expandable-hymn-title"
+                  onClick={() => toggleHymnExpansion(hymnId)}
+                  style={{cursor: 'pointer'}}
+                >
+                  <HeaderComponent placeHolder={`${hymn.artist} - ${hymn.name}`} />
+                  <div className="expand-indicator">
+                    {isExpanded ? '▼' : '▶'}
+                  </div>
+                </div>
+                
+                {isExpanded && (
+                  <div className="hymn-content-expanded">
+                    <Audio hymn={hymn} autoLoad={true} />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
 
   const HeaderComponent = ({ placeHolder }) => (
     <div className="headerContainer">
@@ -286,9 +399,45 @@ function App() {
         </div>
         <p>The ultimate search engine to house all the hymns in the Coptic church</p>
         <img className="deaf" src={Deaf} alt="deaf" />
-        {ArtistList()}
-        {selectedArtist && renderSeasons()}
-        {selectedSeason && renderHymns()}
+        
+        {/* Toggle Button */}
+        <div style={{marginBottom: '30px'}}>
+          <button
+            onClick={toggleBrowseMode}
+            style={{
+              padding: '15px 30px',
+              borderRadius: '25px',
+              border: 'none',
+              background: browseMode === 'cantor' ? 'var(--primary-color)' : 'var(--fourthy-color)',
+              color: 'white',
+              cursor: 'pointer',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+            }}
+          >
+            {browseMode === 'cantor' ? '🎵 Browse by Season' : '👨‍🎤 Browse by Cantor'}
+          </button>
+        </div>
+
+        {/* Cantor-first browsing mode (original) */}
+        {browseMode === 'cantor' && (
+          <>
+            {ArtistList()}
+            {selectedArtist && renderSeasons()}
+            {selectedSeason && renderHymns()}
+          </>
+        )}
+
+        {/* Season-first browsing mode (new) */}
+        {browseMode === 'season' && (
+          <>
+            {!selectedSeason && renderAllSeasons()}
+            {selectedSeason && !selectedHymn && renderHymnsForSeason()}
+            {selectedSeason && selectedHymn && renderCantorsForHymn()}
+          </>
+        )}
         <div className="footer">
           <nav>
             <li><img src={logo} alt="logo" /></li>
