@@ -1,18 +1,40 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const nodemailer = require('nodemailer');
+const multer = require('multer');
+const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5002;
 
 // Enable CORS for all routes
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'], // Allow both common React dev ports
+  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3003'], // Allow both common React dev ports
   credentials: true
 }));
 
 // Middleware to parse JSON
 app.use(express.json());
+
+// Configure multer for file uploads
+const storage = multer.memoryStorage();
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024 // 10MB limit
+  }
+});
+
+// Configure nodemailer
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.EMAIL_USER || 'psaltoshymns@gmail.com',
+    pass: process.env.EMAIL_PASS || 'your-app-password-here' // You'll need to set this
+  }
+});
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -85,6 +107,73 @@ app.options('/api/audio/proxy', (req, res) => {
   res.status(200).end();
 });
 
+// Contact form endpoint
+app.post('/api/contact', upload.single('attachment'), async (req, res) => {
+  try {
+    const { name, email, subject, message } = req.body;
+    
+    // Validate required fields
+    if (!name || !email || !subject || !message) {
+      return res.status(400).json({ error: 'All fields are required' });
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email format' });
+    }
+
+    console.log(`Received contact form submission from: ${email}`);
+
+    // Prepare email content
+    let emailContent = `
+      <h2>New Contact Form Submission</h2>
+      <p><strong>Name:</strong> ${name}</p>
+      <p><strong>Email:</strong> ${email}</p>
+      <p><strong>Subject:</strong> ${subject}</p>
+      <p><strong>Message:</strong></p>
+      <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
+        ${message.replace(/\n/g, '<br>')}
+      </div>
+      <hr>
+      <p><small>This message was sent from the Psaltos contact form.</small></p>
+    `;
+
+    // Prepare email options
+    const mailOptions = {
+      from: process.env.EMAIL_USER || 'psaltoshymns@gmail.com',
+      to: 'psaltoshymns@gmail.com',
+      subject: `Psaltos Contact Form: ${subject}`,
+      html: emailContent,
+      replyTo: email
+    };
+
+    // Add attachment if present
+    if (req.file) {
+      mailOptions.attachments = [{
+        filename: req.file.originalname,
+        content: req.file.buffer
+      }];
+      console.log(`Attachment included: ${req.file.originalname} (${req.file.size} bytes)`);
+    }
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+    
+    console.log(`Contact form email sent successfully to psaltoshymns@gmail.com`);
+    res.json({ success: true, message: 'Message sent successfully' });
+
+  } catch (error) {
+    console.error('Error sending contact form email:', error);
+    
+    if (error.code === 'EAUTH') {
+      return res.status(500).json({ error: 'Email authentication failed. Please check email configuration.' });
+    }
+    
+    res.status(500).json({ error: 'Failed to send message', details: error.message });
+  }
+});
+
 // Error handling middleware
 app.use((error, req, res, next) => {
   console.error('Server error:', error);
@@ -95,5 +184,6 @@ app.use((error, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`🎵 Psaltos Backend API running on port ${PORT}`);
   console.log(`📡 Audio proxy endpoint: http://localhost:${PORT}/api/audio/proxy?url=<AUDIO_URL>`);
+  console.log(`📧 Contact form endpoint: http://localhost:${PORT}/api/contact`);
   console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
 });

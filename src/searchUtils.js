@@ -7,16 +7,28 @@ const fuseOptions = {
     { name: 'artist', weight: 0.2 },    // Cantor name gets medium weight
     { name: 'season', weight: 0.1 }     // Season gets lowest weight
   ],
-  threshold: 0.6,        // More lenient threshold for better fuzzy matching
+  threshold: 0.8,        // Adjusted threshold for Smith-Waterman scoring
   distance: 100,         // Maximum distance for a match
   minMatchCharLength: 2, // Minimum character length for matching
   includeScore: true,    // Include match score in results
-  ignoreLocation: false, // Consider location of match in string for better scoring
+  ignoreLocation: true,  // Ignore location since Smith-Waterman handles positioning
   findAllMatches: true,  // Find all matches, not just the first one
-  includeMatches: true   // Include match details for better analysis
+  includeMatches: true,  // Include match details for better analysis
+  // Use custom distance function
+  getFn: (obj, path) => {
+    // Get the value at the specified path
+    const value = Fuse.config.getFn(obj, path);
+    return value;
+  },
+  // Custom scoring function
+  sortFn: (a, b) => {
+    // Use Smith-Waterman scores for sorting
+    return a.score - b.score;
+  }
 };
 
-// Create and export the search function
+
+// Create and export the original search function
 export const createSearchFunction = (hymnData) => {
   if (!hymnData || hymnData.length === 0) {
     return () => [];

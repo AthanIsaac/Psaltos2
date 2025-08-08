@@ -1,20 +1,49 @@
 import WavesurferPlayer from '@wavesurfer/react'
 import { useState, useRef, useEffect } from 'react'
+import { useAudio } from './AudioContext.js'
 import playButtonIcon from './img/icons/playButton.svg'
 import pauseButtonIcon from './img/icons/pauseButton.svg'
 import forwardIcon from './img/icons/15Forward.svg'
 import rewindIcon from './img/icons/15Rewind.svg'
 import './playButton.css'
 
-// Global cache to store audio states across component mounts/unmounts
+// Global cache to store audio states across component mounts/unmounts and browser sessions
 const audioCache = new Map()
 
+// Enhanced cache with localStorage persistence
+const getPersistedCache = (key) => {
+    try {
+        const stored = localStorage.getItem(`audio_cache_${key}`)
+        return stored ? JSON.parse(stored) : null
+    } catch (error) {
+        console.warn('Failed to get persisted cache:', error)
+        return null
+    }
+}
+
+const setPersistedCache = (key, data) => {
+    try {
+        localStorage.setItem(`audio_cache_${key}`, JSON.stringify(data))
+    } catch (error) {
+        console.warn('Failed to persist cache:', error)
+    }
+}
+
 function Audio({ hymn, autoLoad = false, compact = true }) {
+    const {
+        currentHymn,
+        playHymn,
+        updateTime,
+        updateDuration,
+        updatePlayState,
+        setWavesurferInstance
+    } = useAudio();
+    
     // Handle cases where hymn or hymn.mp3 might be undefined
     const originalUrl = hymn?.mp3
     
     // Use our backend API to proxy the audio request
-    const backendUrl = 'http://localhost:5001'
+    const backendUrl = 'http://localhost:5002'
     const audioUrl = originalUrl ? `${backendUrl}/api/audio/proxy?url=${encodeURIComponent(originalUrl)}` : null
     
     // Create a unique cache key for this audio
@@ -22,9 +51,24 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
     
     // Initialize state from cache or defaults
     const getCachedState = () => {
+        // First check memory cache
         if (audioCache.has(cacheKey)) {
             return audioCache.get(cacheKey)
         }
+        
+        // Then check localStorage for persistence across sessions
+        const persistedState = getPersistedCache(cacheKey)
+        if (persistedState) {
+            // Restore from localStorage but reset wavesurfer instance
+            const restoredState = {
+                ...persistedState,
+                wavesurfer: null, // This will be recreated
+                isLoading: false  // Reset loading state
+            }
+            audioCache.set(cacheKey, restoredState)
+            return restoredState
+        }
+        
         return {
             wavesurfer: null,
             isPlaying: false,
@@ -54,7 +98,7 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
     // Update cache whenever state changes
     useEffect(() => {
         if (cacheKey !== 'no-url') {
-            audioCache.set(cacheKey, {
+            const cacheData = {
                 wavesurfer,
                 isPlaying,
                 isLoaded,
@@ -64,46 +108,67 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
                 currentTime,
                 duration,
                 playbackSpeed
-            })
+            }
+            
+            // Update memory cache
+            audioCache.set(cacheKey, cacheData)
+            
+            // Persist important state to localStorage (excluding wavesurfer instance)
+            if (hasStartedPlaying) {
+                const persistData = {
+                    isPlaying,
+                    hasStartedPlaying,
+                    currentTime,
+                    duration,
+                    playbackSpeed
+                }
+                setPersistedCache(cacheKey, persistData)
+            }
         }
     }, [cacheKey, wavesurfer, isPlaying, isLoaded, isLoading, hasStartedPlaying, shouldAutoPlay, currentTime, duration, playbackSpeed])
     
     // Sync current time with wavesurfer when it's available and playing
     useEffect(() => {
-        if (wavesurfer && isPlaying && isLoaded) {
+        if (wavesurfer && isLoaded && isPlaying) {
             const syncTime = () => {
-                const actualTime = wavesurfer.getCurrentTime()
-                if (Math.abs(actualTime - currentTime) > 0.5) { // Only update if there's a significant difference
-                    setCurrentTime(actualTime)
+                try {
+                    const actualTime = wavesurfer.getCurrentTime()
+                    if (actualTime >= 0 && !isNaN(actualTime)) {
+                        setCurrentTime(actualTime)
+                        updateTime(actualTime)
+                    }
+                } catch (error) {
+                    console.warn('Failed to get current time:', error);
                 }
             }
             
-            // Sync immediately
-            syncTime()
-            
-            // Set up interval to keep time in sync during playback
-            const interval = setInterval(syncTime, 100) // Update every 100ms
+            // Set up interval to keep time in sync only when playing
+            const interval = setInterval(syncTime, 500) // Update every 500ms to reduce flickering
             
             return () => clearInterval(interval)
         }
-    }, [wavesurfer, isPlaying, isLoaded, currentTime])
+    }, [wavesurfer, isLoaded, isPlaying])
     
-    // Cleanup: pause audio and update cache when component unmounts
+    // Cleanup: preserve audio state during navigation and re-renders
     useEffect(() => {
         return () => {
-            if (wavesurfer && isPlaying) {
-                wavesurfer.pause()
-                // Update cache to reflect paused state
-                if (cacheKey !== 'no-url') {
+            // Don't stop audio on component unmount - let it continue playing
+            // Just update the cache to maintain state
+            if (wavesurfer && cacheKey !== 'no-url') {
+                try {
                     const currentCache = audioCache.get(cacheKey) || {}
                     audioCache.set(cacheKey, {
                         ...currentCache,
-                        isPlaying: false
+                        currentTime: wavesurfer.getCurrentTime(),
+                        isPlaying: wavesurfer.isPlaying(),
+                        hasStartedPlaying: true
                     })
+                } catch (error) {
+                    console.warn('Failed to cache audio state:', error);
                 }
             }
         }
-    }, [wavesurfer, isPlaying, cacheKey])
+    }, [wavesurfer, cacheKey])
 
     // Auto-load audio when autoLoad prop is true
     useEffect(() => {
@@ -146,8 +211,38 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
         setIsLoaded(true)
         setDuration(ws.getDuration())
         
-        // Sync current time with actual audio position
-        setCurrentTime(ws.getCurrentTime())
+        // Update global audio context
+        setWavesurferInstance(ws)
+        updateDuration(ws.getDuration())
+        
+        // Restore cached state if available
+        const cachedState = audioCache.get(cacheKey)
+        if (cachedState && cachedState.hasStartedPlaying && cachedState.currentTime > 0) {
+            // Restore playback position
+            setTimeout(() => {
+                try {
+                    const seekPosition = cachedState.currentTime / ws.getDuration()
+                    if (seekPosition > 0 && seekPosition < 1) {
+                        ws.seekTo(seekPosition)
+                        setCurrentTime(cachedState.currentTime)
+                    }
+                    
+                    // Restore playing state
+                    if (cachedState.isPlaying) {
+                        setTimeout(() => {
+                            ws.play()
+                            setIsPlaying(true)
+                            setHasStartedPlaying(true)
+                            playHymn(hymn)
+                        }, 200)
+                    }
+                } catch (error) {
+                    console.warn('Failed to restore audio position:', error);
+                }
+            }, 100)
+        } else {
+            setCurrentTime(ws.getCurrentTime())
+        }
         
         // Set the playback speed if it was cached
         if (playbackSpeed !== 1) {
@@ -159,39 +254,45 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
             ws.play()
             setHasStartedPlaying(true)
             setShouldAutoPlay(false)
-        }
-        // If we had cached playing state but component was remounted, reset to paused
-        else if (isPlaying && !ws.isPlaying()) {
-            setIsPlaying(false)
-            setCurrentTime(0) // Reset time when paused
-        }
-        // If we had cached playing state and want to resume, start playing
-        else if (isPlaying && hasStartedPlaying) {
-            ws.play()
+            playHymn(hymn)
         }
     }
 
+
     const onTimeUpdate = (time) => {
-        setCurrentTime(time)
-        // Also update the cache immediately to keep it in sync
-        if (cacheKey !== 'no-url') {
-            const currentCache = audioCache.get(cacheKey) || {}
-            audioCache.set(cacheKey, {
-                ...currentCache,
-                currentTime: time
-            })
+        // Only update if the time is valid and different from current
+        if (time >= 0 && !isNaN(time) && Math.abs(time - currentTime) > 0.1) {
+            setCurrentTime(time)
+            updateTime(time)
+            
+            // Update cache immediately to keep it in sync
+            if (cacheKey !== 'no-url') {
+                const currentCache = audioCache.get(cacheKey) || {}
+                audioCache.set(cacheKey, {
+                    ...currentCache,
+                    currentTime: time
+                })
+            }
         }
     }
 
     const skipForward = () => {
         if (wavesurfer && isLoaded) {
-            wavesurfer.skip(10)
+            try {
+                wavesurfer.skip(10)
+            } catch (error) {
+                console.warn('Audio skip forward failed:', error);
+            }
         }
     }
 
     const skipBackward = () => {
         if (wavesurfer && isLoaded) {
-            wavesurfer.skip(-10)
+            try {
+                wavesurfer.skip(-10)
+            } catch (error) {
+                console.warn('Audio skip backward failed:', error);
+            }
         }
     }
 
@@ -215,15 +316,25 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
 
     const onPlayPause = () => {
         if (isLoaded && wavesurfer) {
-            wavesurfer.playPause()
-            if (!hasStartedPlaying) {
-                setHasStartedPlaying(true)
+            try {
+                wavesurfer.playPause()
+                if (!hasStartedPlaying) {
+                    setHasStartedPlaying(true)
+                    // Update global context when starting to play
+                    playHymn(hymn)
+                }
+            } catch (error) {
+                console.warn('Audio playPause failed:', error);
+                // Try to recover by toggling the playing state
+                setIsPlaying(prev => !prev);
             }
         } else if (!isLoading && originalUrl) {
             // First time play - set flag to auto-play when ready
             setIsLoading(true)
             setHasStartedPlaying(true)
             setShouldAutoPlay(true)
+            // Update global context
+            playHymn(hymn)
         }
     }
 
@@ -235,59 +346,56 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
     const speedOptions = [0.5, 0.75, 1, 1.25, 1.5, 2]
 
     return (
-        <div>
+        <div className="audio-container">
             {/* Always render WavesurferPlayer but control visibility */}
-            <div style={{
-                display: hasStartedPlaying ? 'block' : 'none',
-                width: '100%',
-                height: '100px'
-            }}>
-                <WavesurferPlayer
-                    height={100}
-                    waveColor="#2C475C"
-                    url={audioUrl}
-                    onReady={onReady}
-                    onPlay={() => {
-                        setIsPlaying(true)
-                        setHasStartedPlaying(true)
-                    }}
-                    onPause={() => {
-                        setIsPlaying(false)
-                        // Update current time when paused to maintain accuracy
-                        if (wavesurfer) {
-                            setCurrentTime(wavesurfer.getCurrentTime())
-                        }
-                    }}
-                    onTimeupdate={onTimeUpdate}
-                    barWidth={2}
-                    barRadius={10}
-                />
+            <div className={hasStartedPlaying ? 'audio-visible' : 'audio-hidden'}>
+                {(isLoading || hasStartedPlaying || autoLoad) && (
+                    <WavesurferPlayer
+                        key={audioUrl} // Stable key based on audio URL to prevent unnecessary re-creation
+                        height={100}
+                        waveColor="#2C475C"
+                        progressColor="#D4AF37"
+                        url={audioUrl}
+                        onReady={onReady}
+                        onPlay={() => {
+                            setIsPlaying(true)
+                            setHasStartedPlaying(true)
+                            playHymn(hymn)
+                            updatePlayState(true)
+                        }}
+                        onPause={() => {
+                            setIsPlaying(false)
+                            updatePlayState(false)
+                            // Update time when paused but don't cause flickering
+                            if (wavesurfer) {
+                                try {
+                                    const time = wavesurfer.getCurrentTime()
+                                    if (time >= 0 && !isNaN(time)) {
+                                        setCurrentTime(time)
+                                        updateTime(time)
+                                    }
+                                } catch (error) {
+                                    console.warn('Failed to get time on pause:', error);
+                                }
+                            }
+                        }}
+                        onTimeupdate={onTimeUpdate}
+                        barWidth={3}
+                        barRadius={2}
+                        barGap={1}
+                    />
+                )}
             </div>
             
             {/* Show placeholder when not started playing */}
             {!hasStartedPlaying && (
-                <div style={{ position: 'relative', width: '100%', height: '100px', backgroundColor: 'transparent' }}>
+                <div className="audio-placeholder">
                     <canvas
                         ref={canvasRef}
                         width={800}
-                        height={100}
-                        style={{ width: '100%', height: '100%', backgroundColor: 'transparent' }}
+                        height={120}
+                        className="audio-canvas"
                     />
-                    {/* {isLoading && (
-                        <div style={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            backgroundColor: 'rgba(0,0,0,0.7)',
-                            color: 'white',
-                            padding: '5px 10px',
-                            borderRadius: '3px',
-                            fontSize: '12px'
-                        }}>
-                            Loading audio...
-                        </div>
-                    )} */}
                 </div>
             )}
             <div className="audio-player-container">
@@ -307,9 +415,9 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
                         disabled={isLoading}
                     >
                         {isLoading ? (
-                            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <img src={playButtonIcon} alt="Loading..." width={compact ? "28" : "51"} height={compact ? "28" : "51"} style={{opacity: 0.6}} />
-                                <div className="loading-spinner" style={{ position: 'absolute' }}></div>
+                            <div className="audio-loading-container">
+                                <img src={playButtonIcon} alt="Loading..." width={compact ? "28" : "51"} height={compact ? "28" : "51"} className="audio-loading-icon" />
+                                <div className="loading-spinner audio-loading-spinner"></div>
                             </div>
                         ) : isPlaying ? (
                             <img src={pauseButtonIcon} alt="Pause" width={compact ? "28" : "51"} height={compact ? "28" : "51"} />

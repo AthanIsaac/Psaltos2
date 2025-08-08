@@ -1,70 +1,142 @@
-/* Audio Player Container */
+/* Enhanced Professional Audio Player Container */
 .audio-player-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
+    gap: var(--space-4);
     width: 100%;
-    min-height: 120px;
+    max-width: 1000px;
+    min-height: 140px;
     justify-content: center;
+    background: var(--bg-card);
+    border-radius: var(--radius-2xl);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-xl);
+    border: 1px solid var(--border-light);
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    margin: 0 auto;
 }
 
-/* Audio Controls */
+.audio-player-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--primary-color);
+}
+
+/* Enhanced Modern Audio Controls */
 .audio-controls-centered {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
-    padding: 15px;
-    background: linear-gradient(135deg, rgba(44, 71, 92, 0.9) 0%, rgba(34, 55, 70, 0.9) 100%);
-    border-radius: 25px;
-    box-shadow: 0 4px 20px rgba(44, 71, 92, 0.3);
-    border: 2px solid #1a3a4a;
+    gap: var(--space-4);
+    padding: var(--space-4);
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 50%, var(--primary-dark) 100%);
+    border-radius: var(--radius-full);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--primary-light);
     min-height: 60px;
     flex-shrink: 0;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    width: fit-content;
 }
 
+
+.audio-controls-centered:hover {
+    transform: translateY(-1px) scale(1.01);
+    box-shadow: var(--shadow-xl);
+}
+
+/* Enhanced Professional Control Buttons */
 .audio-control-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 8px;
+    transition: all 0.2s ease;
+    padding: var(--space-3);
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+}
+
+.audio-control-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.3);
     border-radius: 50%;
-    background: rgba(26, 58, 74, 0.8);
-    border: 2px solid #1a3a4a;
+    transform: translate(-50%, -50%);
+    transition: all var(--transition-normal);
+}
+
+.audio-control-btn:hover:not([disabled])::before {
+    width: 100%;
+    height: 100%;
 }
 
 .audio-control-btn:hover:not([disabled]) {
-    transform: translateY(-2px);
-    background: rgba(26, 58, 74, 1);
-    box-shadow: 0 6px 15px rgba(26, 58, 74, 0.4);
+    transform: translateY(-2px) scale(1.05);
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
 }
 
 .audio-control-btn:active:not([disabled]) {
-    transform: translateY(0);
+    transform: translateY(-1px) scale(1.02);
 }
 
 .audio-control-btn[disabled] {
-    opacity: 0.5;
+    opacity: 0.3;
     cursor: not-allowed;
 }
 
 .audio-control-btn img {
     filter: brightness(0) saturate(100%) invert(100%);
-    transition: all 0.3s ease;
+    transition: all var(--transition-fast);
+    position: relative;
+    z-index: 1;
 }
 
+/* Enhanced Play/Pause Button */
 .play-pause-btn {
-    background: rgba(26, 58, 74, 0.9);
-    padding: 12px;
-    border: 3px solid #1a3a4a;
+    background: rgba(255, 255, 255, 0.25);
+    padding: var(--space-4);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    box-shadow: var(--shadow-lg);
+    position: relative;
+}
+
+.play-pause-btn::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    right: 3px;
+    bottom: 3px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent, rgba(255,255,255,0.1));
+    pointer-events: none;
 }
 
 .play-pause-btn:hover:not([disabled]) {
-    background: rgba(26, 58, 74, 1);
-    box-shadow: 0 8px 20px rgba(26, 58, 74, 0.5);
+    background: rgba(255, 255, 255, 0.35);
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-2px) scale(1.08);
+    border-color: rgba(255, 255, 255, 0.6);
 }
 
 /* Loading Spinner */
@@ -82,22 +154,30 @@
     100% { transform: rotate(360deg); }
 }
 
-/* Time Display */
+/* Enhanced Professional Time Display */
 .time-display-section {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    font-family: 'Intel-light', monospace;
-    font-size: var(--small);
-    color: var(--primary-color);
+    gap: var(--space-2);
+    font-family: 'Inter', monospace;
+    font-size: var(--text-sm);
+    color: var(--text-primary);
     font-weight: 600;
-    background: rgba(239, 249, 255, 0.9);
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 2px solid var(--primary-color);
-    min-height: 20px;
+    background: var(--bg-glass);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-light);
+    min-height: 40px;
     flex-shrink: 0;
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+}
+
+.time-display-section:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-xl);
 }
 
 .time-display {
@@ -109,34 +189,42 @@
     color: var(--secondary-color);
 }
 
-/* Speed Control */
+/* Enhanced Professional Speed Control */
 .speed-control-section {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    font-family: 'Intel-light', monospace;
-    font-size: var(--small);
-    color: var(--primary-color);
+    gap: var(--space-3);
+    font-family: 'Inter', sans-serif;
+    font-size: var(--text-sm);
+    color: var(--text-primary);
     font-weight: 600;
-    background: rgba(239, 249, 255, 0.9);
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 2px solid var(--primary-color);
-    min-height: 20px;
+    background: var(--bg-glass);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-light);
+    min-height: 40px;
     flex-shrink: 0;
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+}
+
+.speed-control-section:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-xl);
 }
 
 .speed-label {
-    color: var(--primary-color);
-    font-weight: 600;
-    margin-right: 4px;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-right: var(--space-1);
 }
 
 .speed-buttons {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: var(--space-1);
 }
 
 .speed-btn {
@@ -144,36 +232,131 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
-    padding: 4px 8px;
-    border-radius: 12px;
-    background: rgba(44, 71, 92, 0.1);
-    border: 1px solid rgba(44, 71, 92, 0.3);
-    color: var(--primary-color);
-    font-size: 12px;
+    transition: all var(--transition-normal) cubic-bezier(0.4, 0, 0.2, 1);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-lg);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    color: var(--text-secondary);
+    font-size: var(--text-sm);
     font-weight: 600;
-    min-width: 32px;
+    min-width: 42px;
     text-align: center;
+    position: relative;
+    overflow: hidden;
 }
 
+
 .speed-btn:hover:not([disabled]) {
-    background: rgba(44, 71, 92, 0.2);
+    background: var(--bg-secondary);
     border-color: var(--primary-color);
-    transform: translateY(-1px);
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: var(--shadow-md);
+    color: var(--primary-color);
 }
 
 .speed-btn:active:not([disabled]) {
-    transform: translateY(0);
+    transform: translateY(-1px) scale(1.02);
 }
 
 .speed-btn.active {
-    background: var(--primary-color);
-    color: white;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%);
+    color: var(--text-on-primary);
     border-color: var(--primary-color);
-    box-shadow: 0 2px 8px rgba(44, 71, 92, 0.3);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
 }
 
 .speed-btn[disabled] {
-    opacity: 0.5;
+    opacity: 0.3;
     cursor: not-allowed;
+}
+
+/* Enhanced Mobile Audio Player */
+@media (max-width: 768px) {
+    .audio-player-container {
+        padding: var(--space-6);
+        gap: var(--space-4);
+        min-height: 140px;
+    }
+    
+    .audio-controls-centered {
+        gap: var(--space-5);
+        padding: var(--space-4);
+        min-height: 70px;
+    }
+    
+    .audio-control-btn {
+        padding: var(--space-3);
+    }
+    
+    .play-pause-btn {
+        padding: var(--space-4);
+    }
+    
+    .time-display-section,
+    .speed-control-section {
+        padding: var(--space-3) var(--space-4);
+        min-height: 42px;
+        font-size: var(--text-sm);
+    }
+    
+    .speed-btn {
+        min-width: 38px;
+        padding: var(--space-2);
+        font-size: var(--text-xs);
+    }
+}
+
+@media (max-width: 480px) {
+    .audio-player-container {
+        padding: var(--space-5);
+        gap: var(--space-3);
+        min-height: 120px;
+    }
+    
+    .audio-controls-centered {
+        gap: var(--space-4);
+        padding: var(--space-3);
+        min-height: 60px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .audio-control-btn {
+        padding: var(--space-2);
+    }
+    
+    .play-pause-btn {
+        padding: var(--space-3);
+        order: 1;
+    }
+    
+    .time-display-section {
+        order: 2;
+        width: 100%;
+        margin-top: var(--space-2);
+        padding: var(--space-2) var(--space-4);
+        min-height: 36px;
+        font-size: var(--text-xs);
+    }
+    
+    .speed-control-section {
+        order: 3;
+        width: 100%;
+        margin-top: var(--space-2);
+        padding: var(--space-2) var(--space-4);
+        min-height: 36px;
+        font-size: var(--text-xs);
+    }
+    
+    .speed-btn {
+        min-width: 32px;
+        padding: var(--space-1) var(--space-2);
+        font-size: var(--text-xs);
+    }
+    
+    .speed-label {
+        font-size: var(--text-xs);
+    }
 }
