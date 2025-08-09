@@ -4,7 +4,7 @@ import aboutIcon from './img/aboutIcon.svg';
 import contactIcon from './img/contactIcon.svg';
 import { Link } from 'react-router-dom';
 import { useTheme } from './ThemeContext.js';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import MiniPlayer from './MiniPlayer.js';
 
 function Navbar({ onSearch, searchValue, showStickySearch = false, searchResults = [], onSearchResultClick, performSearch }) {
@@ -17,7 +17,7 @@ function Navbar({ onSearch, searchValue, showStickySearch = false, searchResults
         setStickySearchValue(searchValue || '');
     }, [searchValue]);
 
-    const handleStickySearch = (e) => {
+    const handleStickySearch = useCallback((e) => {
         const input = e.target.value;
         setStickySearchValue(input);
         setShowDropdown(input.trim().length > 0);
@@ -31,16 +31,16 @@ function Navbar({ onSearch, searchValue, showStickySearch = false, searchResults
         }
         
         // Don't call onSearch to avoid affecting main search
-    };
+    }, [performSearch]);
 
-    const handleStickySearchKeyPress = (e) => {
+    const handleStickySearchKeyPress = useCallback((e) => {
         if (e.key === 'Enter' && stickySearchValue.trim()) {
             setShowDropdown(false);
             window.location.href = `/search/${encodeURIComponent(stickySearchValue)}`;
         }
-    };
+    }, [stickySearchValue]);
 
-    const handleSearchResultClick = (hymn) => {
+    const handleSearchResultClick = useCallback((hymn) => {
         setShowDropdown(false);
         setStickySearchValue('');
         if (onSearchResultClick) {
@@ -48,12 +48,12 @@ function Navbar({ onSearch, searchValue, showStickySearch = false, searchResults
         }
         // Navigate to individual hymn page
         window.location.href = `/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}`;
-    };
+    }, [onSearchResultClick]);
 
-    const handleSearchBlur = () => {
+    const handleSearchBlur = useCallback(() => {
         // Delay hiding dropdown to allow clicks on results
         setTimeout(() => setShowDropdown(false), 200);
-    };
+    }, []);
 
     return (
         <>
@@ -114,4 +114,11 @@ function Navbar({ onSearch, searchValue, showStickySearch = false, searchResults
         </>
     )
 }
-export default Navbar;
+// Memoize Navbar to prevent unnecessary re-renders
+export default memo(Navbar, (prevProps, nextProps) => {
+    return (
+        prevProps.searchValue === nextProps.searchValue &&
+        prevProps.showStickySearch === nextProps.showStickySearch &&
+        prevProps.searchResults?.length === nextProps.searchResults?.length
+    );
+});

@@ -1,5 +1,5 @@
 import WavesurferPlayer from '@wavesurfer/react'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback, memo } from 'react'
 import { useAudio } from './AudioContext.js'
 import playButtonIcon from './img/icons/playButton.svg'
 import pauseButtonIcon from './img/icons/pauseButton.svg'
@@ -49,6 +49,9 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
     // Create a unique cache key for this audio
     const cacheKey = audioUrl || 'no-url'
     
+    // State for speed control slider
+    const [showSpeedSlider, setShowSpeedSlider] = useState(false)
+    
     // Initialize state from cache or defaults
     const getCachedState = () => {
         // First check memory cache
@@ -94,8 +97,15 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
     const [duration, setDuration] = useState(cachedState.duration)
     const [playbackSpeed, setPlaybackSpeed] = useState(cachedState.playbackSpeed)
     const canvasRef = useRef(null)
+    const speedControlRef = useRef(null)
+    const speedDropdownRef = useRef(null)
     
-    // Update cache whenever state changes
+    // Debug logging (after state initialization)
+    console.log('Audio component render - showSpeedSlider:', showSpeedSlider)
+    console.log('Audio component render - playbackSpeed:', playbackSpeed)
+    console.log('Audio component render - isLoaded:', isLoaded)
+    
+    // Update cache whenever state changes - optimized to reduce frequency
     useEffect(() => {
         if (cacheKey !== 'no-url') {
             const cacheData = {
@@ -113,8 +123,8 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
             // Update memory cache
             audioCache.set(cacheKey, cacheData)
             
-            // Persist important state to localStorage (excluding wavesurfer instance)
-            if (hasStartedPlaying) {
+            // Only persist to localStorage when there's meaningful state to save
+            if (hasStartedPlaying && (isPlaying || currentTime > 0)) {
                 const persistData = {
                     isPlaying,
                     hasStartedPlaying,
@@ -125,15 +135,15 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
                 setPersistedCache(cacheKey, persistData)
             }
         }
-    }, [cacheKey, wavesurfer, isPlaying, isLoaded, isLoading, hasStartedPlaying, shouldAutoPlay, currentTime, duration, playbackSpeed])
+    }, [cacheKey, isPlaying, hasStartedPlaying, currentTime, duration, playbackSpeed]) // Removed less critical dependencies
     
-    // Sync current time with wavesurfer when it's available and playing
+    // Sync current time with wavesurfer when it's available and playing - optimized
     useEffect(() => {
         if (wavesurfer && isLoaded && isPlaying) {
             const syncTime = () => {
                 try {
                     const actualTime = wavesurfer.getCurrentTime()
-                    if (actualTime >= 0 && !isNaN(actualTime)) {
+                    if (actualTime >= 0 && !isNaN(actualTime) && Math.abs(actualTime - currentTime) > 0.5) {
                         setCurrentTime(actualTime)
                         updateTime(actualTime)
                     }
@@ -142,12 +152,26 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
                 }
             }
             
-            // Set up interval to keep time in sync only when playing
-            const interval = setInterval(syncTime, 500) // Update every 500ms to reduce flickering
+            // Increased interval to reduce re-renders
+            const interval = setInterval(syncTime, 1000) // Update every 1000ms instead of 500ms
             
             return () => clearInterval(interval)
         }
-    }, [wavesurfer, isLoaded, isPlaying])
+    }, [wavesurfer, isLoaded, isPlaying, currentTime, updateTime]) // Added currentTime to dependencies for comparison
+    
+    // Close speed slider when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (speedControlRef.current && !speedControlRef.current.contains(event.target)) {
+                setShowSpeedSlider(false)
+            }
+        }
+        
+        if (showSpeedSlider) {
+            document.addEventListener('mousedown', handleClickOutside)
+            return () => document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [showSpeedSlider])
     
     // Cleanup: preserve audio state during navigation and re-renders
     useEffect(() => {
@@ -297,10 +321,18 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
     }
 
     const handleSpeedChange = (speed) => {
+        console.log('Speed changed to:', speed)
         setPlaybackSpeed(speed)
         if (wavesurfer && isLoaded) {
             wavesurfer.setPlaybackRate(speed)
         }
+    }
+    
+    const handleSliderChange = (event) => {
+        const sliderValue = parseFloat(event.target.value)
+        const speed = speedOptions[sliderValue]
+        console.log('Slider changed - index:', sliderValue, 'speed:', speed)
+        handleSpeedChange(speed)
     }
 
     const formatTime = (time) => {
@@ -314,7 +346,7 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
         return '00:00'
     }
 
-    const onPlayPause = () => {
+    const onPlayPause = useCallback(() => {
         if (isLoaded && wavesurfer) {
             try {
                 wavesurfer.playPause()
@@ -336,7 +368,7 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
             // Update global context
             playHymn(hymn)
         }
-    }
+    }, [isLoaded, wavesurfer, hasStartedPlaying, isLoading, originalUrl, playHymn, hymn])
 
     // Don't render if no audio URL is available
     if (!originalUrl) {
@@ -399,14 +431,22 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
                 </div>
             )}
             <div className="audio-player-container">
-                <div className="audio-controls-centered">
+                <div className="audio-info-left">
+                    <div className="time-display-section">
+                        <span className="time-display">{formatTime(currentTime)}</span>
+                        <span className="time-separator">/</span>
+                        <span className="time-display">{formatTime(duration)}</span>
+                    </div>
+                </div>
+
+                <div className="audio-controls-center">
                     <span
                         className="audio-control-btn"
                         onClick={skipBackward}
                         disabled={!isLoaded}
                         title="Skip back 10 seconds"
                     >
-                        <img src={rewindIcon} alt="Rewind 15 seconds" width={compact ? "24" : "46"} height={compact ? "23" : "45"} />
+                        <img src={rewindIcon} alt="Rewind 10 seconds" width="20" height="20" />
                     </span>
 
                     <span
@@ -416,13 +456,13 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
                     >
                         {isLoading ? (
                             <div className="audio-loading-container">
-                                <img src={playButtonIcon} alt="Loading..." width={compact ? "28" : "51"} height={compact ? "28" : "51"} className="audio-loading-icon" />
+                                <img src={playButtonIcon} alt="Loading..." width="24" height="24" className="audio-loading-icon" />
                                 <div className="loading-spinner audio-loading-spinner"></div>
                             </div>
                         ) : isPlaying ? (
-                            <img src={pauseButtonIcon} alt="Pause" width={compact ? "28" : "51"} height={compact ? "28" : "51"} />
+                            <img src={pauseButtonIcon} alt="Pause" width="24" height="24" />
                         ) : (
-                            <img src={playButtonIcon} alt="Play" width={compact ? "28" : "51"} height={compact ? "28" : "51"} />
+                            <img src={playButtonIcon} alt="Play" width="24" height="24" />
                         )}
                     </span>
 
@@ -432,50 +472,52 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
                         disabled={!isLoaded}
                         title="Skip forward 10 seconds"
                     >
-                        <img src={forwardIcon} alt="Forward 15 seconds" width={compact ? "24" : "46"} height={compact ? "23" : "45"} />
+                        <img src={forwardIcon} alt="Forward 10 seconds" width="20" height="20" />
                     </span>
                 </div>
 
-                <div className="speed-control-section">
-                    <span className="speed-label">Speed:</span>
-                    <div className="speed-buttons">
-                        {speedOptions.map(speed => (
-                            <span
-                                key={speed}
-                                className={`speed-btn ${playbackSpeed === speed ? 'active' : ''}`}
-                                onClick={() => handleSpeedChange(speed)}
-                                disabled={!isLoaded}
-                            >
-                                {speed}x
-                            </span>
-                        ))}
+                <div className="audio-controls-right">
+                    <div className="speed-control-section" ref={speedControlRef}>
+                        <div
+                            className={`speed-slider-inline ${showSpeedSlider ? 'expanded' : 'collapsed'}`}
+                            onClick={() => {
+                                if (!showSpeedSlider) {
+                                    console.log('Speed control clicked - expanding slider')
+                                    setShowSpeedSlider(true)
+                                }
+                            }}
+                        >
+                            <div className="speed-current-display">{playbackSpeed}x</div>
+                            {showSpeedSlider && (
+                                <div className="speed-slider-track">
+                                    <input
+                                        type="range"
+                                        min="0"
+                                        max={speedOptions.length - 1}
+                                        step="1"
+                                        value={speedOptions.indexOf(playbackSpeed)}
+                                        onChange={handleSliderChange}
+                                        className="speed-slider"
+                                        disabled={!isLoaded}
+                                        title="Adjust playback speed"
+                                    />
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-
-                <div className="time-display-section">
-                    <span className="time-display">{formatTime(currentTime)}</span>
-                    <span className="time-separator">/</span>
-                    <span className="time-display">{formatTime(duration)}</span>
-                </div>
-
-                {/* <div className="speed-control">
-                    <label htmlFor="speed-select">Speed:</label>
-                    <select
-                        id="speed-select"
-                        className="speed-dropdown"
-                        value={playbackSpeed}
-                        onChange={(e) => handleSpeedChange(parseFloat(e.target.value))}
-                    >
-                        {speedOptions.map(speed => (
-                            <option key={speed} value={speed}>
-                                {speed}x
-                            </option>
-                        ))}
-                    </select>
-                </div> */}
             </div>
         </div>
     )
 }
 
-export default Audio;
+// Memoize the Audio component to prevent unnecessary re-renders
+export default memo(Audio, (prevProps, nextProps) => {
+    // Only re-render if hymn data actually changes
+    return (
+        prevProps.hymn?.mp3 === nextProps.hymn?.mp3 &&
+        prevProps.hymn?.name === nextProps.hymn?.name &&
+        prevProps.autoLoad === nextProps.autoLoad &&
+        prevProps.compact === nextProps.compact
+    );
+});

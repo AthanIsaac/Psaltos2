@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo, useCallback } from 'react';
 import { useAudio } from './AudioContext';
 import playButtonIcon from './img/icons/playButton.svg';
 import pauseButtonIcon from './img/icons/pauseButton.svg';
@@ -21,45 +21,45 @@ const MiniPlayer = () => {
     wavesurfer
   } = useAudio();
 
-  // Don't render if no hymn is selected
-  if (!currentHymn) {
-    return null;
-  }
-
   // Enhanced play/pause handler that's more resilient
-  const handlePlayPause = () => {
+  const handlePlayPause = useCallback(() => {
     try {
       togglePlayPause();
     } catch (error) {
       console.warn('MiniPlayer play/pause failed:', error);
     }
-  };
+  }, [togglePlayPause]);
 
   // Enhanced skip handlers
-  const handleSkipForward = () => {
+  const handleSkipForward = useCallback(() => {
     try {
       skipForward();
     } catch (error) {
       console.warn('MiniPlayer skip forward failed:', error);
     }
-  };
+  }, [skipForward]);
 
-  const handleSkipBackward = () => {
+  const handleSkipBackward = useCallback(() => {
     try {
       skipBackward();
     } catch (error) {
       console.warn('MiniPlayer skip backward failed:', error);
     }
-  };
+  }, [skipBackward]);
 
   // Enhanced stop handler
-  const handleStop = () => {
+  const handleStop = useCallback(() => {
     try {
       stopHymn();
     } catch (error) {
       console.warn('MiniPlayer stop failed:', error);
     }
-  };
+  }, [stopHymn]);
+
+  // Don't render if no hymn is selected
+  if (!currentHymn) {
+    return null;
+  }
 
   return (
     <div className="mini-player">
@@ -133,4 +133,9 @@ const MiniPlayer = () => {
   );
 };
 
-export default MiniPlayer;
+// Memoize MiniPlayer to prevent unnecessary re-renders
+export default memo(MiniPlayer, (prevProps, nextProps) => {
+    // MiniPlayer has no props, so it only re-renders when context changes
+    // The memo will prevent re-renders when parent components re-render unnecessarily
+    return true;
+});

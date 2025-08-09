@@ -19,7 +19,7 @@ import ArtistIcon from "./img/icons/artistIcon.js";
 import HymnsData from "./hymns.json";
 import ArtistData from "./artists.json";
 import SeasonsData from "./seasons.json";
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef, useCallback, memo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { createSmithWatermanSearch } from "./smithWatermanSearch.js";
 
@@ -55,12 +55,21 @@ function Home() {
     setArtistData(ArtistData);
   }, []);
 
-  // Scroll detection for sticky search
+  // Scroll detection for sticky search - optimized with better throttling
   useEffect(() => {
     let ticking = false;
+    let lastScrollTime = 0;
     let lastShowStickySearch = showStickySearch;
+    const THROTTLE_DELAY = 100; // Increased throttle delay
     
     const handleScroll = () => {
+      const now = Date.now();
+      
+      // More aggressive throttling - only process if enough time has passed
+      if (now - lastScrollTime < THROTTLE_DELAY) {
+        return;
+      }
+      
       if (!ticking) {
         requestAnimationFrame(() => {
           if (searchBarRef.current) {
@@ -69,26 +78,27 @@ function Home() {
             const isSearchBarBehindHeader = searchBarRect.top < headerHeight;
             const newShowStickySearch = isSearchBarBehindHeader && !showSearchResults;
             
-            // Only update state if the value actually changed and avoid rapid state changes
+            // Only update state if the value actually changed
             if (lastShowStickySearch !== newShowStickySearch) {
               lastShowStickySearch = newShowStickySearch;
               setShowStickySearch(newShowStickySearch);
             }
           }
           ticking = false;
+          lastScrollTime = now;
         });
         ticking = true;
       }
     };
 
-    // Use passive scroll listener and throttle more aggressively
+    // Use passive scroll listener with better throttling
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Check initial state
 
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, [showSearchResults, showStickySearch]);
+  }, [showSearchResults]); // Removed showStickySearch dependency to prevent re-binding
 
   // Create search function using Smith-Waterman algorithm
   const performSearch = useMemo(() => {
@@ -229,22 +239,36 @@ function Home() {
     }
   };
 
-  const hymnSearch = (event) => {
+  // Debounced search to prevent excessive re-renders
+  const debouncedSearch = useCallback(
+    useMemo(() => {
+      let timeoutId;
+      return (input) => {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          if (input.trim()) {
+            setFilteredHymns(performSearch(input.trim()));
+          } else {
+            setFilteredHymns([]);
+          }
+        }, 150); // 150ms debounce delay
+      };
+    }, [performSearch]),
+    [performSearch]
+  );
+
+  const hymnSearch = useCallback((event) => {
     const input = event.target.value;
     setHymn(input);
     setSearchQuery(input);
     setShowDropdown(input.trim().length > 0);
     
-    // Use Smith-Waterman search for consistent results
-    if (input.trim()) {
-      setFilteredHymns(performSearch(input.trim()));
-    } else {
-      setFilteredHymns([]);
-    }
-  };
+    // Use debounced search to prevent excessive calls
+    debouncedSearch(input);
+  }, [debouncedSearch]);
 
   // Separate search handler for navbar that doesn't affect main dropdown
-  const handleNavbarSearch = (event) => {
+  const handleNavbarSearch = useCallback((event) => {
     const input = event.target.value;
     // Don't update main search states, let navbar handle its own dropdown
     if (input.trim()) {
@@ -253,9 +277,9 @@ function Home() {
       return results;
     }
     return [];
-  };
+  }, [performSearch]);
 
-  const handleSearchKeyPress = (event) => {
+  const handleSearchKeyPress = useCallback((event) => {
     if (event.key === 'Enter' && searchQuery.trim()) {
       // Measure Smith-Waterman search time
       const startTime = performance.now();
@@ -270,10 +294,10 @@ function Home() {
       setShowDropdown(false);
       updateURL(null, null, null, null, searchQuery);
     }
-  };
+  }, [searchQuery, performSearch, updateURL]);
 
-  // Navigation helpers
-  const goBackToHome = () => {
+  // Navigation helpers - memoized to prevent unnecessary re-renders
+  const goBackToHome = useCallback(() => {
     setShowSearchResults(false);
     setSearchQuery('');
     setSearchResults([]);
@@ -281,57 +305,56 @@ function Home() {
     setShowDropdown(false);
     setHymn('');
     navigate('/');
-  };
+  }, [navigate]);
 
-  const resetSelections = () => {
+  const resetSelections = useCallback(() => {
     setSelectedArtist();
     setSelectedSeason();
     setSelectedHymn(null);
     setExpandedHymns(new Set());
     setClick(0);
     setSeasonFilter('all');
-  };
+  }, []);
 
-  const toggleBrowseMode = () => {
+  const toggleBrowseMode = useCallback(() => {
     resetSelections();
     const newMode = browseMode === 'cantor' ? 'season' : 'cantor';
     setBrowseMode(newMode);
     updateURL(newMode, null, null, null, null);
-  };
+  }, [browseMode, resetSelections, updateURL]);
 
-  // Hymn expansion logic
-  const toggleHymnExpansion = (hymnId, event) => {
+  // Hymn expansion logic - optimized with useCallback
+  const toggleHymnExpansion = useCallback((hymnId, event) => {
     if (event) {
       event.preventDefault();
       event.stopPropagation();
     }
     
-    const isCurrentlyExpanded = expandedHymns.has(hymnId);
-    
     setExpandedHymns(prev => {
+      const isCurrentlyExpanded = prev.has(hymnId);
       const newSet = new Set(prev);
-      if (newSet.has(hymnId)) {
+      
+      if (isCurrentlyExpanded) {
         newSet.delete(hymnId);
       } else {
         newSet.add(hymnId);
+        
+        // Scroll to the hymn element after expansion with a slight delay to allow DOM update
+        setTimeout(() => {
+          const hymnElement = document.querySelector(`[data-hymn-id="${hymnId}"]`);
+          if (hymnElement) {
+            hymnElement.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+              inline: 'nearest'
+            });
+          }
+        }, 100);
       }
+      
       return newSet;
     });
-    
-    // Scroll to the hymn element after expansion with a slight delay to allow DOM update
-    if (!isCurrentlyExpanded) {
-      setTimeout(() => {
-        const hymnElement = document.querySelector(`[data-hymn-id="${hymnId}"]`);
-        if (hymnElement) {
-          hymnElement.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start',
-            inline: 'nearest'
-          });
-        }
-      }, 100);
-    }
-  };
+  }, []);
 
   // Season categorization and filtering
   const categorizeSeasons = (seasons) => ({
@@ -386,21 +409,21 @@ function Home() {
     return <img src={imageSrc} alt={`${season} Season`} />;
   };
 
-  // Reusable components
-  const HeaderComponent = ({ placeHolder }) => (
+  // Reusable components - memoized to prevent unnecessary re-renders
+  const HeaderComponent = useCallback(({ placeHolder }) => (
     <div className="headerContainer">
       <h1>{placeHolder}</h1>
     </div>
-  );
+  ), []);
 
-  const BackButton = ({ onClick, text = "← Back" }) => (
+  const BackButton = useCallback(({ onClick, text = "← Back" }) => (
     <button
       onClick={onClick}
       className="back-button"
     >
       {text}
     </button>
-  );
+  ), []);
 
   const SeasonFilterButtons = () => (
     <div className="season-filter-container">
@@ -450,14 +473,13 @@ function Home() {
     </>
   );
 
-  const ExpandableHymnItem = ({ hymn, hymnId, title }) => {
-    const isExpanded = expandedHymns.has(hymnId);
-    
+  // Create a memoized component that only re-renders when its specific expansion state changes
+  const ExpandableHymnItemMemo = memo(({ hymn, hymnId, title, isExpanded, onToggle }) => {
     return (
       <div className="expandable-hymn-container" data-hymn-id={hymnId}>
         <div
           className="hymnTitleBackground expandable-hymn-title"
-          onClick={(e) => toggleHymnExpansion(hymnId, e)}
+          onClick={(e) => onToggle(hymnId, e)}
         >
           <HeaderComponent placeHolder={title} />
           <div className="expand-indicator">
@@ -472,7 +494,31 @@ function Home() {
         )}
       </div>
     );
-  };
+  }, (prevProps, nextProps) => {
+    // Only re-render if this specific hymn's expansion state or hymn data changes
+    return (
+      prevProps.isExpanded === nextProps.isExpanded &&
+      prevProps.hymn?.mp3 === nextProps.hymn?.mp3 &&
+      prevProps.hymn?.name === nextProps.hymn?.name &&
+      prevProps.title === nextProps.title &&
+      prevProps.hymnId === nextProps.hymnId
+    );
+  });
+
+  // Wrapper component that passes the expansion state
+  const ExpandableHymnItem = useCallback(({ hymn, hymnId, title }) => {
+    const isExpanded = expandedHymns.has(hymnId);
+    
+    return (
+      <ExpandableHymnItemMemo
+        hymn={hymn}
+        hymnId={hymnId}
+        title={title}
+        isExpanded={isExpanded}
+        onToggle={toggleHymnExpansion}
+      />
+    );
+  }, [expandedHymns, toggleHymnExpansion]);
 
   // Artist components
   const ArtistCard = ({ artist }) => (
@@ -681,14 +727,14 @@ function Home() {
   };
 
 
-  const SearchItem = ({ hymn, index, onClick }) => (
+  const SearchItem = useCallback(({ hymn, index, onClick }) => (
     <div key={index} className="main-search-result" onClick={onClick}>
       <div className="main-search-result-title">{hymn.name}</div>
       <div className="main-search-result-artist">
         {hymn.artist} • {hymn.season}
       </div>
     </div>
-  );
+  ), []);
 
   // Render individual hymn page
   const renderIndividualHymn = () => {
