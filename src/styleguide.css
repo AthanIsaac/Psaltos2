@@ -138,20 +138,20 @@
 /* Enhanced Dark Theme Variables */
 [data-theme="dark"] {
     /* Enhanced Professional Color Palette - Dark Theme */
-    --primary-color: #3b82f6;
-    --primary-light: #60a5fa;
-    --primary-dark: #1d4ed8;
-    --primary-hover: #2563eb;
-    --secondary-color: #e6c77a;
-    --secondary-light: #f0d68c;
-    --secondary-dark: #d4b566;
-    --accent-color: #94a3b8;
-    --accent-light: #cbd5e1;
-    --accent-dark: #64748b;
+    --primary-color: #d4af37;
+    --primary-light: #f4d03f;
+    --primary-dark: #b8860b;
+    --primary-hover: #daa520;
+    --secondary-color: #8b0000;
+    --secondary-light: #a52a2a;
+    --secondary-dark: #660000;
+    --accent-color: #cd853f;
+    --accent-light: #deb887;
+    --accent-dark: #a0522d;
     --success-color: #22c55e;
     --warning-color: #f59e0b;
     --error-color: #ef4444;
-    --info-color: #3b82f6;
+    --info-color: #d4af37;
     
     /* Enhanced Neutral Colors - Dark Theme */
     --gray-25: #0a0a0b;
@@ -168,13 +168,13 @@
     --gray-950: #ffffff;
     
     /* Enhanced Background Colors - Dark Theme */
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #2a2a2a;
-    --bg-tertiary: #3a3a3a;
-    --bg-quaternary: #4a4a4a;
-    --bg-overlay: rgba(59, 130, 246, 0.95);
-    --bg-glass: rgba(42, 42, 42, 0.95);
-    --bg-card: rgba(45, 45, 45, 0.98);
+    --bg-primary: #2d2d2d;
+    --bg-secondary: #3d3d3d;
+    --bg-tertiary: #4d4d4d;
+    --bg-quaternary: #5d5d5d;
+    --bg-overlay: rgba(212, 175, 55, 0.95);
+    --bg-glass: rgba(55, 55, 55, 0.95);
+    --bg-card: rgba(60, 60, 60, 0.98);
     
     /* Enhanced Text Colors - Dark Theme with Better Contrast */
     --text-primary: #ffffff;
@@ -191,7 +191,7 @@
     --border-light: #555555;
     --border-medium: #666666;
     --border-dark: #777777;
-    --border-focus: #3b82f6;
+    --border-focus: #d4af37;
     --border-error: #ef4444;
     --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
     --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5), 0 1px 2px 0 rgba(0, 0, 0, 0.4);
@@ -242,7 +242,7 @@ body {
 }
 
 [data-theme="dark"] body {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 25%, #404040 50%, #525252 100%);
+    background: linear-gradient(135deg, #3a3a3a 0%, #4d4d4d 25%, #606060 50%, #737373 100%);
 }
 
 /* Background Pattern */
@@ -786,49 +786,61 @@ t {
     min-width: 400px;
 }
 
-.audio-visible {
-    display: block;
+.audio-waveform-container {
+    position: relative;
     width: 100%;
-    min-width: 400px;
-    height: 120px;
+    height: 120px; /* Fixed height to prevent resizing */
     margin-bottom: var(--space-4);
     background: var(--bg-glass);
     border-radius: var(--radius-xl);
-    padding: var(--space-3);
     border: 1px solid var(--border-light);
     backdrop-filter: blur(10px);
+    overflow: hidden;
+}
+
+.audio-visible {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: var(--space-3);
 }
 
 .audio-hidden {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     display: none;
     width: 100%;
-    min-width: 400px;
-    height: 120px;
-    margin-bottom: var(--space-4);
-    background: var(--bg-glass);
-    border-radius: var(--radius-xl);
+    height: 100%;
     padding: var(--space-3);
-    border: 1px solid var(--border-light);
-    backdrop-filter: blur(10px);
 }
 
 .audio-placeholder {
-    position: relative;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     width: 100%;
-    min-width: 400px;
-    height: 120px;
-    margin-bottom: var(--space-4);
-    background: var(--bg-glass);
-    border-radius: var(--radius-xl);
+    height: 100%;
     padding: var(--space-3);
-    border: 1px solid var(--border-light);
-    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .audio-canvas {
     width: 100%;
-    height: 100%;
+    height: 100px; /* Match WavesurferPlayer height */
     background-color: transparent;
+    border-radius: var(--radius-lg);
 }
 
 .audio-loading-container {

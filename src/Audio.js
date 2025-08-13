@@ -378,58 +378,61 @@ function Audio({ hymn, autoLoad = false, compact = true }) {
     const speedOptions = [0.5, 0.75, 1, 1.25, 1.5, 2]
 
     return (
-        <div className="audio-container">
-            {/* Always render WavesurferPlayer but control visibility */}
-            <div className={hasStartedPlaying ? 'audio-visible' : 'audio-hidden'}>
-                {(isLoading || hasStartedPlaying || autoLoad) && (
-                    <WavesurferPlayer
-                        key={audioUrl} // Stable key based on audio URL to prevent unnecessary re-creation
-                        height={100}
-                        waveColor="#2C475C"
-                        progressColor="#D4AF37"
-                        url={audioUrl}
-                        onReady={onReady}
-                        onPlay={() => {
-                            setIsPlaying(true)
-                            setHasStartedPlaying(true)
-                            playHymn(hymn)
-                            updatePlayState(true)
-                        }}
-                        onPause={() => {
-                            setIsPlaying(false)
-                            updatePlayState(false)
-                            // Update time when paused but don't cause flickering
-                            if (wavesurfer) {
-                                try {
-                                    const time = wavesurfer.getCurrentTime()
-                                    if (time >= 0 && !isNaN(time)) {
-                                        setCurrentTime(time)
-                                        updateTime(time)
+        <div className="audio-container" onClick={(e) => e.stopPropagation()}>
+            {/* Container with fixed dimensions to prevent resizing */}
+            <div className="audio-waveform-container">
+                {/* Always render WavesurferPlayer but control visibility */}
+                <div className={hasStartedPlaying ? 'audio-visible' : 'audio-hidden'}>
+                    {(isLoading || hasStartedPlaying || autoLoad) && (
+                        <WavesurferPlayer
+                            key={audioUrl} // Stable key based on audio URL to prevent unnecessary re-creation
+                            height={100}
+                            waveColor="#2C475C"
+                            progressColor="#D4AF37"
+                            url={audioUrl}
+                            onReady={onReady}
+                            onPlay={() => {
+                                setIsPlaying(true)
+                                setHasStartedPlaying(true)
+                                playHymn(hymn)
+                                updatePlayState(true)
+                            }}
+                            onPause={() => {
+                                setIsPlaying(false)
+                                updatePlayState(false)
+                                // Update time when paused but don't cause flickering
+                                if (wavesurfer) {
+                                    try {
+                                        const time = wavesurfer.getCurrentTime()
+                                        if (time >= 0 && !isNaN(time)) {
+                                            setCurrentTime(time)
+                                            updateTime(time)
+                                        }
+                                    } catch (error) {
+                                        console.warn('Failed to get time on pause:', error);
                                     }
-                                } catch (error) {
-                                    console.warn('Failed to get time on pause:', error);
                                 }
-                            }
-                        }}
-                        onTimeupdate={onTimeUpdate}
-                        barWidth={3}
-                        barRadius={2}
-                        barGap={1}
-                    />
+                            }}
+                            onTimeupdate={onTimeUpdate}
+                            barWidth={3}
+                            barRadius={2}
+                            barGap={1}
+                        />
+                    )}
+                </div>
+                
+                {/* Show placeholder when not started playing */}
+                {!hasStartedPlaying && (
+                    <div className="audio-placeholder">
+                        <canvas
+                            ref={canvasRef}
+                            width={800}
+                            height={100}
+                            className="audio-canvas"
+                        />
+                    </div>
                 )}
             </div>
-            
-            {/* Show placeholder when not started playing */}
-            {!hasStartedPlaying && (
-                <div className="audio-placeholder">
-                    <canvas
-                        ref={canvasRef}
-                        width={800}
-                        height={120}
-                        className="audio-canvas"
-                    />
-                </div>
-            )}
             <div className="audio-player-container">
                 <div className="audio-info-left">
                     <div className="time-display-section">
@@ -517,6 +520,7 @@ export default memo(Audio, (prevProps, nextProps) => {
     return (
         prevProps.hymn?.mp3 === nextProps.hymn?.mp3 &&
         prevProps.hymn?.name === nextProps.hymn?.name &&
+        prevProps.hymn?.artist === nextProps.hymn?.artist &&
         prevProps.autoLoad === nextProps.autoLoad &&
         prevProps.compact === nextProps.compact
     );

@@ -20,8 +20,8 @@ export const AudioProvider = ({ children }) => {
 
   // Memoized audio control functions to prevent unnecessary re-renders
   const playHymn = useCallback((hymn) => {
-    // Only update if it's a different hymn
-    if (!currentHymn || currentHymn.mp3 !== hymn.mp3) {
+    // Only update if it's a different hymn to prevent unnecessary re-renders
+    if (!currentHymn || currentHymn.mp3 !== hymn.mp3 || currentHymn.name !== hymn.name || currentHymn.artist !== hymn.artist) {
       setCurrentHymn(hymn);
     }
     setIsPlaying(true);

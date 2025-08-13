@@ -4,7 +4,7 @@ import aboutIcon from './img/aboutIcon.svg';
 import contactIcon from './img/contactIcon.svg';
 import { Link } from 'react-router-dom';
 import { useTheme } from './ThemeContext.js';
-import { useState, useEffect, useCallback, memo } from 'react';
+import { useState, useEffect, useCallback, memo, useMemo } from 'react';
 import MiniPlayer from './MiniPlayer.js';
 
 function Navbar({ onSearch, searchValue, showStickySearch = false, searchResults = [], onSearchResultClick, performSearch }) {
@@ -17,26 +17,41 @@ function Navbar({ onSearch, searchValue, showStickySearch = false, searchResults
         setStickySearchValue(searchValue || '');
     }, [searchValue]);
 
+    // Debounced search for navbar to prevent excessive search calls
+    const debouncedNavbarSearch = useCallback(
+        useMemo(() => {
+            let timeoutId;
+            return (input) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                    if (input.trim() && performSearch) {
+                        const results = performSearch(input.trim());
+                        setNavbarSearchResults(results);
+                    } else {
+                        setNavbarSearchResults([]);
+                    }
+                }, 500); // 500ms debounce delay - optimized for better performance
+            };
+        }, [performSearch]),
+        [performSearch]
+    );
+
     const handleStickySearch = useCallback((e) => {
         const input = e.target.value;
         setStickySearchValue(input);
         setShowDropdown(input.trim().length > 0);
         
-        // Handle navbar's own search results
-        if (input.trim() && performSearch) {
-            const results = performSearch(input.trim());
-            setNavbarSearchResults(results);
-        } else {
-            setNavbarSearchResults([]);
-        }
+        // Use debounced search to prevent excessive calls
+        debouncedNavbarSearch(input);
         
         // Don't call onSearch to avoid affecting main search
-    }, [performSearch]);
+    }, [debouncedNavbarSearch]);
 
     const handleStickySearchKeyPress = useCallback((e) => {
         if (e.key === 'Enter' && stickySearchValue.trim()) {
             setShowDropdown(false);
             window.location.href = `/search/${encodeURIComponent(stickySearchValue)}`;
+            // Scroll will be handled by the Home component after navigation
         }
     }, [stickySearchValue]);
 
@@ -48,6 +63,7 @@ function Navbar({ onSearch, searchValue, showStickySearch = false, searchResults
         }
         // Navigate to individual hymn page
         window.location.href = `/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}`;
+        // Scroll will be handled by the Home component after navigation
     }, [onSearchResultClick]);
 
     const handleSearchBlur = useCallback(() => {
