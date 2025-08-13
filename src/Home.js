@@ -20,9 +20,16 @@ import ArtistIcon from "./img/icons/artistIcon.js";
 import HymnsData from "./hymns.json";
 import ArtistData from "./artists.json";
 import SeasonsData from "./seasons.json";
-import { useEffect, useState, useMemo, useRef, useCallback, memo } from "react";
+import HymnItem from "./HymnItem.js";
+import { useEffect, useState, useMemo, useRef, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { createSmithWatermanSearch } from "./smithWatermanSearch.js";
+
+// Debug flag for showing search scores - controlled by URL parameter or environment
+const isDebugMode = () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.has('debug') || (process.env.NODE_ENV === 'development' && urlParams.has('showScores'));
+};
 
 function Home() {
   // URL parameters and navigation
@@ -586,52 +593,6 @@ function Home() {
     </>
   );
 
-  // Create a memoized component that only re-renders when its specific expansion state changes
-  const ExpandableHymnItemMemo = memo(({ hymn, hymnId, title, isExpanded, onToggle }) => {
-    return (
-      <div className="expandable-hymn-container" data-hymn-id={hymnId}>
-        <div
-          className="hymnTitleBackground expandable-hymn-title"
-          onClick={(e) => onToggle(hymnId, e)}
-        >
-          <HeaderComponent placeHolder={title} />
-          <div className="expand-indicator">
-            {isExpanded ? '▼' : '▶'}
-          </div>
-        </div>
-        
-        {isExpanded && (
-          <div className="hymn-content-expanded">
-            <Audio hymn={hymn} autoLoad={true} />
-          </div>
-        )}
-      </div>
-    );
-  }, (prevProps, nextProps) => {
-    // Only re-render if this specific hymn's expansion state or hymn data changes
-    return (
-      prevProps.isExpanded === nextProps.isExpanded &&
-      prevProps.hymn?.mp3 === nextProps.hymn?.mp3 &&
-      prevProps.hymn?.name === nextProps.hymn?.name &&
-      prevProps.title === nextProps.title &&
-      prevProps.hymnId === nextProps.hymnId
-    );
-  });
-
-  // Wrapper component that passes the expansion state
-  const ExpandableHymnItem = useCallback(({ hymn, hymnId, title }) => {
-    const isExpanded = expandedHymns.has(hymnId);
-    
-    return (
-      <ExpandableHymnItemMemo
-        hymn={hymn}
-        hymnId={hymnId}
-        title={title}
-        isExpanded={isExpanded}
-        onToggle={toggleHymnExpansion}
-      />
-    );
-  }, [expandedHymns, toggleHymnExpansion]);
 
   // Artist components
   const ArtistCard = ({ artist }) => (
@@ -743,23 +704,33 @@ function Home() {
   };
 
   const renderHymns = () => {
-    const hymns = [...new Set(hymnData.filter(hymn => 
+    const hymns = [...new Set(hymnData.filter(hymn =>
       hymn.artist === selectedArtist.artistName && hymn.season === selectedSeason
     ))];
 
     return (
-      <div>
-        {hymns.map((hymn, index) => {
-          const hymnId = `${hymn.name}-${hymn.artist}`;
-          return (
-            <ExpandableHymnItem 
-              key={index}
-              hymn={hymn}
-              hymnId={hymnId}
-              title={hymn.name}
-            />
-          );
-        })}
+      <div className="search-results-compact">
+        <div className="search-results-list">
+          {hymns.map((hymn, index) => {
+            const hymnId = `${hymn.name}-${hymn.artist}-${hymn.season || 'unknown'}-${index}`;
+            const isExpanded = expandedHymns.has(hymnId);
+            
+            return (
+              <HymnItem
+                key={index}
+                hymn={hymn}
+                type="hymn"
+                index={index}
+                isExpanded={isExpanded}
+                onExpand={toggleHymnExpansion}
+                onGoto={(e) => {
+                  navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}`);
+                  scrollToContent();
+                }}
+              />
+            );
+          })}
+        </div>
       </div>
     );
   };
@@ -883,75 +854,36 @@ function Home() {
           </div>
         </div>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '15px', marginTop: '20px' }}>
-          {hymnsInSeason.map((hymnName, index) => {
-            const hymnRecordings = hymnData.filter(hymn => hymn.season === selectedSeason && hymn.name === hymnName);
-            const cantorCount = hymnRecordings.length;
-            
-            return (
-              <div
-                key={index}
-                className="seasonItem"
-                onClick={() => {
-                  setSelectedHymn(hymnName);
-                  updateURL('season', null, selectedSeason, hymnName, null);
-                  scrollToContent();
-                }}
-                style={{
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: '10px',
-                  overflow: 'hidden'
-                }}
-              >
-                <div style={{
-                  background: 'linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%)',
-                  padding: '20px',
-                  textAlign: 'center'
-                }}>
-                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginBottom: '10px', opacity: '0.8'}}>
-                    <path d="M9 18V5L21 3V16M9 18C9 19.6569 7.65685 21 6 21C4.34315 21 3 19.6569 3 18C3 16.3431 4.34315 15 6 15C7.65685 15 9 16.3431 9 18ZM21 16C21 17.6569 19.6569 19 18 19C16.3431 19 15 17.6569 15 16C15 14.3431 16.3431 13 18 13C19.6569 13 21 14.3431 21 16Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <HeaderComponent placeHolder={hymnName} />
-                <div style={{padding: '10px', display: 'flex', justifyContent: 'center', gap: '5px', flexWrap: 'wrap'}}>
-                  {hymnRecordings.slice(0, 4).map((recording, idx) => (
-                    <div key={idx} style={{
-                      width: '25px',
-                      height: '25px',
-                      borderRadius: '50%',
-                      background: 'var(--primary-color)',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '10px',
-                      fontWeight: 'bold'
-                    }} title={recording.artist}>
-                      {recording.artist.charAt(0)}
-                    </div>
-                  ))}
-                  {cantorCount > 4 && (
-                    <div style={{
-                      width: '25px',
-                      height: '25px',
-                      borderRadius: '50%',
-                      background: 'var(--secondary-color)',
-                      color: 'white',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '9px',
-                      fontWeight: 'bold'
-                    }}>
-                      +{cantorCount - 4}
-                    </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+        {/* Search Results Style List */}
+        <div className="search-results-compact">
+          <div className="search-results-list">
+            {hymnsInSeason.map((hymnName, index) => {
+              const hymnRecordings = hymnData.filter(hymn => hymn.season === selectedSeason && hymn.name === hymnName);
+              const cantorCount = hymnRecordings.length;
+              
+              return (
+                <HymnItem
+                  key={index}
+                  hymnName={hymnName}
+                  season={selectedSeason}
+                  type="hymnList"
+                  index={index}
+                  cantorCount={cantorCount}
+                  cantorList={hymnRecordings}
+                  onClick={() => {
+                    setSelectedHymn(hymnName);
+                    updateURL('season', null, selectedSeason, hymnName, null);
+                    scrollToContent();
+                  }}
+                  onGoto={(e) => {
+                    setSelectedHymn(hymnName);
+                    updateURL('season', null, selectedSeason, hymnName, null);
+                    scrollToContent();
+                  }}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     );
@@ -982,18 +914,29 @@ function Home() {
           </div>
         </div>
         
-        <div>
-          {cantorsForHymn.map((hymn, index) => {
-            const hymnId = `${hymn.name}-${hymn.artist}`;
-            return (
-              <ExpandableHymnItem 
-                key={index}
-                hymn={hymn}
-                hymnId={hymnId}
-                title={`${hymn.artist} - ${hymn.name}`}
-              />
-            );
-          })}
+        {/* Search Results Style List */}
+        <div className="search-results-compact">
+          <div className="search-results-list">
+            {cantorsForHymn.map((hymn, index) => {
+              const hymnId = `${hymn.name}-${hymn.artist}-${hymn.season || 'unknown'}-${index}`;
+              const isExpanded = expandedHymns.has(hymnId);
+              
+              return (
+                <HymnItem
+                  key={index}
+                  hymn={hymn}
+                  type="cantor"
+                  index={index}
+                  isExpanded={isExpanded}
+                  onExpand={toggleHymnExpansion}
+                  onGoto={(e) => {
+                    navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}`);
+                    scrollToContent();
+                  }}
+                />
+              );
+            })}
+          </div>
         </div>
       </div>
     );
@@ -1017,22 +960,33 @@ function Home() {
       <div className="TabList">
         <span>
           <HeaderComponent placeHolder={selectedHymn.name} />
-          {/* <p>{selectedHymn.artist}</p> */}
           <BackButton onClick={() => {
             setSelectedHymn(null);
             navigate('/');
           }} text="← Back to Home" />
         </span>
-        <div className="individual-hymn-container">
-          <div className="hymnTitleBackground">
-            <HeaderComponent placeHolder={`${selectedHymn.artist} - ${selectedHymn.name}`} />
-            <div className="individual-hymn-meta">
-              <p><strong>Season:</strong> {selectedHymn.season}</p>
-              <p><strong>Cantor:</strong> {selectedHymn.artist}</p>
+        
+        {/* Search Results Style Individual Hymn */}
+        <div className="search-results-compact">
+          <div className="search-results-list">
+            <HymnItem
+              hymn={selectedHymn}
+              type="individual"
+              imageSize={60}
+              isClickable={false}
+              showActions={false}
+            />
+            
+            {/* Audio Player Section */}
+            <div style={{
+              marginTop: '20px',
+              padding: '20px',
+              background: 'var(--bg-card)',
+              borderRadius: '12px',
+              border: '1px solid var(--border-color)'
+            }}>
+              <Audio hymn={selectedHymn} autoLoad={true} />
             </div>
-          </div>
-          <div className="hymn-content-expanded">
-            <Audio hymn={selectedHymn} autoLoad={true} />
           </div>
         </div>
       </div>
@@ -1093,72 +1047,24 @@ function Home() {
         ) : (
           <>
             {searchResults.map((hymn, index) => {
-              // Use a stable ID that doesn't depend on array index
-              const hymnId = `${hymn.name}-${hymn.artist}`;
+              const hymnId = `${hymn.name}-${hymn.artist}-${hymn.season || 'unknown'}-${index}`;
               const isExpanded = expandedHymns.has(hymnId);
               
               return (
-                <div
+                <HymnItem
                   key={index}
-                  className="search-result-item-compact"
-                  data-hymn-id={hymnId}
-                  onClick={(e) => {
-                    // Only toggle if clicking on the main content area, not on buttons or audio controls
-                    if (e.target === e.currentTarget ||
-                        e.target.closest('.search-result-main-content') ||
-                        e.target.closest('.search-result-text-content')) {
-                      toggleHymnExpansion(hymnId);
-                    }
+                  hymn={hymn}
+                  type="search"
+                  index={index}
+                  isExpanded={isExpanded}
+                  score={hymn._swScore}
+                  showScore={isDebugMode()}
+                  onExpand={toggleHymnExpansion}
+                  onGoto={(e) => {
+                    navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}`);
+                    scrollToContent();
                   }}
-                >
-                  <div className="search-result-main-content">
-                    <div className="search-result-text-content">
-                      <h3 className="search-result-title-compact">{hymn.name}</h3>
-                      <div className="search-result-meta-compact">
-                        <span className="search-result-artist-compact">{hymn.artist}</span>
-                        <span className="search-result-season-compact">• {hymn.season}</span>
-                        {hymn._swScore && (
-                          <span className="search-result-score" title={`Relevance score: ${hymn._swScore.toFixed(1)}`}>
-                            • {hymn._swScore.toFixed(1)}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="search-result-actions">
-                    <button
-                      className={`search-result-expand-btn ${isExpanded ? 'expanded' : ''}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toggleHymnExpansion(hymnId, e);
-                      }}
-                      title={isExpanded ? 'Collapse' : 'Expand to play'}
-                    >
-                      {isExpanded ? '▼' : '▶'}
-                    </button>
-                    <button
-                      className="search-result-goto-btn"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}`);
-                        scrollToContent();
-                      }}
-                      title="Go to hymn page"
-                    >
-                      →
-                    </button>
-                  </div>
-                  
-                  {isExpanded && (
-                    <div
-                      className="search-result-expanded-content"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Audio hymn={hymn} autoLoad={true} compact={true} />
-                    </div>
-                  )}
-                </div>
+                />
               );
             })}
             
