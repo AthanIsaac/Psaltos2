@@ -1,0 +1,327 @@
+/* ── Selected chip (cantor / season breadcrumb) ─────────────── */
+
+.selected-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-3);
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2) var(--space-4) var(--space-2) var(--space-2);
+    cursor: pointer;
+    max-width: 340px;
+    transition: all var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(8px);
+}
+
+.selected-chip:hover {
+    border-color: var(--accent-color);
+    box-shadow: var(--shadow-md);
+}
+
+.selected-chip-image {
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    object-fit: cover;
+    object-position: center top;
+    flex-shrink: 0;
+}
+
+.selected-chip-info { flex: 1; min-width: 0; }
+
+.selected-chip-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 2px;
+}
+
+.selected-chip-name {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: 'Playfair Display', serif;
+}
+
+.selected-chip-dismiss {
+    font-size: 18px;
+    line-height: 1;
+    color: var(--text-muted);
+    padding: 0 var(--space-1);
+    flex-shrink: 0;
+    font-weight: 300;
+    transition: color var(--transition-fast);
+}
+
+.selected-chip:hover .selected-chip-dismiss { color: var(--text-primary); }
+
+/* ── Cantor + season selection layout ───────────────────────── */
+
+.cantor-season-layout {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+}
+
+.selected-cantor-season {
+    display: flex;
+    gap: var(--space-8);
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.selected-chips-row {
+    display: flex;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: var(--space-4);
+}
+
+@media (max-width: 768px) {
+    .selected-cantor-season { flex-direction: column; align-items: center; }
+    .selected-cantor-season > div { width: 100%; max-width: none; }
+}
+
+/* ── Header container (used by SharedComponents) ────────────── */
+
+.headerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: var(--space-3) var(--space-6);
+    margin: 0;
+    align-items: center;
+    background: var(--bg-glass);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-light);
+}
+
+.headerContainer h1 {
+    text-align: center;
+    font-size: var(--text-xl);
+    font-weight: 600;
+    color: var(--primary-color);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    line-height: 1.3;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+
+/* ── Back button ────────────────────────────────────────────── */
+
+.back-button {
+    margin-top: 5px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: none;
+    background: var(--primary-color);
+    color: white;
+    cursor: pointer;
+}
+
+/* ── Artist icon ────────────────────────────────────────────── */
+
+.artistIcon {
+    fill: var(--primary-color);
+    transition: fill var(--transition-fast);
+}
+
+/* ── Scroll sections ────────────────────────────────────────── */
+
+.scroll-section {
+    width: 100%;
+    margin-bottom: var(--space-8);
+}
+
+.scroll-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: var(--space-4);
+}
+
+.scroll-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: var(--text-2xl);
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.show-all-btn {
+    font-size: var(--text-sm);
+    font-weight: 700;
+    color: var(--text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    white-space: nowrap;
+}
+
+.show-all-btn:hover { color: var(--text-primary); }
+
+/* Scroll row with right-edge fade indicator */
+
+.scroll-row-wrapper {
+    position: relative;
+}
+
+.scroll-row-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: var(--space-3);
+    width: 80px;
+    background: linear-gradient(to right, transparent, var(--bg-primary));
+    pointer-events: none;
+    z-index: 1;
+}
+
+.scroll-row {
+    display: flex;
+    gap: var(--space-3);
+    overflow-x: auto;
+    padding-bottom: var(--space-3);
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scroll-row::-webkit-scrollbar { display: none; }
+
+/* Wrap grid — used by show-all state */
+
+.card-wrap-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    padding-bottom: var(--space-2);
+}
+
+/* ── Cantor scroll card — circular ──────────────────────────── */
+
+.cantor-scroll-card {
+    flex: 0 0 150px;
+    cursor: pointer;
+    text-align: center;
+    padding: var(--space-3);
+    border-radius: var(--radius-xl);
+    transition: background var(--transition-fast);
+}
+
+.cantor-scroll-card:hover { background: var(--bg-secondary); }
+
+.cantor-scroll-card-img-wrap {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto var(--space-3);
+    box-shadow: var(--shadow-lg);
+    transition: box-shadow var(--transition-normal);
+}
+
+.cantor-scroll-card:hover .cantor-scroll-card-img-wrap { box-shadow: var(--shadow-xl); }
+
+.cantor-scroll-card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+}
+
+.cantor-scroll-card-name {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.4;
+    margin-bottom: var(--space-1);
+    font-family: 'Inter', sans-serif;
+}
+
+.cantor-scroll-card-label {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── Season scroll card — square ────────────────────────────── */
+
+.season-scroll-card {
+    flex: 0 0 150px;
+    cursor: pointer;
+    padding: var(--space-3);
+    border-radius: var(--radius-xl);
+    transition: background var(--transition-fast);
+}
+
+.season-scroll-card:hover { background: var(--bg-secondary); }
+
+.season-scroll-card-img-wrap {
+    width: 126px;
+    height: 126px;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: var(--space-3);
+    box-shadow: var(--shadow-lg);
+    transition: box-shadow var(--transition-normal);
+}
+
+.season-scroll-card:hover .season-scroll-card-img-wrap { box-shadow: var(--shadow-xl); }
+
+.season-scroll-card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.season-scroll-card-name {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    line-height: 1.4;
+    font-family: 'Inter', sans-serif;
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+    .cantor-scroll-card { flex: 0 0 130px; }
+    .cantor-scroll-card-img-wrap { width: 100px; height: 100px; }
+    .season-scroll-card { flex: 0 0 130px; }
+    .season-scroll-card-img-wrap { width: 106px; height: 106px; }
+}
+
+@media (max-width: 480px) {
+    .cantor-scroll-card { flex: 0 0 110px; }
+    .cantor-scroll-card-img-wrap { width: 86px; height: 86px; }
+    .season-scroll-card { flex: 0 0 115px; }
+    .season-scroll-card-img-wrap { width: 91px; height: 91px; }
+}

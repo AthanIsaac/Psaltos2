@@ -1,6 +1,6 @@
-import "./style.css";
-import logo from './img/logo.svg';
-import Cross from "./img/icons/cross.js";
+import "./styles/layout.css";
+import "./styles/navbar.css";
+import "./styles/pages.css";
 import Church from "./img/church.svg";
 import jesus from './img/jesus.svg';
 import Navbar from "./Navbar.js";
@@ -8,7 +8,6 @@ import Footer from "./Footer.js";
 import { useState } from 'react';
 
 function Contact() {
-    // const { isDarkMode } = useTheme(); // Removed unused variable
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -19,13 +18,6 @@ function Contact() {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitStatus, setSubmitStatus] = useState(null);
     
-    const HeaderComponent = ({ placeHolder }) => (
-        <div className="headerContainer">
-            <Cross />
-            <h1>{placeHolder}</h1>
-            <Cross />
-        </div>
-    );
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -63,7 +55,8 @@ function Contact() {
                 formDataToSend.append('attachment', selectedFile);
             }
 
-            const response = await fetch('http://localhost:5002/api/contact', {
+            const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:5002';
+            const response = await fetch(`${apiUrl}/api/contact`, {
                 method: 'POST',
                 body: formDataToSend
             });
@@ -81,9 +74,10 @@ function Contact() {
                 document.getElementById('file-input').value = '';
             } else {
                 setSubmitStatus('error');
+                setSelectedFile(null);
+                document.getElementById('file-input').value = '';
             }
-        } catch (error) {
-            console.error('Error submitting form:', error);
+        } catch {
             setSubmitStatus('error');
         } finally {
             setIsSubmitting(false);
@@ -93,40 +87,19 @@ function Contact() {
     return (
         <div className="mainContainer">
             <div className="backgroundOverlay"></div>
+            <Navbar showStickySearch={false} />
             <div className="contents">
-                <Navbar showStickySearch={false} />
                 <img className="Jesus" src={jesus} alt="Jesus" />
-                <div className="titleContainer">
-                    <img className="mainLogo" src={logo} alt="logo" />
-                    <span>Psaltos</span>
-                </div>
-                
+
                 <div className="modern-hymns-page">
                     {/* Hero Section */}
                     <div className="hymns-hero-section">
                         <div className="hymns-hero-content">
-                            <div className="hymns-hero-badge">
-                                Contact Us
-                            </div>
-                            <div className="hymns-stats">
-                                <div className="hymns-stat">
-                                    <span className="hymns-stat-number">24-48</span>
-                                    <span className="hymns-stat-label">Hours Response</span>
-                                </div>
-                                <div className="hymns-stat">
-                                    <span className="hymns-stat-number">100%</span>
-                                    <span className="hymns-stat-label">Secure</span>
-                                </div>
-                            </div>
-                            <button
-                                className="hymns-back-button"
-                                onClick={() => window.history.back()}
-                            >
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                                Back to Home
-                            </button>
+                            <div className="hymns-hero-badge">Contact Us</div>
+                            <p className="page-hero-subtitle">
+                                Have feedback, a question, or a hymn to suggest? We'd love to hear from you.
+                                We typically respond within 24–48 hours.
+                            </p>
                         </div>
                     </div>
 
@@ -279,8 +252,9 @@ function Contact() {
                         </div>
                     </div>
                 </div>
-                <Footer />
             </div>
+
+            <Footer />
             <img className="churchImg" src={Church} alt="church" />
         </div>
     );

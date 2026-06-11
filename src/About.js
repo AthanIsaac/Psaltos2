@@ -1,41 +1,24 @@
-import "./style.css";
-import logo from './img/logo.svg';
-import Cross from "./img/icons/cross.js";
+import "./styles/layout.css";
+import "./styles/navbar.css";
+import "./styles/pages.css";
 import Church from "./img/church.svg";
 import jesus from './img/jesus.svg';
 import Navbar from "./Navbar.js";
 import Footer from "./Footer.js";
-import { useTheme } from './ThemeContext.js';
 
 function About() {
-    const { isDarkMode } = useTheme();
-    
-    const HeaderComponent = ({ placeHolder }) => (
-        <div className="headerContainer">
-            <Cross />
-            <h1>{placeHolder}</h1>
-            <Cross />
-        </div>
-    );
-
     return (
         <div className="mainContainer">
             <div className="backgroundOverlay"></div>
+            <Navbar showStickySearch={false} />
             <div className="contents">
-                <Navbar showStickySearch={false} />
                 <img className="Jesus" src={jesus} alt="Jesus" />
-                <div className="titleContainer">
-                    <img className="mainLogo" src={logo} alt="logo" />
-                    <span>Psaltos</span>
-                </div>
-                
+
                 <div className="modern-hymns-page">
                     {/* Hero Section */}
                     <div className="hymns-hero-section">
                         <div className="hymns-hero-content">
-                            <div className="hymns-hero-badge">
-                                About Psaltos
-                            </div>
+                            <div className="hymns-hero-badge">About Psaltos</div>
                             <div className="hymns-stats">
                                 <div className="hymns-stat">
                                     <span className="hymns-stat-number">1000+</span>
@@ -50,15 +33,6 @@ function About() {
                                     <span className="hymns-stat-label">Seasons</span>
                                 </div>
                             </div>
-                            <button
-                                className="hymns-back-button"
-                                onClick={() => window.history.back()}
-                            >
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M19 12H5M12 19L5 12L12 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                </svg>
-                                Back to Home
-                            </button>
                         </div>
                     </div>
 
@@ -103,7 +77,7 @@ function About() {
                                         • Multiple cantors and interpretations<br/>
                                         • Advanced search functionality<br/>
                                         • High-quality audio playback<br/>
-                                        • {isDarkMode ? 'Dark' : 'Light'} mode support
+                                        • Clean, responsive design
                                     </p>
                                 </div>
                                 <div className="hymn-card-overlay"></div>
@@ -179,8 +153,9 @@ function About() {
                         </div>
                     </div>
                 </div>
-                <Footer />
             </div>
+
+            <Footer />
             <img className="churchImg" src={Church} alt="church" />
         </div>
     );

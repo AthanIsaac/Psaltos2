@@ -1,424 +1,192 @@
-import "./style.css";
-import "./styleguide.css";
-import "./cantorTab.css";
-import "./searchResultsStyles.css";
+import "./styles/layout.css";
+import "./styles/navbar.css";
+import "./styles/browse.css";
+import "./styles/search.css";
+import "./styles/pages.css";
 import logo from './img/logo.svg';
 import search from './img/search.svg';
 import jesus from './img/jesus.svg';
-import Navbar from "./Navbar.js";
-import Footer from "./Footer.js";
 import Church from "./img/church.svg";
-import Nativity from "./img/Nativity.jpg";
-import Audio from "./Audio.js";
-import Resurrection from "./img/resurrection.jpg";
-import Theophany from "./img/theopany.jpg";
-import Apostles from "./img/apostles.jpg";
-import SundayTesbaha from "./img/tasbeha.jpg";
-import Weekday from "./img/weekdayTasbeha.jpg";
-import SundayVespers from "./img/vespers.jpg"
-import ArtistIcon from "./img/icons/artistIcon.js";
+
+// Data imports
 import HymnsData from "./hymns.json";
 import ArtistData from "./artists.json";
-import SeasonsData from "./seasons.json";
+
+// Component imports
+import Navbar from "./Navbar.js";
+import Footer from "./Footer.js";
+import Audio from "./Audio.js";
 import HymnItem from "./HymnItem.js";
-import { useEffect, useState, useMemo, useRef, useCallback } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useAudio } from "./AudioContext.js";
+
+// Custom hooks
+import { useScrollDetection } from "./hooks/useScrollDetection.js";
+import { useSearch } from "./hooks/useSearch.js";
+import { useURLManagement } from "./hooks/useURLManagement.js";
+
+// Utility functions
+import {
+  getSeasonsForArtist,
+  getAllSeasons,
+  getHymnsForArtistAndSeason,
+  getHymnNamesForSeason,
+  getCantorsForHymn,
+  getSeasonImageUrl
+} from "./utils/seasonUtils.js";
+
+// UI Components
+import {
+  SearchResults,
+  IndividualHymn,
+  SearchDropdown
+} from "./components/SearchComponents.js";
+
+import {
+  ArtistList,
+  SeasonsForArtist,
+  HymnsList,
+  AllSeasons,
+  HymnsForSeason,
+  CantorsForHymn,
+  SelectedChip
+} from "./components/BrowseComponents.js";
+
+// React imports
+import { useEffect, useState, useMemo, useCallback, useRef } from "react";
 import { createSmithWatermanSearch } from "./smithWatermanSearch.js";
 
-// Debug flag for showing search scores - controlled by URL parameter or environment
-const isDebugMode = () => {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.has('debug') || (process.env.NODE_ENV === 'development' && urlParams.has('showScores'));
-};
-
 function Home() {
-  // URL parameters and navigation
-  const params = useParams();
-  const navigate = useNavigate();
-  
-  // State management
+  const { recentlyPlayed } = useAudio();
+
+  // Core state management
   const [hymnData, setHymnData] = useState([]);
-  const [hymn, setHymn] = useState("");
   const [artistData, setArtistData] = useState([]);
-  const [filteredHymns, setFilteredHymns] = useState([]);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [hymn, setHymn] = useState("");
+  const [isUserTypingMain, setIsUserTypingMain] = useState(false);
+  
+  // Browse state
   const [selectedHymn, setSelectedHymn] = useState(null);
   const [selectedSeason, setSelectedSeason] = useState();
   const [selectedArtist, setSelectedArtist] = useState();
-  const [expandedHymns, setExpandedHymns] = useState(new Set());
   const [browseMode, setBrowseMode] = useState('cantor');
-  const [click, setClick] = useState(0);
-  const [showSearchResults, setShowSearchResults] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [searchTiming, setSearchTiming] = useState({ smithWaterman: 0 });
-  const [searchMeta, setSearchMeta] = useState({ hasMore: false, totalResults: 0, cutoffPosition: 0, showingAll: false });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [allSearchResults, setAllSearchResults] = useState([]);
   const [seasonFilter, setSeasonFilter] = useState('all');
-  const [showStickySearch, setShowStickySearch] = useState(false);
+  
+  // UI state
+  const [expandedHymns, setExpandedHymns] = useState(new Set());
   const [showDropdown, setShowDropdown] = useState(false);
-  const searchBarRef = useRef(null);
 
   // Data initialization
   useEffect(() => {
     setHymnData(HymnsData);
-    setFilteredHymns([]);
     setArtistData(ArtistData);
+    setIsDataLoaded(true);
   }, []);
-
-  // Scroll detection for sticky search - optimized with better throttling
-  useEffect(() => {
-    let ticking = false;
-    let lastScrollTime = 0;
-    let lastShowStickySearch = showStickySearch;
-    const THROTTLE_DELAY = 100; // Increased throttle delay
-    
-    const handleScroll = () => {
-      const now = Date.now();
-      
-      // More aggressive throttling - only process if enough time has passed
-      if (now - lastScrollTime < THROTTLE_DELAY) {
-        return;
-      }
-      
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          if (searchBarRef.current) {
-            const searchBarRect = searchBarRef.current.getBoundingClientRect();
-            const headerHeight = 80; // Approximate navbar height
-            const isSearchBarBehindHeader = searchBarRect.top < headerHeight;
-            const newShowStickySearch = isSearchBarBehindHeader;
-            
-            // Only update state if the value actually changed
-            if (lastShowStickySearch !== newShowStickySearch) {
-              lastShowStickySearch = newShowStickySearch;
-              setShowStickySearch(newShowStickySearch);
-            }
-          }
-          ticking = false;
-          lastScrollTime = now;
-        });
-        ticking = true;
-      }
-    };
-
-    // Use passive scroll listener with better throttling
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // Check initial state
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [showSearchResults]); // Removed showStickySearch dependency to prevent re-binding
 
   // Create search function using Smith-Waterman algorithm
   const performSearch = useMemo(() => {
     return createSmithWatermanSearch(hymnData);
   }, [hymnData]);
 
-  // URL parameter synchronization
-  useEffect(() => {
-    if (!hymnData.length || !artistData.length) return;
-
-    // Clear search results when not on search page
-    if (!params.query && !params.hymnName) {
-      setShowSearchResults(false);
-      setSearchResults([]);
-      setAllSearchResults([]);
-      setSearchQuery('');
-      setHymn('');
-      // Don't clear expandedHymns here - preserve user's expanded state
-    }
-
-    // Handle individual hymn URLs
-    if (params.hymnName && params.artist) {
-      const decodedHymnName = decodeURIComponent(params.hymnName);
-      const decodedArtist = decodeURIComponent(params.artist);
-      
-      // Find the specific hymn
-      const specificHymn = hymnData.find(h =>
-        h.name === decodedHymnName && h.artist === decodedArtist
-      );
-      
-      if (specificHymn) {
-        setSelectedHymn(specificHymn);
-        setShowSearchResults(false);
-        setSelectedArtist();
-        setSelectedSeason();
-        return;
-      }
-    }
-
-    // Handle search URLs
-    if (params.query) {
-      const decodedQuery = decodeURIComponent(params.query);
-      const pageFromUrl = params.page ? parseInt(params.page, 10) : 1;
-      
-      setSearchQuery(decodedQuery);
-      setHymn(decodedQuery);
-      
-      // Measure Smith-Waterman search time
-      const startTime = performance.now();
-      const searchResult = performSearch(decodedQuery);
-      const allResults = performSearch(decodedQuery, { showAll: true });
-      const endTime = performance.now();
-      
-      // Calculate results to show based on page from URL
-      const pageSize = 10;
-      const initialCount = searchResult.cutoffPosition || searchResult.results.length;
-      const additionalResults = (pageFromUrl - 1) * pageSize;
-      const totalToShow = initialCount + additionalResults;
-      
-      const resultsToShow = pageFromUrl > 1 ? allResults.results.slice(0, totalToShow) : searchResult.results;
-      const hasMoreResults = totalToShow < allResults.totalResults;
-      
-      setSearchResults(resultsToShow);
-      setAllSearchResults(allResults.results);
-      setSearchMeta({
-        hasMore: pageFromUrl > 1 ? hasMoreResults : searchResult.hasMore,
-        totalResults: searchResult.totalResults,
-        cutoffPosition: searchResult.cutoffPosition,
-        showingAll: pageFromUrl > 1 ? !hasMoreResults : false
-      });
-      setCurrentPage(pageFromUrl);
-      setSearchTiming({
-        smithWaterman: endTime - startTime
-      });
-      setShowSearchResults(true);
-      // Clear other selections when searching
-      setSelectedArtist();
-      setSelectedSeason();
-      setSelectedHymn(null);
-      return;
-    }
-
-    // Handle browse mode URLs
-    if (params.mode) {
-      setBrowseMode(params.mode);
-      
-      if (params.artist) {
-        const artist = artistData.find(a =>
-          encodeURIComponent(a.artistName.toLowerCase().replace(/\s+/g, '-')) === params.artist
-        );
-        if (artist) {
-          setSelectedArtist(artist);
-          
-          if (params.season) {
-            const decodedSeason = decodeURIComponent(params.season);
-            setSelectedSeason(decodedSeason);
-          } else {
-            setSelectedSeason();
-            setSelectedHymn(null);
-          }
-        } else {
-          // Artist not found, clear selections
-          setSelectedArtist();
-          setSelectedSeason();
-          setSelectedHymn(null);
-        }
-      } else {
-        // No artist in URL, clear selections
-        setSelectedArtist();
-        setSelectedSeason();
-        setSelectedHymn(null);
-      }
-    }
-
-    // Handle season-only URLs
-    if (params.season && !params.mode) {
-      const decodedSeason = decodeURIComponent(params.season);
-      setBrowseMode('season');
-      setSelectedSeason(decodedSeason);
-      setSelectedArtist(); // Clear artist when browsing by season
-      
-      if (params.hymn) {
-        const decodedHymn = decodeURIComponent(params.hymn);
-        setSelectedHymn(decodedHymn);
-      } else {
-        setSelectedHymn(null);
-      }
-    }
-
-    // Handle home page (no params)
-    if (!params.query && !params.mode && !params.season && !params.hymnName) {
-      setSelectedArtist();
-      setSelectedSeason();
-      setSelectedHymn(null);
-      setBrowseMode('cantor'); // Default to cantor mode
-    }
-  }, [params, hymnData, artistData, performSearch]);
-
-  // Helper function to encode artist name for URL
-  const encodeArtistName = (artistName) => {
-    return encodeURIComponent(artistName.toLowerCase().replace(/\s+/g, '-'));
-  };
-
-  // Helper function to scroll to content with smooth animation
+  // Scroll to content only when the target is outside the visible viewport
   const scrollToContent = useCallback((delay = 300) => {
     setTimeout(() => {
-      // Find the main content area (TabList or similar)
       const contentElement = document.querySelector('.TabList') ||
-                           document.querySelector('.cantor-season-layout') ||
-                           document.querySelector('.seasonContainer');
-      
+                             document.querySelector('.cantor-season-layout');
+
       if (contentElement) {
-        const headerHeight = 120; // Account for navbar and title
-        const elementTop = contentElement.getBoundingClientRect().top + window.pageYOffset;
-        const scrollToPosition = Math.max(0, elementTop - headerHeight);
-        
-        window.scrollTo({
-          top: scrollToPosition,
-          behavior: 'smooth'
-        });
+        const rect = contentElement.getBoundingClientRect();
+        const alreadyVisible = rect.top >= -50 && rect.top <= window.innerHeight * 0.75;
+        if (alreadyVisible) return;
+
+        const headerHeight = 120;
+        const scrollToPosition = Math.max(0, rect.top + window.pageYOffset - headerHeight);
+        window.scrollTo({ top: scrollToPosition, behavior: 'smooth' });
       }
     }, delay);
   }, []);
 
-  // Handle scrolling when URL parameters change (for navigation from external sources)
-  useEffect(() => {
-    if (params.mode || params.season || params.query || params.hymnName) {
-      scrollToContent(500); // Longer delay for URL parameter changes
-    }
-  }, [params.mode, params.season, params.query, params.hymnName, scrollToContent]);
+  // Custom hooks
+  const { showStickySearch, searchBarRef } = useScrollDetection();
 
-  // Helper function to update URL based on current state
-  const updateURL = useCallback((newBrowseMode, newArtist, newSeason, newHymn, newSearchQuery, page = 1) => {
-    if (newSearchQuery) {
-      if (page > 1) {
-        navigate(`/search/${encodeURIComponent(newSearchQuery)}/${page}`);
-      } else {
-        navigate(`/search/${encodeURIComponent(newSearchQuery)}`);
-      }
-    } else if (newBrowseMode === 'season' && newSeason && newHymn) {
-      navigate(`/season/${encodeURIComponent(newSeason)}/${encodeURIComponent(newHymn)}`);
-    } else if (newBrowseMode === 'season' && newSeason) {
-      navigate(`/season/${encodeURIComponent(newSeason)}`);
-    } else if (newBrowseMode === 'cantor' && newArtist && newSeason) {
-      navigate(`/browse/${newBrowseMode}/${encodeArtistName(newArtist.artistName)}/${encodeURIComponent(newSeason)}`);
-    } else if (newBrowseMode === 'cantor' && newArtist) {
-      navigate(`/browse/${newBrowseMode}/${encodeArtistName(newArtist.artistName)}`);
-    } else if (newBrowseMode) {
-      navigate(`/browse/${newBrowseMode}`);
-    } else {
-      navigate('/');
-    }
-  }, [navigate]);
+  // Ref so useSearch can call updateURL without a circular dependency
+  const updateURLRef = useRef(null);
 
-  // Debounced search to prevent excessive re-renders
-  const debouncedSearch = useCallback(
-    useMemo(() => {
-      let timeoutId;
-      return (input) => {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          if (input.trim()) {
-            const result = performSearch(input.trim());
-            setFilteredHymns(result.results);
-          } else {
-            setFilteredHymns([]);
-          }
-        }, 500); // 500ms debounce delay - optimized for better performance
-      };
-    }, [performSearch]),
-    [performSearch]
-  );
+  const {
+    searchQuery,
+    searchResults,
+    searchTiming,
+    searchMeta,
+    showSearchResults,
+    filteredHymns,
+    allSearchResults,
+    currentPage,
+    setSearchQuery,
+    debouncedSearch,
+    executeSearch,
+    handleShowMoreResults,
+    clearSearch
+  } = useSearch(performSearch, updateURLRef, scrollToContent);
 
+  const { params, navigate, updateURL } = useURLManagement({
+    hymnData,
+    artistData,
+    performSearch,
+    isUserTypingMain,
+    executeSearch,
+    clearSearch,
+    setHymn,
+    setSelectedHymn,
+    setSelectedArtist,
+    setSelectedSeason,
+    setBrowseMode,
+  });
+
+  // Keep the ref current every render so useSearch's handleShowMoreResults always has the latest updateURL
+  updateURLRef.current = updateURL;
+
+  // Search handlers
   const hymnSearch = useCallback((event) => {
     const input = event.target.value;
     setHymn(input);
     setSearchQuery(input);
     setShowDropdown(input.trim().length > 0);
     
-    // Use debounced search to prevent excessive calls
+    setIsUserTypingMain(true);
     debouncedSearch(input);
-  }, [debouncedSearch]);
+  }, [debouncedSearch, setSearchQuery]);
 
-  // Separate search handler for navbar that doesn't affect main dropdown
   const handleNavbarSearch = useCallback((event) => {
     const input = event.target.value;
-    // Don't update main search states, let navbar handle its own dropdown
+    setHymn(input);
+    setSearchQuery(input);
+    
+    debouncedSearch(input);
+    
     if (input.trim()) {
       const result = performSearch(input.trim());
-      // Only update search results for navbar, not main dropdown
       return result.results;
     }
     return [];
-  }, [performSearch]);
+  }, [performSearch, debouncedSearch, setSearchQuery]);
 
   const handleSearchKeyPress = useCallback((event) => {
     if (event.key === 'Enter' && searchQuery.trim()) {
-      // Measure Smith-Waterman search time
-      const startTime = performance.now();
-      const searchResult = performSearch(searchQuery);
-      const allResults = performSearch(searchQuery, { showAll: true });
-      const endTime = performance.now();
-      
-      setSearchResults(searchResult.results);
-      setAllSearchResults(allResults.results);
-      setSearchMeta({
-        hasMore: searchResult.hasMore,
-        totalResults: searchResult.totalResults,
-        cutoffPosition: searchResult.cutoffPosition,
-        showingAll: false
-      });
-      setCurrentPage(1);
-      setSearchTiming({
-        smithWaterman: endTime - startTime
-      });
-      setShowSearchResults(true);
+      setIsUserTypingMain(false);
+      executeSearch(searchQuery);
       setShowDropdown(false);
       updateURL(null, null, null, null, searchQuery, 1);
       scrollToContent();
     }
-  }, [searchQuery, performSearch, updateURL, scrollToContent]);
+  }, [searchQuery, executeSearch, updateURL, scrollToContent]);
 
-  // Navigation helpers - memoized to prevent unnecessary re-renders
+  // Navigation helpers
   const goBackToHome = useCallback(() => {
-    setShowSearchResults(false);
-    setSearchQuery('');
-    setSearchResults([]);
-    setAllSearchResults([]);
-    setSearchMeta({ hasMore: false, totalResults: 0, cutoffPosition: 0, showingAll: false });
-    setCurrentPage(1);
-    setSearchTiming({ smithWaterman: 0 });
+    clearSearch();
     setShowDropdown(false);
     setHymn('');
     navigate('/');
-  }, [navigate]);
-
-  // Show more results handler - loads next 10 results incrementally
-  const handleShowMoreResults = useCallback(() => {
-    if (!searchQuery.trim() || !allSearchResults.length) return;
-    
-    const startTime = performance.now();
-    const nextPage = currentPage + 1;
-    const pageSize = 10;
-    
-    // Calculate how many results to show (initial filtered + additional pages)
-    const initialCount = searchMeta.cutoffPosition || (searchResults.length > 0 ? searchResults.length : 10);
-    const additionalResults = (nextPage - 1) * pageSize;
-    const totalToShow = initialCount + additionalResults;
-    
-    // Use the cached allSearchResults instead of re-searching
-    const newResults = allSearchResults.slice(0, totalToShow);
-    const hasMoreResults = totalToShow < allSearchResults.length;
-    
-    const endTime = performance.now();
-    
-    setSearchResults(newResults);
-    setCurrentPage(nextPage);
-    setSearchMeta(prev => ({
-      ...prev,
-      hasMore: hasMoreResults,
-      showingAll: !hasMoreResults
-    }));
-    setSearchTiming({
-      smithWaterman: endTime - startTime
-    });
-    
-    // Update URL with new page number
-    updateURL(null, null, null, null, searchQuery, nextPage);
-  }, [searchQuery, allSearchResults, currentPage, searchMeta.cutoffPosition, searchResults.length, updateURL]);
+  }, [clearSearch, navigate]);
 
   const resetSelections = useCallback((preserveExpanded = false) => {
     setSelectedArtist();
@@ -427,19 +195,17 @@ function Home() {
     if (!preserveExpanded) {
       setExpandedHymns(new Set());
     }
-    setClick(0);
     setSeasonFilter('all');
   }, []);
 
   const toggleBrowseMode = useCallback(() => {
-    resetSelections(false); // Clear expanded hymns when switching browse modes
+    resetSelections(false);
     const newMode = browseMode === 'cantor' ? 'season' : 'cantor';
     setBrowseMode(newMode);
     updateURL(newMode, null, null, null, null);
-    scrollToContent();
-  }, [browseMode, resetSelections, updateURL, scrollToContent]);
+  }, [browseMode, resetSelections, updateURL]);
 
-  // Hymn expansion logic - optimized with useCallback
+  // Hymn expansion logic
   const toggleHymnExpansion = useCallback((hymnId, event) => {
     if (event) {
       event.preventDefault();
@@ -454,667 +220,230 @@ function Home() {
         newSet.delete(hymnId);
       } else {
         newSet.add(hymnId);
-        
-        // Scroll to the hymn element after expansion with proper offset for navbar
-        setTimeout(() => {
+
+        requestAnimationFrame(() => {
           const hymnElement = document.querySelector(`[data-hymn-id="${hymnId}"]`);
           if (hymnElement) {
-            const navbarHeight = 120; // Height of the navbar
+            const navbarHeight = 120;
             const elementTop = hymnElement.getBoundingClientRect().top + window.pageYOffset;
             const scrollToPosition = Math.max(0, elementTop - navbarHeight);
-            
-            window.scrollTo({
-              top: scrollToPosition,
-              behavior: 'smooth'
-            });
+            window.scrollTo({ top: scrollToPosition, behavior: 'smooth' });
           }
-        }, 100);
+        });
       }
       
       return newSet;
     });
   }, []);
 
-  // Season categorization and filtering
-  const categorizeSeasons = (seasons) => ({
-    annual: seasons.filter(season => 
-      season.toLowerCase().includes('annual') || season.toLowerCase().includes('liturg')
-    ),
-    feasts: seasons.filter(season => season.toLowerCase().includes('feast')),
-    fasts: seasons.filter(season => season.toLowerCase().includes('fast')),
-    other: seasons.filter(season => {
-      const lowerSeason = season.toLowerCase();
-      return !lowerSeason.includes('annual') &&
-             !lowerSeason.includes('liturg') &&
-             !lowerSeason.includes('feast') &&
-             !lowerSeason.includes('fast');
-    })
-  });
-
-  const getFilteredCategories = (categorizedSeasons) => {
-    if (seasonFilter === 'all') return categorizedSeasons;
-    return {
-      annual: seasonFilter === 'annual' ? categorizedSeasons.annual : [],
-      feasts: seasonFilter === 'feasts' ? categorizedSeasons.feasts : [],
-      fasts: seasonFilter === 'fasts' ? categorizedSeasons.fasts : [],
-      other: seasonFilter === 'other' ? categorizedSeasons.other : []
-    };
-  };
-
-  // Season image rendering
-  const seasonRender = (season) => {
-    const seasonData = SeasonsData.find(s => s.seasonName === season);
-    
-    if (seasonData && seasonData.img !== 'placeholder.jpg') {
-      return <img src={seasonData.img} alt={`${season} Season`} />;
-    }
-    
-    // Fallback images
-    const imageMap = {
-      'Nativity': Nativity,
-      'Major Feasts of the Lord - Nativity': Nativity,
-      'Resurrection': Resurrection,
-      'Major Feasts of the Lord - Resurrection': Resurrection,
-      'Theophany': Theophany,
-      'Major Feasts of the Lord - Epiphany': Theophany,
-      'Apostles Fast': Apostles,
-      'Fasts - Apostles': Apostles,
-      'Sunday Tasbeha (Midnight Praises)': SundayTesbaha,
-      'Weekday Tasbeha (Midnight Praises)': Weekday,
-      'Sunday Vespers Praise': SundayVespers
-    };
-
-    const imageSrc = imageMap[season] || SundayTesbaha;
-    return <img src={imageSrc} alt={`${season} Season`} />;
-  };
-
-  // Reusable components - memoized to prevent unnecessary re-renders
-  const HeaderComponent = useCallback(({ placeHolder }) => (
-    <div className="headerContainer">
-      <h1>{placeHolder}</h1>
-    </div>
-  ), []);
-
-  const BackButton = useCallback(({ onClick, text = "← Back" }) => (
-    <button
-      onClick={onClick}
-      className="back-button"
-    >
-      {text}
-    </button>
-  ), []);
-
-  const SeasonFilterButtons = () => (
-    <div className="season-filter-container">
-      {['all', 'annual', 'feasts', 'fasts', 'other'].map(filter => (
-        <button
-          key={filter}
-          onClick={() => setSeasonFilter(filter)}
-          className={`season-filter-button ${seasonFilter === filter ? 'active' : 'inactive'}`}
-        >
-          {filter === 'all' ? 'All Categories' : filter}
-        </button>
-      ))}
-    </div>
-  );
-
-  const SeasonCategory = ({ title, seasons }) => (
-    seasons.length > 0 && (
-      <div className="seasonCategorySection">
-        <h2 className="season-category-title">
-          {title}
-        </h2>
-        <div className="seasonContainer">
-          {seasons.map((season, index) => (
-            <div key={index} className="seasonItem" onClick={() => {
-              setSelectedSeason(season);
-              if (browseMode === 'cantor' && selectedArtist) {
-                updateURL(browseMode, selectedArtist, season, null, null);
-              } else {
-                updateURL('season', null, season, null, null);
-              }
-              scrollToContent();
-            }}>
-              {seasonRender(season)}
-              <HeaderComponent placeHolder={season} />
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  );
-
-  const CategorizedSeasons = ({ filteredCategories }) => (
-    <>
-      <SeasonCategory title="Annual" seasons={filteredCategories.annual} />
-      <SeasonCategory title="Feasts" seasons={filteredCategories.feasts} />
-      <SeasonCategory title="Fasts" seasons={filteredCategories.fasts} />
-      <SeasonCategory title="Other" seasons={filteredCategories.other} />
-    </>
-  );
-
-
-  // Artist components
-  const ArtistCard = ({ artist }) => (
-    <div className="seasonItem" onClick={() => {
-      setSelectedArtist(artist);
+  // Browse handlers
+  const handleArtistSelect = useCallback((artist) => {
+    setSelectedArtist(artist);
+    if (artist) {
       updateURL(browseMode, artist, null, null, null);
-      scrollToContent();
-    }}>
-      <img src={artist.img} alt={`${artist.artistName}`} />
-      <HeaderComponent placeHolder={artist.artistName} />
-    </div>
-  );
+    } else {
+      setSelectedSeason();
+      updateURL(browseMode, null, null, null, null);
+    }
+  }, [browseMode, updateURL]);
 
-  const SelectedArtist = () => (
-    <div className="seasonContainer">
-      <div className="seasonItem selectedSeasonItem" onClick={() => {
-        setSelectedArtist();
-        setSelectedSeason();
-        updateURL(browseMode, null, null, null, null);
-      }}>
-        <img src={selectedArtist.img} alt={`${selectedArtist.artistName}`} className="artist-image" />
-        <div className="headerContainer artist-header-spacing">
-          <h1>{selectedArtist.artistName}</h1>
-        </div>
-        <div className="artist artist-label-spacing">
-          <span>
-            <ArtistIcon />
-            <p>CANTOR</p>
-          </span>
-        </div>
-      </div>
-    </div>
-  );
+  const handleSeasonSelect = useCallback((season) => {
+    setSelectedSeason(season);
+    if (browseMode === 'cantor' && selectedArtist) {
+      updateURL(browseMode, selectedArtist, season, null, null);
+    } else {
+      updateURL('season', null, season, null, null);
+    }
+  }, [browseMode, selectedArtist, updateURL]);
 
-  // Navigation arrows
-  const NavigationArrow = ({ direction, onClick }) => (
-    <svg 
-      className={`${direction}Arrow`} 
-      onClick={onClick} 
-      width="22" 
-      height="32" 
-      viewBox="0 0 22 32" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M1.05873 17.5848C0.0187157 16.7842 0.0187151 15.2158 1.05873 14.4152L18.28 1.15824C19.5951 0.145845 21.5 1.08337 21.5 2.74305V29.2569C21.5 30.9166 19.5951 31.8542 18.28 30.8418L1.05873 17.5848Z" />
-    </svg>
-  );
+  const handleHymnSelect = useCallback((hymnName) => {
+    setSelectedHymn(hymnName);
+    updateURL('season', null, selectedSeason, hymnName, null);
+    scrollToContent();
+  }, [selectedSeason, updateURL, scrollToContent]);
 
-  // Main render functions
-  const ArtistList = () => {
-    const nextFour = () => setClick(prev => Math.min(prev + 4, artistData.length - 4));
-    const prevFour = () => setClick(prev => Math.max(prev - 4, 0));
+  // Data derivations
+  const seasonsForArtist = useMemo(() => 
+    selectedArtist ? getSeasonsForArtist(hymnData, selectedArtist.artistName) : []
+  , [hymnData, selectedArtist]);
 
-    return (
-      <div className="TabList">
-        <span>
-          <HeaderComponent placeHolder="cantors" />
-          <p>Choose a Coptic deacon to enrich your spiritual journey with traditional hymns</p>
-        </span>
-        {!selectedArtist ? (
-          <span>
-            <NavigationArrow direction="left" onClick={prevFour} />
-            <div className="list">
-              {artistData.slice(click, click + 4).map((artist, index) => (
-                <div key={index}>
-                  <ArtistCard artist={artist} />
-                </div>
-              ))}
-            </div>
-            <NavigationArrow direction="right" onClick={nextFour} />
-          </span>
-        ) : (
-          <div><SelectedArtist /></div>
-        )}
-      </div>
-    );
-  };
+  const hymnsForArtistAndSeason = useMemo(() => 
+    selectedArtist && selectedSeason ? 
+      getHymnsForArtistAndSeason(hymnData, selectedArtist.artistName, selectedSeason) : []
+  , [hymnData, selectedArtist, selectedSeason]);
 
-  const renderSeasons = () => {
-    const seasons = [...new Set(hymnData.filter(hymn => hymn.artist === selectedArtist.artistName).map(hymn => hymn.season))];
-    const categorizedSeasons = categorizeSeasons(seasons);
-    const filteredCategories = getFilteredCategories(categorizedSeasons);
+  const allSeasons = useMemo(() => getAllSeasons(hymnData), [hymnData]);
 
-    return (
-      <div className="TabList">
-        {!selectedSeason ? (
-          <>
-            <span>
-              <HeaderComponent placeHolder="Seasons" />
-              <p>Choose a liturgical season to explore hymns by this cantor</p>
-            </span>
-            <SeasonFilterButtons />
-            <CategorizedSeasons filteredCategories={filteredCategories} />
-          </>
-        ) : (
-          <div className="seasonContainer">
-            <div className="seasonItem selectedSeasonItem" onClick={() => {
-              setSelectedSeason();
-              updateURL(browseMode, selectedArtist, null, null, null);
-            }}>
-              {seasonRender(selectedSeason)}
-              <HeaderComponent placeHolder={selectedSeason} />
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
+  const hymnsInSeason = useMemo(() => 
+    selectedSeason ? getHymnNamesForSeason(hymnData, selectedSeason) : []
+  , [hymnData, selectedSeason]);
 
-  const renderHymns = () => {
-    const hymns = [...new Set(hymnData.filter(hymn =>
-      hymn.artist === selectedArtist.artistName && hymn.season === selectedSeason
-    ))];
+  const cantorsForHymn = useMemo(() => 
+    selectedHymn && selectedSeason ? 
+      getCantorsForHymn(hymnData, selectedHymn, selectedSeason) : []
+  , [hymnData, selectedHymn, selectedSeason]);
 
-    return (
-      <div className="search-results-compact">
-        <div className="search-results-list">
-          {hymns.map((hymn, index) => {
-            const hymnId = `${hymn.name}-${hymn.artist}-${hymn.season || 'unknown'}-${index}`;
-            const isExpanded = expandedHymns.has(hymnId);
-            
-            return (
-              <HymnItem
-                key={index}
-                hymn={hymn}
-                type="hymn"
-                index={index}
-                isExpanded={isExpanded}
-                onExpand={toggleHymnExpansion}
-                onGoto={(e) => {
-                  navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}`);
-                  scrollToContent();
-                }}
-              />
-            );
-          })}
-        </div>
-      </div>
-    );
-  };
+  // Render main content based on current state
+  const renderMainContent = () => {
+    if (showSearchResults) {
+      return (
+        <SearchResults
+          searchResults={searchResults}
+          searchMeta={searchMeta}
+          searchTiming={searchTiming}
+          expandedHymns={expandedHymns}
+          toggleHymnExpansion={toggleHymnExpansion}
+          handleShowMoreResults={() =>
+            handleShowMoreResults(searchQuery, allSearchResults, searchMeta, searchResults.length, currentPage)
+          }
+          goBackToHome={goBackToHome}
+          navigate={navigate}
+        />
+      );
+    }
 
-  const renderAllSeasons = () => {
-    const allSeasons = [...new Set(hymnData.map(hymn => hymn.season))];
-    const categorizedSeasons = categorizeSeasons(allSeasons);
-    const filteredCategories = getFilteredCategories(categorizedSeasons);
-    
-    return (
-      <div className="TabList">
-        <span>
-          <HeaderComponent placeHolder="Seasons" />
-          <p>Choose a liturgical season to explore hymns</p>
-        </span>
-        
-        {/* Filter Buttons */}
-        <SeasonFilterButtons />
-        
-        {/* Annual Seasons */}
-        {filteredCategories.annual.length > 0 && (
-          <div className="seasonCategorySection">
-            <h2 className="season-category-title">Annual</h2>
-            <div className="seasonContainer">
-              {filteredCategories.annual.map((season, index) => (
-                <div key={`annual-${index}`} className="seasonItem" onClick={() => {
-                  setSelectedSeason(season);
-                  updateURL('season', null, season, null, null);
-                  scrollToContent();
-                }}>
-                  {seasonRender(season)}
-                  <HeaderComponent placeHolder={season} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+    if (selectedHymn && typeof selectedHymn === 'object') {
+      return (
+        <IndividualHymn
+          selectedHymn={selectedHymn}
+          setSelectedHymn={setSelectedHymn}
+          navigate={navigate}
+        />
+      );
+    }
 
-        {/* Feasts */}
-        {filteredCategories.feasts.length > 0 && (
-          <div className="seasonCategorySection">
-            <h2 className="season-category-title">Feasts</h2>
-            <div className="seasonContainer">
-              {filteredCategories.feasts.map((season, index) => (
-                <div key={`feasts-${index}`} className="seasonItem" onClick={() => {
-                  setSelectedSeason(season);
-                  updateURL('season', null, season, null, null);
-                  scrollToContent();
-                }}>
-                  {seasonRender(season)}
-                  <HeaderComponent placeHolder={season} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Fasts */}
-        {filteredCategories.fasts.length > 0 && (
-          <div className="seasonCategorySection">
-            <h2 className="season-category-title">Fasts</h2>
-            <div className="seasonContainer">
-              {filteredCategories.fasts.map((season, index) => (
-                <div key={`fasts-${index}`} className="seasonItem" onClick={() => {
-                  setSelectedSeason(season);
-                  updateURL('season', null, season, null, null);
-                  scrollToContent();
-                }}>
-                  {seasonRender(season)}
-                  <HeaderComponent placeHolder={season} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Other */}
-        {filteredCategories.other.length > 0 && (
-          <div className="seasonCategorySection">
-            <h2 className="season-category-title">Other Seasons</h2>
-            <div className="seasonContainer">
-              {filteredCategories.other.map((season, index) => (
-                <div key={`other-${index}`} className="seasonItem" onClick={() => {
-                  setSelectedSeason(season);
-                  updateURL('season', null, season, null, null);
-                  scrollToContent();
-                }}>
-                  {seasonRender(season)}
-                  <HeaderComponent placeHolder={season} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  };
-
-  const renderHymnsForSeason = () => {
-    const hymnsInSeason = [...new Set(hymnData.filter(hymn => hymn.season === selectedSeason).map(hymn => hymn.name))];
-    
-    return (
-      <div className="TabList">
-        <span>
-          <HeaderComponent placeHolder={selectedSeason} />
-          <p>Choose a hymn to explore different cantor interpretations</p>
-          <BackButton onClick={() => {
-            setSelectedSeason();
-            updateURL('season', null, null, null, null);
-          }} text="← Back to Seasons" />
-        </span>
-        
-        {/* Show selected season as a card */}
-        <div className="seasonContainer">
-          <div className="seasonItem selectedSeasonItem" onClick={() => {
-            setSelectedSeason();
-            updateURL('season', null, null, null, null);
-          }}>
-            {seasonRender(selectedSeason)}
-            <HeaderComponent placeHolder={selectedSeason} />
-          </div>
-        </div>
-        
-        {/* Search Results Style List */}
-        <div className="search-results-compact">
-          <div className="search-results-list">
-            {hymnsInSeason.map((hymnName, index) => {
-              const hymnRecordings = hymnData.filter(hymn => hymn.season === selectedSeason && hymn.name === hymnName);
-              const cantorCount = hymnRecordings.length;
-              
-              return (
-                <HymnItem
-                  key={index}
-                  hymnName={hymnName}
-                  season={selectedSeason}
-                  type="hymnList"
-                  index={index}
-                  cantorCount={cantorCount}
-                  cantorList={hymnRecordings}
-                  onClick={() => {
-                    setSelectedHymn(hymnName);
-                    updateURL('season', null, selectedSeason, hymnName, null);
-                    scrollToContent();
-                  }}
-                  onGoto={(e) => {
-                    setSelectedHymn(hymnName);
-                    updateURL('season', null, selectedSeason, hymnName, null);
-                    scrollToContent();
+    if (browseMode === 'cantor') {
+      if (selectedArtist && selectedSeason) {
+        return (
+          <div className="cantor-season-layout">
+            <div className="selected-cantor-season">
+              <div className="selected-chips-row">
+                <SelectedChip
+                  imageSrc={selectedArtist.img}
+                  label="Cantor"
+                  name={selectedArtist.artistName}
+                  onClear={() => {
+                    setSelectedArtist();
+                    setSelectedSeason();
+                    updateURL(browseMode, null, null, null, null);
                   }}
                 />
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const renderCantorsForHymn = () => {
-    const cantorsForHymn = hymnData.filter(hymn => hymn.name === selectedHymn && hymn.season === selectedSeason);
-    
-    return (
-      <div className="TabList">
-        <span>
-          <HeaderComponent placeHolder={`Cantors for "${selectedHymn}"`} />
-          <p>Listen to different interpretations of this hymn</p>
-          <BackButton onClick={() => {
-            setSelectedHymn(null);
-            updateURL('season', null, selectedSeason, null, null);
-          }} text="← Back to Hymns" />
-        </span>
-        
-        {/* Show selected season as a card */}
-        <div className="seasonContainer">
-          <div className="seasonItem selectedSeasonItem" onClick={() => {
-            setSelectedSeason();
-            updateURL('season', null, null, null, null);
-          }}>
-            {seasonRender(selectedSeason)}
-            <HeaderComponent placeHolder={selectedSeason} />
-          </div>
-        </div>
-        
-        {/* Search Results Style List */}
-        <div className="search-results-compact">
-          <div className="search-results-list">
-            {cantorsForHymn.map((hymn, index) => {
-              const hymnId = `${hymn.name}-${hymn.artist}-${hymn.season || 'unknown'}-${index}`;
-              const isExpanded = expandedHymns.has(hymnId);
-              
-              return (
-                <HymnItem
-                  key={index}
-                  hymn={hymn}
-                  type="cantor"
-                  index={index}
-                  isExpanded={isExpanded}
-                  onExpand={toggleHymnExpansion}
-                  onGoto={(e) => {
-                    navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}`);
-                    scrollToContent();
+                <SelectedChip
+                  imageSrc={getSeasonImageUrl(selectedSeason)}
+                  label="Season"
+                  name={selectedSeason}
+                  onClear={() => {
+                    setSelectedSeason();
+                    updateURL(browseMode, selectedArtist, null, null, null);
                   }}
                 />
-              );
-            })}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-
-  const SearchItem = useCallback(({ hymn, index, onClick }) => (
-    <div key={index} className="main-search-result" onClick={onClick}>
-      <div className="main-search-result-title">{hymn.name}</div>
-      <div className="main-search-result-artist">
-        {hymn.artist} • {hymn.season}
-      </div>
-    </div>
-  ), []);
-
-  // Render individual hymn page
-  const renderIndividualHymn = () => {
-    if (!selectedHymn || typeof selectedHymn !== 'object') return null;
-    
-    return (
-      <div className="TabList">
-        <span>
-          <HeaderComponent placeHolder={selectedHymn.name} />
-          <BackButton onClick={() => {
-            setSelectedHymn(null);
-            navigate('/');
-          }} text="← Back to Home" />
-        </span>
-        
-        {/* Search Results Style Individual Hymn */}
-        <div className="search-results-compact">
-          <div className="search-results-list">
-            <HymnItem
-              hymn={selectedHymn}
-              type="individual"
-              imageSize={60}
-              isClickable={false}
-              showActions={false}
+              </div>
+            </div>
+            <HymnsList
+              hymns={hymnsForArtistAndSeason}
+              expandedHymns={expandedHymns}
+              toggleHymnExpansion={toggleHymnExpansion}
+              navigate={navigate}
             />
-            
-            {/* Audio Player Section */}
-            <div style={{
-              marginTop: '20px',
-              padding: '20px',
-              background: 'var(--bg-card)',
-              borderRadius: '12px',
-              border: '1px solid var(--border-color)'
-            }}>
-              <Audio hymn={selectedHymn} autoLoad={true} />
-            </div>
           </div>
-        </div>
-      </div>
-    );
+        );
+      }
+
+      return (
+        <>
+          <ArtistList
+            artistData={artistData}
+            selectedArtist={selectedArtist}
+            onArtistSelect={handleArtistSelect}
+          />
+          {selectedArtist && (
+            <SeasonsForArtist
+              seasons={seasonsForArtist}
+              selectedSeason={selectedSeason}
+              seasonFilter={seasonFilter}
+              setSeasonFilter={setSeasonFilter}
+              onSeasonSelect={handleSeasonSelect}
+              onBack={() => handleArtistSelect(null)}
+            />
+          )}
+        </>
+      );
+    }
+
+    if (browseMode === 'season') {
+      if (!selectedSeason) {
+        return (
+          <AllSeasons
+            allSeasons={allSeasons}
+            seasonFilter={seasonFilter}
+            setSeasonFilter={setSeasonFilter}
+            onSeasonSelect={handleSeasonSelect}
+          />
+        );
+      }
+
+      if (selectedSeason && !selectedHymn) {
+        return (
+          <HymnsForSeason
+            selectedSeason={selectedSeason}
+            hymnsInSeason={hymnsInSeason}
+            hymnData={hymnData}
+            onHymnSelect={handleHymnSelect}
+            onBack={() => {
+              setSelectedSeason();
+              updateURL('season', null, null, null, null);
+            }}
+          />
+        );
+      }
+
+      if (selectedSeason && selectedHymn) {
+        return (
+          <CantorsForHymn
+            selectedHymn={selectedHymn}
+            selectedSeason={selectedSeason}
+            cantorsForHymn={cantorsForHymn}
+            expandedHymns={expandedHymns}
+            toggleHymnExpansion={toggleHymnExpansion}
+            navigate={navigate}
+            onBack={(toSeasons = false) => {
+              if (toSeasons) {
+                setSelectedSeason();
+                updateURL('season', null, null, null, null);
+              } else {
+                setSelectedHymn(null);
+                updateURL('season', null, selectedSeason, null, null);
+              }
+            }}
+          />
+        );
+      }
+    }
+
+    return null;
   };
-
-  const renderSearchResults = () => (
-    <div className="search-results-compact">
-      {/* Compact Hero Section */}
-      <div className="hymns-hero-section">
-        <div className="hymns-hero-content">
-          <div className="hymns-hero-badge">Search Results</div>
-          <div className="hymns-stats">
-            <div className="hymns-stat">
-              <span className="hymns-stat-number">{searchResults.length}</span>
-              <span className="hymns-stat-label">
-                {searchMeta.showingAll ? 'Total Results' : 'Top Results'}
-              </span>
-            </div>
-            <div className="hymns-stat">
-              <span className="hymns-stat-number">{searchTiming.smithWaterman.toFixed(1)}</span>
-              <span className="hymns-stat-label">ms Search Time</span>
-            </div>
-            {searchMeta.totalResults > searchResults.length && (
-              <div className="hymns-stat">
-                <span className="hymns-stat-number">{Math.min(searchMeta.totalResults, 100)}</span>
-                <span className="hymns-stat-label">Total Available</span>
-              </div>
-            )}
-          </div>
-          <button className="hymns-back-button" onClick={goBackToHome}>
-            ← Back to Home
-          </button>
-        </div>
-      </div>
-
-      {/* Search Results Info */}
-      {searchMeta.hasMore && !searchMeta.showingAll && (
-        <div className="search-results-info">
-          <div className="search-filter-notice">
-            <span className="search-filter-icon">🎯</span>
-            <div className="search-filter-text">
-              <strong>Smart filtering applied:</strong> Showing {searchResults.length} most relevant results out of {Math.min(searchMeta.totalResults, 100)} total matches.
-              <br />
-              <small>Results are filtered based on natural quality breakpoints in the scoring system.</small>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Compact Search Results List */}
-      <div className="search-results-list">
-        {searchResults.length === 0 ? (
-          <div className="search-no-results">
-            <h3 className="search-no-results-title">No hymns found matching your search.</h3>
-            <p>Try searching with different keywords or check your spelling.</p>
-          </div>
-        ) : (
-          <>
-            {searchResults.map((hymn, index) => {
-              const hymnId = `${hymn.name}-${hymn.artist}-${hymn.season || 'unknown'}-${index}`;
-              const isExpanded = expandedHymns.has(hymnId);
-              
-              return (
-                <HymnItem
-                  key={index}
-                  hymn={hymn}
-                  type="search"
-                  index={index}
-                  isExpanded={isExpanded}
-                  score={hymn._swScore}
-                  showScore={isDebugMode()}
-                  onExpand={toggleHymnExpansion}
-                  onGoto={(e) => {
-                    navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}`);
-                    scrollToContent();
-                  }}
-                />
-              );
-            })}
-            
-            {/* Show More Results Button */}
-            {searchMeta.hasMore && searchResults.length < 100 && (
-              <div className="show-more-results-container">
-                <button
-                  className="show-more-results-btn"
-                  onClick={handleShowMoreResults}
-                >
-                  Show Next 10 Results
-                  <small>({searchResults.length} of {Math.min(searchMeta.totalResults, 100)} shown)</small>
-                </button>
-              </div>
-            )}
-            
-            {!searchMeta.hasMore && searchMeta.totalResults > searchMeta.cutoffPosition && (
-              <div className="search-results-footer">
-                <div className="search-results-note">
-                  <span className="search-note-icon">ℹ️</span>
-                  Showing all {searchResults.length} results. The first {searchMeta.cutoffPosition} were identified as most relevant by smart filtering.
-                </div>
-              </div>
-            )}
-          </>
-        )}
-      </div>
-    </div>
-  );
 
   return (
     <div className="mainContainer">
       <div className="backgroundOverlay"></div>
+      <Navbar
+        onSearch={handleNavbarSearch}
+        searchValue={hymn}
+        showStickySearch={showStickySearch}
+        onSearchResultClick={(hymn) => {
+          navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}/${encodeURIComponent(hymn.mp3)}`);
+        }}
+        performSearch={performSearch}
+        isMainUserTyping={isUserTypingMain}
+      />
       <div className="contents">
-        <Navbar
-          onSearch={handleNavbarSearch}
-          searchValue={hymn}
-          showStickySearch={showStickySearch}
-          searchResults={[]} // Navbar will handle its own search results
-          onSearchResultClick={(hymn) => {
-            // Navigate to individual hymn page
-            navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}`);
-          }}
-          performSearch={performSearch} // Pass search function to navbar
-        />
         <img className="Jesus" src={jesus} alt="Jesus" />
+
         <div className="titleContainer">
           <img className="mainLogo" src={logo} alt="logo" />
           <span>Psaltos</span>
         </div>
+        
         <div className="searchBarContainer" ref={searchBarRef}>
           <div className="searchBar">
             <input
@@ -1124,124 +453,80 @@ function Home() {
               onChange={hymnSearch}
               onKeyPress={handleSearchKeyPress}
               onFocus={() => {
+                setIsUserTypingMain(true);
                 if (hymn.trim().length > 0) {
                   setShowDropdown(true);
                 }
               }}
               onBlur={() => {
-                // Delay hiding dropdown to allow clicks on results
                 setTimeout(() => setShowDropdown(false), 200);
               }}
             />
             <img src={search} alt="search" />
           </div>
-          {showDropdown && filteredHymns.length > 0 && (
-            <div>
-              {filteredHymns.slice(0, 8).map((hymnItem, index) => (
-                <SearchItem
-                  key={index}
-                  hymn={hymnItem}
-                  index={index}
-                  onClick={() => {
-                    setShowDropdown(false);
-                    setHymn('');
-                    navigate(`/hymn/${encodeURIComponent(hymnItem.name)}/${encodeURIComponent(hymnItem.artist)}`);
-                    scrollToContent();
-                  }}
-                />
-              ))}
-            </div>
-          )}
+          
+          <SearchDropdown
+            showDropdown={showDropdown}
+            filteredHymns={filteredHymns}
+            setShowDropdown={setShowDropdown}
+            setHymn={setHymn}
+            setIsUserTypingMain={setIsUserTypingMain}
+            navigate={navigate}
+          />
         </div>
         
-        {/* Compact Toggle Button */}
-        <button
-          onClick={toggleBrowseMode}
-          style={{
-            background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-light) 100%)',
-            color: 'white',
-            border: 'none',
-            padding: '8px 16px',
-            borderRadius: '20px',
-            fontSize: '14px',
-            fontWeight: '500',
-            cursor: 'pointer',
-            margin: '10px auto',
-            display: 'block',
-            transition: 'all 0.3s ease',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
-            minWidth: 'auto',
-            whiteSpace: 'nowrap'
-          }}
-          onMouseEnter={(e) => {
-            e.target.style.transform = 'translateY(-1px)';
-            e.target.style.boxShadow = '0 4px 12px rgba(0,0,0,0.3)';
-          }}
-          onMouseLeave={(e) => {
-            e.target.style.transform = 'translateY(0)';
-            e.target.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
-          }}
-        >
-          {browseMode === 'cantor' ? 'Browse by Season' : 'Browse by Cantor'}
-        </button>
+        <div className="browse-mode-tabs" data-mode={browseMode}>
+          <button
+            className={`browse-tab ${browseMode === 'cantor' ? 'active' : ''}`}
+            onClick={() => browseMode !== 'cantor' && toggleBrowseMode()}
+          >
+            By Cantor
+          </button>
+          <button
+            className={`browse-tab ${browseMode === 'season' ? 'active' : ''}`}
+            onClick={() => browseMode !== 'season' && toggleBrowseMode()}
+          >
+            By Season
+          </button>
+        </div>
 
-        {showSearchResults ? renderSearchResults() :
-         selectedHymn && typeof selectedHymn === 'object' ? renderIndividualHymn() : (
+        {!isDataLoaded ? (
+          <div className="loading-skeleton-container">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="loading-skeleton-item">
+                <div className="skeleton-avatar" />
+                <div className="skeleton-lines">
+                  <div className="skeleton-line skeleton-line-long" />
+                  <div className="skeleton-line skeleton-line-short" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
           <>
-            {browseMode === 'cantor' && (
-              <>
-                {selectedArtist && selectedSeason ? (
-                  <div className="cantor-season-layout">
-                    <div className="selected-cantor-season">
-                      <div className="seasonContainer">
-                        <div className="seasonItem selectedSeasonItem" onClick={() => {
-                          setSelectedArtist();
-                          setSelectedSeason();
-                          updateURL(browseMode, null, null, null, null);
-                        }}>
-                          <img src={selectedArtist.img} alt={`${selectedArtist.artistName}`} />
-                          <div className="headerContainer">
-                            <h1>{selectedArtist.artistName}</h1>
-                          </div>
-                          <div className="artist artist-label-spacing">
-                            <span>
-                              <ArtistIcon />
-                              <p>CANTOR</p>
-                            </span>
-                          </div>
-                        </div>
-                        <div className="seasonItem selectedSeasonItem" onClick={() => {
-                          setSelectedSeason();
-                          updateURL(browseMode, selectedArtist, null, null, null);
-                        }}>
-                          {seasonRender(selectedSeason)}
-                          <HeaderComponent placeHolder={selectedSeason} />
-                        </div>
-                      </div>
-                    </div>
-                    {renderHymns()}
-                  </div>
-                ) : (
-                  <>
-                    {ArtistList()}
-                    {selectedArtist && renderSeasons()}
-                  </>
-                )}
-              </>
-            )}
+            {renderMainContent()}
 
-            {browseMode === 'season' && (
-              <>
-                {!selectedSeason && renderAllSeasons()}
-                {selectedSeason && !selectedHymn && renderHymnsForSeason()}
-                {selectedSeason && selectedHymn && renderCantorsForHymn()}
-              </>
+            {!showSearchResults && !selectedHymn && recentlyPlayed?.length > 0 && (
+              <div className="recently-played-section">
+                <h2 className="recently-played-title">Recently Played</h2>
+                <div className="search-results-list">
+                  {recentlyPlayed.map((item, i) => (
+                    <HymnItem
+                      key={i}
+                      hymn={item}
+                      type="hymn"
+                      index={i}
+                      onClick={() => navigate(`/hymn/${encodeURIComponent(item.name)}/${encodeURIComponent(item.artist)}/${encodeURIComponent(item.mp3)}`)}
+                    />
+                  ))}
+                </div>
+              </div>
             )}
           </>
         )}
-        
-        <Footer />
       </div>
+
+      <Footer />
       <img className="churchImg" src={Church} alt="church" />
     </div>
   );

@@ -10,8 +10,12 @@ const app = express();
 const PORT = process.env.PORT || 5002;
 
 // Enable CORS for all routes
+const allowedOrigins = process.env.ALLOWED_ORIGINS
+  ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim())
+  : ['http://localhost:3000', 'http://localhost:3001'];
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:3003'], // Allow both common React dev ports
+  origin: allowedOrigins,
   credentials: true
 }));
 
@@ -31,10 +35,17 @@ const upload = multer({
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER || 'psaltoshymns@gmail.com',
-    pass: process.env.EMAIL_PASS || 'your-app-password-here' // You'll need to set this
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
   }
 });
+
+const escapeHtml = (str) =>
+  String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -45,66 +56,75 @@ app.get('/api/health', (req, res) => {
 app.get('/api/audio/proxy', async (req, res) => {
   try {
     const { url } = req.query;
-    
+
     if (!url) {
       return res.status(400).json({ error: 'URL parameter is required' });
     }
 
     console.log(`Proxying audio request for: ${url}`);
 
-    // Fetch the audio file from the external URL
+    // Forward Range header to support browser seeking
+    const upstreamHeaders = {
+      'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+    };
+    if (req.headers.range) {
+      upstreamHeaders['Range'] = req.headers.range;
+      console.log(`Range request forwarded: ${req.headers.range}`);
+    }
+
     const response = await axios({
       method: 'GET',
       url: url,
       responseType: 'stream',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      },
-      timeout: 30000 // 30 second timeout
+      headers: upstreamHeaders,
+      timeout: 30000,
     });
 
-    // Set appropriate headers for audio streaming
-    res.set({
-      'Content-Type': response.headers['content-type'] || 'audio/mpeg',
-      'Content-Length': response.headers['content-length'],
+    const upstreamContentType = response.headers['content-type'] || '';
+    console.log(`Upstream response: status=${response.status}, content-type=${upstreamContentType}, content-length=${response.headers['content-length']}`);
+
+    // Build response headers — let cors() middleware handle CORS, don't set them here
+    const responseHeaders = {
+      'Content-Type': upstreamContentType || 'audio/mpeg',
       'Accept-Ranges': 'bytes',
-      'Cache-Control': 'public, max-age=3600', // Cache for 1 hour
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, OPTIONS',
-      'Access-Control-Allow-Headers': 'Range, Content-Type'
-    });
-
-    // Handle range requests for audio seeking
-    if (req.headers.range && response.headers['accept-ranges'] === 'bytes') {
-      res.status(206); // Partial Content
+      'Cache-Control': 'public, max-age=3600',
+    };
+    if (response.headers['content-length']) {
+      responseHeaders['Content-Length'] = response.headers['content-length'];
+    }
+    if (response.headers['content-range']) {
+      responseHeaders['Content-Range'] = response.headers['content-range'];
     }
 
-    // Pipe the audio stream to the response
+    res.status(response.status === 206 ? 206 : 200).set(responseHeaders);
+
+    // Handle stream errors that occur after headers are sent
+    response.data.on('error', (streamErr) => {
+      console.error('Upstream stream error:', streamErr.message);
+      if (!res.headersSent) {
+        res.status(502).json({ error: 'Upstream stream failed' });
+      } else {
+        res.end();
+      }
+    });
+
     response.data.pipe(res);
 
   } catch (error) {
     console.error('Error proxying audio:', error.message);
-    
+
     if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
       return res.status(404).json({ error: 'Audio file not found or server unreachable' });
     }
-    
+
     if (error.code === 'ETIMEDOUT') {
       return res.status(408).json({ error: 'Request timeout' });
     }
-    
-    res.status(500).json({ error: 'Failed to fetch audio file', details: error.message });
-  }
-});
 
-// Handle preflight requests
-app.options('/api/audio/proxy', (req, res) => {
-  res.set({
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS',
-    'Access-Control-Allow-Headers': 'Range, Content-Type'
-  });
-  res.status(200).end();
+    if (!res.headersSent) {
+      res.status(500).json({ error: 'Failed to fetch audio file', details: error.message });
+    }
+  }
 });
 
 // Contact form endpoint
@@ -128,12 +148,12 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
     // Prepare email content
     let emailContent = `
       <h2>New Contact Form Submission</h2>
-      <p><strong>Name:</strong> ${name}</p>
-      <p><strong>Email:</strong> ${email}</p>
-      <p><strong>Subject:</strong> ${subject}</p>
+      <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+      <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+      <p><strong>Subject:</strong> ${escapeHtml(subject)}</p>
       <p><strong>Message:</strong></p>
       <div style="background-color: #f5f5f5; padding: 15px; border-radius: 5px; margin: 10px 0;">
-        ${message.replace(/\n/g, '<br>')}
+        ${escapeHtml(message).replace(/\n/g, '<br>')}
       </div>
       <hr>
       <p><small>This message was sent from the Psaltos contact form.</small></p>
@@ -141,7 +161,7 @@ app.post('/api/contact', upload.single('attachment'), async (req, res) => {
 
     // Prepare email options
     const mailOptions = {
-      from: process.env.EMAIL_USER || 'psaltoshymns@gmail.com',
+      from: process.env.EMAIL_USER,
       to: 'psaltoshymns@gmail.com',
       subject: `Psaltos Contact Form: ${subject}`,
       html: emailContent,

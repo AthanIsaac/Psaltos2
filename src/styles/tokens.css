@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700;800;900&display=swap');
+
+:root {
+    /* Typography Scale */
+    --text-xs: 12px;
+    --text-sm: 14px;
+    --text-base: 16px;
+    --text-lg: 18px;
+    --text-xl: 20px;
+    --text-2xl: 24px;
+    --text-3xl: 30px;
+    --text-4xl: 36px;
+    --text-5xl: 48px;
+    --text-6xl: 60px;
+
+    /* Color Palette – Light */
+    --primary-color: #1a365d;
+    --primary-light: #2c5282;
+    --primary-dark: #0d1b2a;
+    --primary-hover: #1e3a5f;
+    --secondary-color: #744210;
+    --secondary-light: #975a16;
+    --secondary-dark: #553010;
+    --accent-color: #D4AF37;
+    --accent-light: #F4D03F;
+    --accent-dark: #B8860B;
+    --success-color: #22c55e;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --info-color: #3b82f6;
+
+    /* Neutral Grays */
+    --gray-25: #fcfcfd;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --gray-950: #030712;
+
+    /* Backgrounds – Light */
+    --bg-primary: #f5f4f0;
+    --bg-secondary: #ebe9e5;
+    --bg-tertiary: #e0ddd9;
+    --bg-quaternary: #d5d2cc;
+    --bg-overlay: rgba(26, 54, 93, 0.95);
+    --bg-glass: rgba(245, 244, 240, 0.95);
+    --bg-card: rgba(249, 248, 245, 0.98);
+
+    /* Text – Light */
+    --text-primary: #1a202c;
+    --text-secondary: #2d3748;
+    --text-tertiary: #4a5568;
+    --text-muted: #718096;
+    --text-inverse: #ffffff;
+    --text-on-primary: #ffffff;
+    --text-on-secondary: #ffffff;
+    --text-on-accent: #1a202c;
+
+    /* Borders & Shadows – Light */
+    --border-color: #e2e8f0;
+    --border-light: #edf2f7;
+    --border-medium: #cbd5e1;
+    --border-dark: #a0aec0;
+    --border-focus: #3182ce;
+    --border-error: #ef4444;
+    --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+    --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 1px 2px 0 rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.08);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.08);
+    --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.3);
+    --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.08);
+
+    /* Spacing */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.25rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-10: 2.5rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-20: 5rem;
+
+    /* Border Radius */
+    --radius-sm: 0.375rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
+    --radius-2xl: 1.5rem;
+    --radius-full: 9999px;
+
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-normal: 200ms ease;
+    --transition-slow: 300ms ease;
+
+    /* Legacy aliases */
+    --max: var(--text-5xl);
+    --big: var(--text-3xl);
+    --medium: var(--text-2xl);
+    --small: var(--text-lg);
+    --mini: var(--text-xs);
+    --fourthy-color: var(--gray-300);
+    --fifthly-color: var(--bg-primary);
+}
+
