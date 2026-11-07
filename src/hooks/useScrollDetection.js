@@ -1,86 +1,30 @@
 import { useState, useEffect, useRef } from 'react';
 
+// Sticky navbar height; the search bar counts as "scrolled away" once it slides under it
+const HEADER_HEIGHT = 80;
+
 /**
- * Custom hook for detecting scroll position and managing sticky search visibility
- * @param {boolean} showSearchResults - Whether search results are currently shown
+ * Shows the navbar search once the main search bar has scrolled out of view.
  * @returns {Object} - { showStickySearch, searchBarRef }
  */
-export const useScrollDetection = (showSearchResults) => {
+export const useScrollDetection = () => {
   const [showStickySearch, setShowStickySearch] = useState(false);
   const searchBarRef = useRef(null);
 
   useEffect(() => {
-    let ticking = false;
-    let debounceTimeout = null;
-    let lastScrollY = window.scrollY;
-    let stableScrollDirection = null;
-    let scrollStabilityCounter = 0;
-    const STABILITY_THRESHOLD = 2;
-    const DEBOUNCE_DELAY = 16;
-    const HYSTERESIS_OFFSET = 15;
-    
-    const handleScroll = () => {
-      if (ticking) return;
-      
-      ticking = true;
-      requestAnimationFrame(() => {
-        if (!searchBarRef.current) {
-          ticking = false;
-          return;
-        }
-        
-        const currentScrollY = window.scrollY;
-        const searchBarRect = searchBarRef.current.getBoundingClientRect();
-        const headerHeight = 80;
-        
-        const showThreshold = headerHeight - HYSTERESIS_OFFSET;
-        const hideThreshold = headerHeight + HYSTERESIS_OFFSET;
-        
-        let shouldShowSticky;
-        if (showStickySearch) {
-          shouldShowSticky = searchBarRect.top < hideThreshold;
-        } else {
-          shouldShowSticky = searchBarRect.top < showThreshold;
-        }
-        
-        const scrollDirection = currentScrollY > lastScrollY ? 'down' : 'up';
-        if (scrollDirection === stableScrollDirection) {
-          scrollStabilityCounter++;
-        } else {
-          stableScrollDirection = scrollDirection;
-          scrollStabilityCounter = 1;
-        }
-        
-        lastScrollY = currentScrollY;
-        
-        const isStableScroll = scrollStabilityCounter >= STABILITY_THRESHOLD;
-        const isSignificantChange = Math.abs(searchBarRect.top - headerHeight) > HYSTERESIS_OFFSET;
-        
-        if ((isStableScroll || isSignificantChange) && shouldShowSticky !== showStickySearch) {
-          if (debounceTimeout) {
-            clearTimeout(debounceTimeout);
-          }
-          
-          debounceTimeout = setTimeout(() => {
-            setShowStickySearch(shouldShowSticky);
-            debounceTimeout = null;
-          }, DEBOUNCE_DELAY);
-        }
-        
-        ticking = false;
-      });
-    };
+    const el = searchBarRef.current;
+    if (!el) return;
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (debounceTimeout) {
-        clearTimeout(debounceTimeout);
-      }
-    };
-  }, [showStickySearch, showSearchResults]);
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Only "above the viewport" counts; below it means we're at the top of the page
+        setShowStickySearch(!entry.isIntersecting && entry.boundingClientRect.top < HEADER_HEIGHT);
+      },
+      { rootMargin: `-${HEADER_HEIGHT}px 0px 0px 0px` }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return { showStickySearch, searchBarRef };
 };

@@ -1,49 +1,67 @@
 import { useState, useEffect, useRef, useCallback, memo } from 'react'
-import { useAudio } from './AudioContext.js'
+import { useAudio, useAudioTime, SKIP_SECONDS } from './AudioContext.js'
+import VolumeControl from './VolumeControl.js'
 import playButtonIcon from './img/icons/playButton.svg'
 import pauseButtonIcon from './img/icons/pauseButton.svg'
 import forwardIcon from './img/icons/15Forward.svg'
 import rewindIcon from './img/icons/15Rewind.svg'
 import './styles/audio.css'
 
-const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5, 2];
+const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3];
 
 function Audio({ hymn, autoPlay = false }) {
     const {
         currentHymn,
         isPlaying,
-        currentTime,
-        duration,
         audioElement,
         playHymn,
         togglePlayPause,
         skipForward,
         skipBackward,
         formatTime,
+        setMainPlayerVisible,
+        audioError,
+        playbackSpeed,
+        setPlaybackSpeed,
     } = useAudio();
+    const { currentTime, duration } = useAudioTime();
 
     const isThisHymn = currentHymn?.mp3 === hymn?.mp3;
 
     const [isBuffering, setIsBuffering] = useState(false);
-    const [playbackSpeed, setPlaybackSpeed] = useState(1);
     const [showSpeedSlider, setShowSpeedSlider] = useState(false);
-    // Local seek value while the user is dragging
     const [isSeeking, setIsSeeking] = useState(false);
     const [seekValue, setSeekValue] = useState(0);
 
     const speedControlRef = useRef(null);
+    const containerRef = useRef(null);
+    const playerId = useRef(Symbol('audio-player')).current;
+
+    // Report visibility so MiniPlayer knows when to appear
+    useEffect(() => {
+        const el = containerRef.current;
+        if (!el) return;
+        const obs = new IntersectionObserver(
+            ([entry]) => setMainPlayerVisible(playerId, entry.isIntersecting),
+            { threshold: 0.1 }
+        );
+        obs.observe(el);
+        return () => {
+            obs.disconnect();
+            setMainPlayerVisible(playerId, false);
+        };
+    }, [setMainPlayerVisible, playerId]);
 
     // Auto-play on mount — used for shareable /hymn/:name/:artist/:mp3 links
     useEffect(() => {
         if (autoPlay && hymn) playHymn(hymn);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    // Detect buffering from native audio events (only when this hymn is active)
     useEffect(() => {
         if (!audioElement || !isThisHymn) return;
-        const onWaiting  = () => setIsBuffering(true);
-        const onPlaying  = () => setIsBuffering(false);
-        const onCanPlay  = () => setIsBuffering(false);
+        const onWaiting = () => setIsBuffering(true);
+        const onPlaying = () => setIsBuffering(false);
+        const onCanPlay = () => setIsBuffering(false);
         audioElement.addEventListener('waiting',  onWaiting);
         audioElement.addEventListener('playing',  onPlaying);
         audioElement.addEventListener('canplay',  onCanPlay);
@@ -54,7 +72,6 @@ function Audio({ hymn, autoPlay = false }) {
         };
     }, [audioElement, isThisHymn]);
 
-    // Close speed slider on outside click
     useEffect(() => {
         const handler = (e) => {
             if (speedControlRef.current && !speedControlRef.current.contains(e.target)) {
@@ -73,7 +90,6 @@ function Audio({ hymn, autoPlay = false }) {
         }
     }, [isThisHymn, currentHymn, hymn, playHymn, togglePlayPause]);
 
-    // Seeking: show local value while dragging, commit on release
     const handleSeekStart = useCallback(() => {
         if (!isThisHymn) return;
         setIsSeeking(true);
@@ -82,8 +98,11 @@ function Audio({ hymn, autoPlay = false }) {
 
     const handleSeekMove = useCallback((e) => {
         if (!isThisHymn) return;
-        setSeekValue(parseFloat(e.target.value));
-    }, [isThisHymn]);
+        const value = parseFloat(e.target.value);
+        setSeekValue(value);
+        // Keyboard adjustments arrive without a mouse/touch drag, so apply them directly
+        if (!isSeeking && audioElement) audioElement.currentTime = value;
+    }, [isThisHymn, isSeeking, audioElement]);
 
     const handleSeekCommit = useCallback((e) => {
         setIsSeeking(false);
@@ -91,10 +110,7 @@ function Audio({ hymn, autoPlay = false }) {
         audioElement.currentTime = parseFloat(e.target.value);
     }, [isThisHymn, audioElement]);
 
-    const handleSpeedChange = useCallback((speed) => {
-        setPlaybackSpeed(speed);
-        if (audioElement) audioElement.playbackRate = speed;
-    }, [audioElement]);
+    const handleSpeedChange = setPlaybackSpeed;
 
     const handleSliderChange = useCallback((e) => {
         handleSpeedChange(SPEED_OPTIONS[parseFloat(e.target.value)]);
@@ -108,9 +124,9 @@ function Audio({ hymn, autoPlay = false }) {
     const showSpinner     = isThisHymn && isBuffering && isPlaying;
 
     return (
-        <div className="audio-container" onClick={e => e.stopPropagation()}>
+        <div className="audio-container" ref={containerRef} onClick={e => e.stopPropagation()}>
 
-            {/* ── Seek bar ─────────────────────────────────────────── */}
+            {/* Seek bar — top strip */}
             <div className="audio-seek-container">
                 <input
                     type="range"
@@ -129,7 +145,11 @@ function Audio({ hymn, autoPlay = false }) {
                 />
             </div>
 
-            {/* ── Controls row ──────────────────────────────────────── */}
+            {isThisHymn && audioError && (
+                <div className="audio-error" role="alert">{audioError}</div>
+            )}
+
+            {/* Controls row */}
             <div className="audio-player-container">
 
                 {/* Time */}
@@ -143,37 +163,39 @@ function Audio({ hymn, autoPlay = false }) {
 
                 {/* Play / skip */}
                 <div className="audio-controls-center">
-                    <span
+                    <button
                         className="audio-control-btn"
                         onClick={isThisHymn ? skipBackward : undefined}
-                        title="Skip back 10 s"
-                        style={!isThisHymn ? { opacity: 0.35, pointerEvents: 'none' } : {}}
+                        title={`Skip back ${SKIP_SECONDS} s`}
+                        disabled={!isThisHymn}
                     >
-                        <img src={rewindIcon} alt="Rewind" width="20" height="20" />
-                    </span>
+                        <img src={rewindIcon} alt="Rewind" width="18" height="18" />
+                    </button>
 
-                    <span className="audio-control-btn play-pause-btn" onClick={handlePlayPause}>
+                    <button className="audio-control-btn play-pause-btn" onClick={handlePlayPause}>
                         {showSpinner ? (
                             <div className="loading-spinner" />
                         ) : isThisHymn && isPlaying ? (
-                            <img src={pauseButtonIcon} alt="Pause" width="24" height="24" />
+                            <img src={pauseButtonIcon} alt="Pause" width="20" height="20" />
                         ) : (
-                            <img src={playButtonIcon}  alt="Play"  width="24" height="24" />
+                            <img src={playButtonIcon}  alt="Play"  width="20" height="20" />
                         )}
-                    </span>
+                    </button>
 
-                    <span
+                    <button
                         className="audio-control-btn"
                         onClick={isThisHymn ? skipForward : undefined}
-                        title="Skip forward 10 s"
-                        style={!isThisHymn ? { opacity: 0.35, pointerEvents: 'none' } : {}}
+                        title={`Skip forward ${SKIP_SECONDS} s`}
+                        disabled={!isThisHymn}
                     >
-                        <img src={forwardIcon} alt="Forward" width="20" height="20" />
-                    </span>
+                        <img src={forwardIcon} alt="Forward" width="18" height="18" />
+                    </button>
                 </div>
 
-                {/* Speed */}
+                {/* Volume + Speed */}
                 <div className="audio-controls-right">
+                    <VolumeControl prefix="audio" />
+
                     <div className="speed-control-section" ref={speedControlRef}>
                         <div
                             className={`speed-slider-inline ${showSpeedSlider ? 'expanded' : 'collapsed'}`}

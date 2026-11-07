@@ -1,5 +1,7 @@
+import { hymnPath } from './utils/routes.js';
 import React, { memo, useCallback, useRef } from 'react';
-import { useAudio } from './AudioContext';
+import { useAudio, useAudioTime, SKIP_SECONDS } from './AudioContext';
+import VolumeControl from './VolumeControl.js';
 import { useNavigate } from 'react-router-dom';
 import playButtonIcon from './img/icons/playButton.svg';
 import pauseButtonIcon from './img/icons/pauseButton.svg';
@@ -8,35 +10,20 @@ import rewindIcon from './img/icons/15Rewind.svg';
 import ArtistIcon from './img/icons/artistIcon.js';
 import './styles/audio.css';
 
-const VolumeIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <path d="M2 6H5L9 3V13L5 10H2V6Z" fill="currentColor" />
-    <path d="M11 5.5C11.8 6.3 12.2 7.1 12.2 8C12.2 8.9 11.8 9.7 11 10.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-  </svg>
-);
-
-const MuteIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <path d="M2 6H5L9 3V13L5 10H2V6Z" fill="currentColor" />
-    <path d="M12 6L15 9M15 6L12 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-  </svg>
-);
-
 const MiniPlayer = () => {
   const {
     currentHymn,
     isPlaying,
-    currentTime,
-    duration,
-    volume,
+    mainPlayerVisible,
     togglePlayPause,
     skipForward,
     skipBackward,
     seekTo,
-    setVolumeLevel,
     formatTime,
     stopHymn,
+    audioError,
   } = useAudio();
+  const { currentTime, duration } = useAudioTime();
   const navigate = useNavigate();
 
   const handlePlayPause  = useCallback(() => { try { togglePlayPause(); } catch {} }, [togglePlayPause]);
@@ -46,7 +33,7 @@ const MiniPlayer = () => {
 
   const handleGoToHymn = useCallback(() => {
     if (currentHymn) {
-      navigate(`/hymn/${encodeURIComponent(currentHymn.name)}/${encodeURIComponent(currentHymn.artist)}/${encodeURIComponent(currentHymn.mp3)}`);
+      navigate(hymnPath(currentHymn));
     }
   }, [currentHymn, navigate]);
 
@@ -54,16 +41,11 @@ const MiniPlayer = () => {
     seekTo(parseFloat(e.target.value));
   }, [seekTo]);
 
-  const handleVolume = useCallback((e) => {
-    setVolumeLevel(parseFloat(e.target.value));
-  }, [setVolumeLevel]);
-
-  const handleVolumeMuteToggle = useCallback(() => {
-    setVolumeLevel(volume > 0 ? 0 : 1);
-  }, [volume, setVolumeLevel]);
-
   const touchStartX = useRef(null);
-  const handleTouchStart = useCallback((e) => { touchStartX.current = e.touches[0].clientX; }, []);
+  const handleTouchStart = useCallback((e) => {
+    // Dragging a slider must not be mistaken for a skip swipe
+    touchStartX.current = e.target.closest('input[type="range"]') ? null : e.touches[0].clientX;
+  }, []);
   const handleTouchEnd = useCallback((e) => {
     if (touchStartX.current === null) return;
     const delta = e.changedTouches[0].clientX - touchStartX.current;
@@ -73,7 +55,7 @@ const MiniPlayer = () => {
     else handleSkipBackward();
   }, [handleSkipForward, handleSkipBackward]);
 
-  if (!currentHymn) return null;
+  if (!currentHymn || mainPlayerVisible) return null;
 
   const fillPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
@@ -83,6 +65,7 @@ const MiniPlayer = () => {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
+      {audioError && <div className="mini-player-error" role="alert">{audioError}</div>}
       <div className="mini-player-content">
         {/* Hymn info — click to navigate */}
         <div className="mini-player-info" onClick={handleGoToHymn}>
@@ -95,7 +78,7 @@ const MiniPlayer = () => {
 
         {/* Playback controls */}
         <div className="mini-player-controls">
-          <button className="mini-control-btn" onClick={handleSkipBackward} title="Skip back 10s">
+          <button className="mini-control-btn" onClick={handleSkipBackward} title={`Skip back ${SKIP_SECONDS}s`}>
             <img src={rewindIcon} alt="Rewind" width="16" height="16" />
           </button>
           <button className="mini-control-btn mini-play-pause" onClick={handlePlayPause}>
@@ -104,7 +87,7 @@ const MiniPlayer = () => {
               : <img src={playButtonIcon}  alt="Play"  width="18" height="18" />
             }
           </button>
-          <button className="mini-control-btn" onClick={handleSkipForward} title="Skip forward 10s">
+          <button className="mini-control-btn" onClick={handleSkipForward} title={`Skip forward ${SKIP_SECONDS}s`}>
             <img src={forwardIcon} alt="Forward" width="16" height="16" />
           </button>
         </div>
@@ -116,20 +99,7 @@ const MiniPlayer = () => {
           <span>{formatTime(duration)}</span>
         </div>
 
-        {/* Volume */}
-        <div className="mini-volume-wrapper">
-          <button className="mini-volume-btn" onClick={handleVolumeMuteToggle} title={volume > 0 ? 'Mute' : 'Unmute'}>
-            {volume === 0 ? <MuteIcon /> : <VolumeIcon />}
-          </button>
-          <input
-            type="range"
-            className="mini-volume-slider"
-            min={0} max={1} step={0.02}
-            value={volume}
-            onChange={handleVolume}
-            aria-label="Volume"
-          />
-        </div>
+        <VolumeControl prefix="mini" />
 
         {/* Close */}
         <button className="mini-player-close" onClick={handleStop} title="Stop and close">

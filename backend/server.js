@@ -5,6 +5,7 @@ const axios = require('axios');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const path = require('path');
+const adminRoutes = require('./routes/admin');
 
 const app = express();
 const PORT = process.env.PORT || 5002;
@@ -51,6 +52,9 @@ const escapeHtml = (str) =>
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Psaltos Backend API is running' });
 });
+
+// Admin routes (local use only)
+app.use('/api/admin', adminRoutes);
 
 // Audio proxy endpoint
 app.get('/api/audio/proxy', async (req, res) => {

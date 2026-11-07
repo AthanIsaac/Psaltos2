@@ -1,0 +1,254 @@
+[
+  {
+    "id": "01-coptic-new-year",
+    "name_en": "Coptic New Year",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 1
+  },
+  {
+    "id": "02-feast-of-the-cross",
+    "name_en": "Feast of the Cross",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 2
+  },
+  {
+    "id": "03-vespers-praises",
+    "name_en": "Vespers Praises",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 3
+  },
+  {
+    "id": "03a-verses-of-the-cymbals-and-doxologies",
+    "name_en": "Verses of the Cymbals and Doxologies",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 4
+  },
+  {
+    "id": "04-weekday-praise",
+    "name_en": "Weekday Praise",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 5
+  },
+  {
+    "id": "05-sunday-midnight-praise",
+    "name_en": "Sunday Midnight Praise",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 6
+  },
+  {
+    "id": "06-vespers-and-matins-priest-parts",
+    "name_en": "Vespers and Matins Priest Parts",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 7
+  },
+  {
+    "id": "07a-st-basil-liturgy",
+    "name_en": "St. Basil Liturgy",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 8
+  },
+  {
+    "id": "07b-st-gregory-liturgy",
+    "name_en": "St. Gregory Liturgy",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 9
+  },
+  {
+    "id": "08-annual-deacon-responses",
+    "name_en": "Annual Deacon Responses",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 10
+  },
+  {
+    "id": "09-annual-congregation-responses",
+    "name_en": "Annual Congregation Responses",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 11
+  },
+  {
+    "id": "10-kiahk",
+    "name_en": "Kiahk",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 12
+  },
+  {
+    "id": "11-nativity",
+    "name_en": "Nativity",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 13
+  },
+  {
+    "id": "12-epiphany",
+    "name_en": "Epiphany",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 14
+  },
+  {
+    "id": "12a-cana-of-galilee",
+    "name_en": "Cana of Galilee",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 15
+  },
+  {
+    "id": "13-great-lent",
+    "name_en": "Great Lent",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 16
+  },
+  {
+    "id": "14-lazarus-saturday",
+    "name_en": "Lazarus Saturday",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 17
+  },
+  {
+    "id": "15-palm-sunday",
+    "name_en": "Palm Sunday",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 18
+  },
+  {
+    "id": "16-holy-week",
+    "name_en": "Holy Week",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 19
+  },
+  {
+    "id": "17-bright-saturday",
+    "name_en": "Bright Saturday",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 20
+  },
+  {
+    "id": "18-resurrection",
+    "name_en": "Resurrection",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 21
+  },
+  {
+    "id": "19-feast-of-the-lords-entry-into-egypt",
+    "name_en": "Feast of the Lord's Entry into Egypt",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 22
+  },
+  {
+    "id": "20-ascension",
+    "name_en": "Ascension",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 23
+  },
+  {
+    "id": "21-pentecost-and-sagda",
+    "name_en": "Pentecost and Sagda",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 24
+  },
+  {
+    "id": "22-apostles-fast",
+    "name_en": "Apostles Fast",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 25
+  },
+  {
+    "id": "23-st-marys-fast",
+    "name_en": "St. Mary's Fast",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 26
+  },
+  {
+    "id": "24-glorification",
+    "name_en": "Glorification",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 27
+  },
+  {
+    "id": "25-29th-of-the-month",
+    "name_en": "29th of the Month",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 28
+  },
+  {
+    "id": "29-gospels",
+    "name_en": "Gospels",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 29
+  },
+  {
+    "id": "31-wedding",
+    "name_en": "Wedding",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 30
+  },
+  {
+    "id": "07c-st-cyril-liturgy",
+    "name_en": "St. Cyril Liturgy",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 31
+  },
+  {
+    "id": "extra-twenty-four-presbyters",
+    "name_en": "Twenty Four Presbyters",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 32
+  },
+  {
+    "id": "veneration",
+    "name_en": "Veneration",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 33
+  },
+  {
+    "id": "liturgy-of-the-word",
+    "name_en": "Liturgy of the Word",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 34
+  },
+  {
+    "id": "30-spiritual-songs-cds",
+    "name_en": "Tapes",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 35
+  },
+  {
+    "id": "27-coptic-melodies",
+    "name_en": "MISC",
+    "name_coptic": "",
+    "name_ar": "",
+    "sort_order": 36
+  }
+]

@@ -14,6 +14,15 @@ export const useKeyboardControls = () => {
         activeElement.contentEditable === 'true'
       );
 
+      // Space activates focused buttons/links natively; don't hijack it there
+      const isInteractive = activeElement && (
+        activeElement.tagName === 'BUTTON' ||
+        activeElement.tagName === 'A' ||
+        activeElement.tagName === 'SELECT' ||
+        activeElement.getAttribute('role') === 'button'
+      );
+      if (event.metaKey || event.ctrlKey || event.altKey) return;
+
       // Only handle keyboard controls if there's a current hymn playing and not in an input field
       if (!currentHymn || isInputField) {
         return;
@@ -21,6 +30,7 @@ export const useKeyboardControls = () => {
 
       switch (event.code) {
         case 'Space':
+          if (isInteractive) return;
           event.preventDefault(); // Prevent page scroll
           togglePlayPause();
           break;

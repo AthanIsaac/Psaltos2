@@ -1,310 +1,168 @@
-// Debug flag - set to true to enable console logging
-const DEBUG_SMITH_WATERMAN = false;
+// Fuzzy hymn search based on the Smith-Waterman local-alignment algorithm.
 
-// Performance optimization: Cache for boundary checks
-const boundaryCache = new Map();
+const MATCH_SCORE = 5;
+const CONSECUTIVE_BONUS = 16; // carried to the next diagonal cell while characters keep matching
+const BOUNDARY_BONUS = 4;     // match at the start of a word in both strings
+const MIN_RESULTS = 3;
+const MAX_RESULTS = 100;
 
-function isBoundary(i, str) {
-    if (i === 0) return true;
-    const char = str[i - 1];
-    return char === ' ' || char === ',' || char === '-';
-}
+const EMPTY_RESULT = { results: [], hasMore: false, totalResults: 0, cutoffPosition: 0 };
 
-// Optimized Smith-Waterman algorithm
+const isWordStart = (str, i) => i === 0 || str[i - 1] === ' ' || str[i - 1] === ',' || str[i - 1] === '-';
+
+// Best local-alignment score of `needle` inside `haystack` (both already lower-cased)
 function swMatch(needle, haystack) {
-    const haystackSize = haystack.length + 1;
-    const needleSize = needle.length + 1;
-
-    // Pre-allocate and reuse arrays (simulate static behavior)
-    if (!swMatch._previousRow || swMatch._previousRow.length !== needleSize) {
-        swMatch._previousRow = new Array(needleSize);
-        swMatch._currentRow = new Array(needleSize);
-        
-        // Initialize with plain objects for better performance
-        for (let i = 0; i < needleSize; i++) {
-            swMatch._previousRow[i] = { score: 0, matchBonus: 0 };
-            swMatch._currentRow[i] = { score: 0, matchBonus: 0 };
-        }
-    } else {
-        // Reset arrays instead of recreating
-        for (let i = 0; i < needleSize; i++) {
-            swMatch._previousRow[i].score = 0;
-            swMatch._previousRow[i].matchBonus = 0;
-            swMatch._currentRow[i].score = 0;
-            swMatch._currentRow[i].matchBonus = 0;
-        }
-    }
-
-    let previousRow = swMatch._previousRow;
-    let currentRow = swMatch._currentRow;
+    const cols = needle.length + 1;
+    let prevScore = new Int32Array(cols);
+    let currScore = new Int32Array(cols);
+    let prevBonus = new Int32Array(cols);
+    let currBonus = new Int32Array(cols);
     let maxScore = 0;
 
-    // Cache string lengths and characters for faster access
-    const needleChars = needle;
-    const haystackChars = haystack;
+    for (let i = 0; i < haystack.length; i++) {
+        const haystackWordStart = isWordStart(haystack, i);
 
-    for (let i = 1; i < haystackSize; i++) {
-        const haystackChar = haystackChars[i - 1];
-        
-        for (let j = 1; j < needleSize; j++) {
-            const needleChar = needleChars[j - 1];
+        for (let j = 1; j < cols; j++) {
             let score = 0;
 
-            if (needleChar === haystackChar) {
-                currentRow[j].matchBonus = 16;
-                score = 5 + previousRow[j - 1].matchBonus;
-                
-                // Inline boundary check for better performance
-                const haystackBoundary = (i === 1) || (haystackChars[i - 2] === ' ' || haystackChars[i - 2] === ',' || haystackChars[i - 2] === '-');
-                const needleBoundary = (j === 1) || (needleChars[j - 2] === ' ' || needleChars[j - 2] === ',' || needleChars[j - 2] === '-');
-                
-                if (haystackBoundary && needleBoundary) {
-                    score += 4;
-                }
+            if (needle[j - 1] === haystack[i]) {
+                currBonus[j] = CONSECUTIVE_BONUS;
+                score = MATCH_SCORE + prevBonus[j - 1];
+                if (haystackWordStart && isWordStart(needle, j - 1)) score += BOUNDARY_BONUS;
             } else {
-                currentRow[j].matchBonus = 0;
+                currBonus[j] = 0;
             }
 
-            // Inline max calculation
-            const option1 = previousRow[j].score - 1;
-            const option2 = currentRow[j - 1].score - 1;
-            const option3 = previousRow[j - 1].score + score;
-            
-            score = Math.max(option1, Math.max(option2, option3));
-
-            if (score <= 0) {
-                score = 0;
-            } else if (score > maxScore) {
-                maxScore = score;
-            }
-
-            currentRow[j].score = score;
+            // Best of: gap in needle, gap in haystack, diagonal; never below zero
+            score = Math.max(prevScore[j] - 1, currScore[j - 1] - 1, prevScore[j - 1] + score, 0);
+            if (score > maxScore) maxScore = score;
+            currScore[j] = score;
         }
-        
-        // Efficient swap using temporary reference
-        const temp = previousRow;
-        previousRow = currentRow;
-        currentRow = temp;
+
+        [prevScore, currScore] = [currScore, prevScore];
+        [prevBonus, currBonus] = [currBonus, prevBonus];
     }
 
     return maxScore;
 }
 
-// Apply intelligent cutoff based on natural breakpoints in score distribution
-function applyIntelligentCutoff(query, results) {
-    if (results.length === 0) return results;
-    
-    const scores = results.map(r => r._swScore);
-    
-    // Find natural breakpoints using gap analysis
-    const cutoffPosition = findNaturalCutoff(scores, query);
-    
-    // Apply the cutoff
-    let filteredResults = results.slice(0, cutoffPosition);
-    
-    // Ensure reasonable bounds
-    const minResults = 3;  // Reduced minimum
-    const maxResults = 100; // Maximum number of search results
-    
-    if (filteredResults.length < minResults && results.length >= minResults) {
-        filteredResults = results.slice(0, minResults);
-    } else if (filteredResults.length > maxResults) {
-        filteredResults = results.slice(0, maxResults);
-    }
-    
-    if (DEBUG_SMITH_WATERMAN) {
-        const originalThreshold = results[cutoffPosition - 1]?._swScore || 0;
-        console.log(`Natural cutoff at position ${cutoffPosition} (threshold: ${originalThreshold.toFixed(2)}): ${results.length} → ${filteredResults.length} results`);
-    }
-    
-    return filteredResults;
-}
-
-// Find natural cutoff point based on score gaps and query characteristics
-function findNaturalCutoff(scores, query) {
-    if (scores.length <= 3) return scores.length;
-    
-    const sortedScores = [...scores].sort((a, b) => b - a);
-    const gaps = [];
-    
-    // Calculate gaps between consecutive scores
-    for (let i = 0; i < Math.min(sortedScores.length - 1, 50); i++) { // Only analyze first 50 positions
-        const gap = sortedScores[i] - sortedScores[i + 1];
-        const position = i + 1;
-        const gapRatio = sortedScores[i] > 0 ? gap / sortedScores[i] : 0;
-        
-        gaps.push({
-            position,
-            gap,
-            gapRatio,
-            beforeScore: sortedScores[i],
-            afterScore: sortedScores[i + 1]
-        });
-    }
-    
-    // Find significant gaps (based on our analysis)
-    const significantGaps = gaps.filter(g => {
-        // A gap is significant if:
-        // 1. It's a large absolute gap (>= 10 points) in the top 20 positions, OR
-        // 2. It's a large relative gap (>= 25% drop) anywhere, OR  
-        // 3. It's a moderate gap (>= 15% drop and >= 3 points) in top 15 positions
-        return (g.position <= 20 && g.gap >= 10) ||
-               (g.gapRatio >= 0.25 && g.gap >= 3) ||
-               (g.position <= 15 && g.gapRatio >= 0.15 && g.gap >= 3);
-    });
-    
-    if (significantGaps.length === 0) {
-        // No significant gaps found, use score-based cutoff
-        return findScoreBasedCutoff(sortedScores, query);
-    }
-    
-    // Choose the best gap based on query characteristics
-    let bestGap = significantGaps[0]; // Default to first significant gap
-    
-    // For exact matches (high top scores), prefer earlier gaps
-    if (sortedScores[0] > 150) {
-        bestGap = significantGaps.find(g => g.position <= 8) || bestGap;
-    }
-    // For partial matches, prefer gaps with good relative drops
-    else if (sortedScores[0] < 100) {
-        bestGap = significantGaps.reduce((best, current) => 
-            current.gapRatio > best.gapRatio ? current : best
-        );
-    }
-    
-    return Math.min(bestGap.position, 100); // Cap at 100 results
-}
-
-// Fallback score-based cutoff when no clear gaps are found
+// Fallback when no clear score gap exists: cut where scores fall below a fraction of the best
 function findScoreBasedCutoff(sortedScores, query) {
     const maxScore = sortedScores[0];
-    const queryLength = query.length;
-    
-    // Different strategies based on query characteristics and max score
+    const short = query.length <= 4;
+
     let thresholdRatio;
-    
-    if (maxScore > 150) {
-        // High-scoring exact matches - be more selective
-        thresholdRatio = queryLength <= 4 ? 0.5 : 0.4;
-    } else if (maxScore > 50) {
-        // Good partial matches - moderate selectivity
-        thresholdRatio = queryLength <= 4 ? 0.4 : 0.3;
-    } else {
-        // Lower scores - be more lenient
-        thresholdRatio = queryLength <= 4 ? 0.35 : 0.25;
-    }
-    
+    if (maxScore > 150) thresholdRatio = short ? 0.5 : 0.4;       // exact matches: be selective
+    else if (maxScore > 50) thresholdRatio = short ? 0.4 : 0.3;   // good partial matches
+    else thresholdRatio = short ? 0.35 : 0.25;                    // weak matches: be lenient
+
     const threshold = maxScore * thresholdRatio;
-    const cutoffPosition = sortedScores.findIndex(score => score < threshold);
-    
-    return cutoffPosition === -1 ? Math.min(sortedScores.length, 100) : Math.min(cutoffPosition, 100);
+    const cutoff = sortedScores.findIndex(score => score < threshold);
+    return Math.min(cutoff === -1 ? sortedScores.length : cutoff, MAX_RESULTS);
 }
 
-// Create Smith-Waterman search function for hymn data with pagination support
-export const createSmithWatermanSearch = (hymnData) => {
-    if (!hymnData || hymnData.length === 0) {
-        return () => ({ results: [], hasMore: false, totalResults: 0, cutoffPosition: 0 });
+// Find a natural cutoff by looking for a large drop between consecutive scores
+function findNaturalCutoff(scores, query) {
+    if (scores.length <= 3) return scores.length;
+
+    const sortedScores = [...scores].sort((a, b) => b - a);
+    const gaps = [];
+
+    for (let i = 0; i < Math.min(sortedScores.length - 1, 50); i++) {
+        const gap = sortedScores[i] - sortedScores[i + 1];
+        gaps.push({
+            position: i + 1,
+            gap,
+            gapRatio: sortedScores[i] > 0 ? gap / sortedScores[i] : 0,
+        });
     }
 
-    return (query, options = {}) => {
-        const { page = 1, pageSize = null, showAll = false } = options;
-        
-        if (!query) return { results: [], hasMore: false, totalResults: 0, cutoffPosition: 0 };
-        
-        const trimmedQuery = query.trim().toLowerCase();
-        if (!trimmedQuery) return { results: [], hasMore: false, totalResults: 0, cutoffPosition: 0 };
+    // Significant: big absolute drop near the top, big relative drop anywhere,
+    // or a moderate relative drop in the top 15
+    const significantGaps = gaps.filter(g =>
+        (g.position <= 20 && g.gap >= 10) ||
+        (g.gapRatio >= 0.25 && g.gap >= 3) ||
+        (g.position <= 15 && g.gapRatio >= 0.15 && g.gap >= 3)
+    );
 
-        if (DEBUG_SMITH_WATERMAN) {
-            console.log(`Smith-Waterman search for: "${trimmedQuery}" (page: ${page}, showAll: ${showAll})`);
-        }
+    if (significantGaps.length === 0) return findScoreBasedCutoff(sortedScores, query);
 
-        const startTime = performance.now();
+    let bestGap = significantGaps[0];
+    if (sortedScores[0] > 150) {
+        // Near-exact matches: prefer an early cutoff
+        bestGap = significantGaps.find(g => g.position <= 8) || bestGap;
+    } else if (sortedScores[0] < 100) {
+        // Partial matches: prefer the sharpest relative drop
+        bestGap = significantGaps.reduce((best, g) => (g.gapRatio > best.gapRatio ? g : best));
+    }
 
-        // Search through hymn data and score each hymn
-        const allResults = hymnData
-            .map(hymn => {
-                // Calculate scores for different fields
-                const nameScore = swMatch(trimmedQuery, hymn.name.toLowerCase());
-                const artistScore = swMatch(trimmedQuery, hymn.artist.toLowerCase());
-                const seasonScore = swMatch(trimmedQuery, hymn.season.toLowerCase());
-                
-                // Weighted total score (name gets highest weight)
-                const totalScore = (nameScore * 0.7) + (artistScore * 0.2) + (seasonScore * 0.1);
-                
-                if (DEBUG_SMITH_WATERMAN && totalScore > 0) {
-                    console.log(`${hymn.name} by ${hymn.artist}: name=${nameScore}, artist=${artistScore}, season=${seasonScore}, total=${totalScore.toFixed(2)}`);
-                }
-                
-                return {
-                    ...hymn,
-                    _swScore: totalScore,
-                    _swNameScore: nameScore,
-                    _swArtistScore: artistScore,
-                    _swSeasonScore: seasonScore,
-                    _searchType: 'smith-waterman',
-                    _searchScore: totalScore // For consistency with other search implementations
-                };
-            })
-            .filter(hymn => hymn._swScore > 0) // Only include hymns with positive scores
-            .sort((a, b) => b._swScore - a._swScore); // Sort by score descending
+    return Math.min(bestGap.position, MAX_RESULTS);
+}
 
-        // Determine cutoff position and pagination
-        let results, hasMore, cutoffPosition;
-        
+function applyIntelligentCutoff(query, results) {
+    if (results.length === 0) return results;
+
+    const cutoff = findNaturalCutoff(results.map(r => r._swScore), query);
+    if (cutoff < MIN_RESULTS && results.length >= MIN_RESULTS) return results.slice(0, MIN_RESULTS);
+    return results.slice(0, Math.min(cutoff, MAX_RESULTS));
+}
+
+/**
+ * Returns search(query, { showAll }) => { results, hasMore, totalResults, cutoffPosition }.
+ * By default only the best matches (up to a natural score cutoff) are returned;
+ * `showAll` returns up to 100 results regardless of the cutoff.
+ */
+export const createSmithWatermanSearch = (hymnData) => {
+    if (!hymnData || hymnData.length === 0) return () => EMPTY_RESULT;
+
+    // Lower-case once instead of on every search
+    const entries = hymnData.map(hymn => ({
+        hymn,
+        name: hymn.name.toLowerCase(),
+        artist: hymn.artist.toLowerCase(),
+        season: hymn.season.toLowerCase(),
+    }));
+
+    // The UI asks for both the top matches and the full list for the same query; score only once
+    let lastQuery = null;
+    let lastScored = [];
+
+    const scoreAll = (query) => {
+        if (query === lastQuery) return lastScored;
+
+        lastScored = entries
+            .map(({ hymn, name, artist, season }) => ({
+                ...hymn,
+                // Name matters most, then artist, then season
+                _swScore: swMatch(query, name) * 0.7 + swMatch(query, artist) * 0.2 + swMatch(query, season) * 0.1,
+            }))
+            .filter(hymn => hymn._swScore > 0)
+            .sort((a, b) => b._swScore - a._swScore);
+        lastQuery = query;
+        return lastScored;
+    };
+
+    return (query, { showAll = false } = {}) => {
+        const trimmedQuery = query?.trim().toLowerCase();
+        if (!trimmedQuery) return EMPTY_RESULT;
+
+        const allResults = scoreAll(trimmedQuery);
+
         if (showAll) {
-            // Show all results when user explicitly requests them
-            const startIndex = (page - 1) * 100;
-            const endIndex = startIndex + 100;
-            results = allResults.slice(startIndex, endIndex);
-            hasMore = endIndex < allResults.length;
-            cutoffPosition = allResults.length;
-        } else {
-            // Apply intelligent filtering for initial results
-            const filteredResults = applyIntelligentCutoff(trimmedQuery, allResults);
-            cutoffPosition = filteredResults.length;
-            
-            if (pageSize) {
-                // Paginate filtered results
-                const startIndex = (page - 1) * pageSize;
-                const endIndex = startIndex + pageSize;
-                results = filteredResults.slice(startIndex, endIndex);
-                hasMore = endIndex < filteredResults.length || filteredResults.length < allResults.length;
-            } else {
-                // Return all filtered results
-                results = filteredResults;
-                hasMore = filteredResults.length < allResults.length;
-            }
+            return {
+                results: allResults.slice(0, MAX_RESULTS),
+                hasMore: MAX_RESULTS < allResults.length,
+                totalResults: allResults.length,
+                cutoffPosition: allResults.length,
+            };
         }
 
-        const endTime = performance.now();
-        
-        if (DEBUG_SMITH_WATERMAN) {
-            console.log(`Smith-Waterman search completed in ${(endTime - startTime).toFixed(2)}ms, found ${results.length} results (filtered from ${allResults.length}, cutoff at ${cutoffPosition})`);
-        }
-
-        // Clear cache periodically to prevent memory leaks
-        if (boundaryCache.size > 1000) {
-            boundaryCache.clear();
-        }
-
+        const results = applyIntelligentCutoff(trimmedQuery, allResults);
         return {
             results,
-            hasMore,
+            hasMore: results.length < allResults.length,
             totalResults: allResults.length,
-            cutoffPosition,
-            filteredCount: showAll ? allResults.length : cutoffPosition
+            cutoffPosition: results.length,
         };
     };
 };
-
-// Backward compatibility - create simple search function that returns just results
-export const createSimpleSmithWatermanSearch = (hymnData) => {
-    const searchWithPagination = createSmithWatermanSearch(hymnData);
-    return (query) => {
-        const result = searchWithPagination(query);
-        return result.results;
-    };
-};
-
-// Example usage:
-// console.log(swMatch("test", "this is a test string"));

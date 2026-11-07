@@ -1,0 +1,1425 @@
+{
+  "folder_seasons": {
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/01 Muallim Mikhail Girgis Ghabrial El Batanooni/Albair Mikhail Files/13 صوم وعيد الرسل": "22-apostles-fast",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/01 Muallim Mikhail Girgis Ghabrial El Batanooni/Albair Mikhail Files/القداس الباسيلي": "07a-st-basil-liturgy",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/01 Muallim Mikhail Girgis Ghabrial El Batanooni/Albair Mikhail Files/القداس الغريغوري": "07b-st-gregory-liturgy",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/01 Muallim Mikhail Girgis Ghabrial El Batanooni/Albair Mikhail Files/القداس الكيرلسي": "07c-st-cyril-liturgy",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/01 Muallim Mikhail Girgis Ghabrial El Batanooni/M Mikhael": "07b-st-gregory-liturgy",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/01 Coptic New Year": "01-coptic-new-year",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/03a Verses of the Cymbals and Doxologies": "03a-verses-of-the-cymbals-and-doxologies",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/05 Sunday Midnight Praise": "05-sunday-midnight-praise",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/07b St. Gregory Liturgy": "07b-st-gregory-liturgy",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/08 Annual Deacon Responses": "08-annual-deacon-responses",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/12a Cana of Galilee": "12a-cana-of-galilee",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/14 Lazarus Saturday": "14-lazarus-saturday",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/15 Palm Sunday": "15-palm-sunday",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/17 Bright Saturday": "17-bright-saturday",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/19 Feast of the Lord's Entry into Egypt": "19-feast-of-the-lords-entry-into-egypt",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/20 Ascension": "20-ascension",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/21 Pentecost and Sagda": "21-pentecost-and-sagda",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/24 Glorification": "veneration",
+    "/Users/athanasiusisaac/hymns/Psaltos2/AllHymns/09 Muallim Ibrahim Ayad Girgis Farah ElAshrooby/25 29th of the Month": "25-29th-of-the-month"
+  },
+  "file_overrides": {
+    "2b9e446c-b605-4b0d-bbd6-529cf43d22c2": {
+      "season_id": "10-kiahk",
+      "removed": false
+    },
+    "15737415-44ba-49d0-9021-7419f80a9bf5": {
+      "season_id": "07c-st-cyril-liturgy",
+      "removed": false
+    },
+    "88c39109-0b06-43fb-9394-2bde9cd4c87b": {
+      "season_id": null,
+      "removed": true
+    },
+    "6302a45a-0a6f-4981-8599-d80131272965": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "c51f4ad1-2a26-49c0-ada2-47708c13b3f3": {
+      "season_id": "18-resurrection",
+      "removed": false
+    },
+    "00a1be3d-99d9-4a00-a0e2-67576c0cdcab": {
+      "season_id": "17-bright-saturday",
+      "removed": false
+    },
+    "689be2e8-9cca-4494-bb7d-1944358462f3": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "62a0fa34-90ef-4b99-bb0a-2a3d63c8df51": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "a861f41e-a3b4-446b-a9d0-c31c4fa54f76": {
+      "season_id": "12a-cana-of-galilee",
+      "removed": false
+    },
+    "dbc36a85-607e-4ed7-b32a-04793d59ea8f": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "a7607ebd-295a-4600-a2b2-635c2cbfb37f": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "a60ec516-37a9-4e81-b8b9-52664893e370": {
+      "season_id": "17-bright-saturday",
+      "removed": false
+    },
+    "b34b18e9-3a65-4005-b1ee-4f686637a88f": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "669301f4-fed9-4fa9-a781-a9fbdaee57b7": {
+      "season_id": "veneration",
+      "removed": false
+    },
+    "e3f21e34-71b0-4090-b1d7-c6fb622daf18": {
+      "season_id": "03-vespers-praises",
+      "removed": false
+    },
+    "6436c600-582c-4e81-a1a0-e0e4b460a274": {
+      "season_id": null,
+      "removed": true
+    },
+    "3fbbb8d3-c9e3-41a4-818c-e00987bfa2de": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "d24cbf45-7747-4baf-9388-e5cc8366a342": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "7a78e8fb-2dba-4385-b01b-8b0861c4bbe4": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "0a3488f4-bff5-47c7-ab9a-72a054e9d146": {
+      "season_id": "10-kiahk",
+      "removed": false
+    },
+    "7b0bf8ea-eb06-403e-9311-5ed03369fcd1": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "ba74c9cf-93b0-43bd-870f-17a1c7220d49": {
+      "season_id": "11-nativity",
+      "removed": false
+    },
+    "95b99773-65e9-47f3-a293-7a5a7f024c48": {
+      "season_id": "03-vespers-praises",
+      "removed": false
+    },
+    "64e09014-5576-49e3-8df2-9b8b407cd7bc": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "2e8ff75c-e170-4c15-90b9-f79c6884d6c5": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "df3779d6-6d23-47a7-ba37-60a39fe73b60": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "aaa14fcb-c7e7-4732-84fe-42d850f0b644": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "428388c1-bc12-43f5-a154-9ffc3f8a0190": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "f68f1add-5e33-4517-b743-66acfebf43a2": {
+      "season_id": "05-sunday-midnight-praise",
+      "removed": false
+    },
+    "26820d8d-29a6-4ebd-84e7-db5c956c81d4": {
+      "season_id": "05-sunday-midnight-praise",
+      "removed": false
+    },
+    "be98c9c3-80c3-4034-9cda-1b2dc955706f": {
+      "season_id": "19-feast-of-the-lords-entry-into-egypt",
+      "removed": false
+    },
+    "da31ddff-64c8-4b0c-9e3f-49ece1f279b4": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "9918ddb4-50fd-4c65-b30f-c99563a7bcf5": {
+      "season_id": "veneration",
+      "removed": false
+    },
+    "db1ce563-9406-46da-ab84-ca99ddbcec05": {
+      "season_id": "18-resurrection",
+      "removed": false
+    },
+    "77b5a5dd-55cd-4f40-94d7-5eaa51a2ed26": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "e4642f67-60f1-4b38-b722-605463417d7b": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "bec2ac7b-b2f6-4398-8a2c-c93f02ae3c29": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "690e74f5-60a2-4a65-9b9f-bb41da96e4c2": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "c82e1b15-b33b-4a65-9634-ddeee930e711": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "5a294ced-4b41-4643-9c44-f2f6c0eb131f": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "9e87ae12-bf4b-4b96-9097-df4b31af38ab": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "1eb0fddc-0c89-4a20-8d9c-50bd182ae817": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "6ed31650-cc42-44bc-b0a4-1646fda188a0": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "d99980b0-fe14-4e49-b84c-24e89e7f17da": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "cbdbdb66-b5c1-46b4-b67c-9afd8e117ac7": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "4a28c92e-3475-4f04-a3a9-d8cc6b1e30da": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "8c82c410-0d0e-4fbb-bed4-b3ea71ae65ff": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "f44f7ead-409e-45c1-b43b-932fed5484a7": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "80227e30-8ff1-476a-8a75-6571a5e537ef": {
+      "season_id": "15-palm-sunday",
+      "removed": false
+    },
+    "8aa7c386-7a08-4c25-b4b4-e38ed4eec3b4": {
+      "season_id": "15-palm-sunday",
+      "removed": false
+    },
+    "f8325352-27af-4657-817a-f2eda904315c": {
+      "season_id": "06-vespers-and-matins-priest-parts",
+      "removed": false
+    },
+    "855c2619-3965-433b-93cc-91ea8c646f47": {
+      "season_id": "11-nativity",
+      "removed": false
+    },
+    "e9d1e3b2-ec56-47b3-b8f2-cfcddfeceb2d": {
+      "season_id": "12a-cana-of-galilee",
+      "removed": false
+    },
+    "ebcc4510-f3a9-4570-86b4-3dd34ff1f0de": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "d21a0a98-4559-49c4-ad9e-178eac705e3e": {
+      "season_id": "12-epiphany",
+      "removed": false
+    },
+    "f2090520-b538-4df5-b940-f82cd41fc9ab": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "f110e6ab-ebe0-4c5c-a52b-88dd5f5da354": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "74dbb183-f875-423a-b130-09f73f4fe3fd": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "b881e68f-24a3-47ff-a081-2ca849061493": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "8b3126a0-9ebc-4c37-8a4d-ef0311f3f3a3": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "e3407894-1095-453b-a32b-ea7b564672a7": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "ffaafd88-dc36-44de-bc9a-b592b10f12ee": {
+      "season_id": null,
+      "removed": true
+    },
+    "8ebc9d9a-8668-4675-a232-421a722ffb89": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "626c5804-a98d-4b21-a0b9-0f717875a733": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "bb0ded1e-f776-4b54-969c-d14fec67b87c": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "d1157af5-9605-48c6-bc7e-584e14fdd6b3": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "3bbace45-29ce-4b38-b53d-f16d8d2ca095": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "98bcb662-9093-4d66-94d6-c72df7284939": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "74e377d1-1fb3-409f-ae5f-d2aaa5fa9e3a": {
+      "season_id": "18-resurrection",
+      "removed": false
+    },
+    "56dac5c2-c070-46ce-a6c1-53aa73d0ae01": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "25b86901-638e-4b0c-9aa8-977c0ffd228b": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "a5fc1455-7b49-4f4e-a782-17322155fdf6": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "e3fc1e2c-2dea-4049-98b9-ca64cdededbd": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "baefb425-32e1-4696-97f9-458aa7c6539b": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "ec3891fc-2280-45d2-92e8-ba6d7d348abc": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "7654d634-123b-4a57-b85d-0649b998d474": {
+      "season_id": "22-apostles-fast",
+      "removed": false
+    },
+    "05f634d2-5418-466f-b1f2-d2928a17b828": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "f9692118-9329-438a-baa1-0871c5771ceb": {
+      "season_id": "10-kiahk",
+      "removed": false
+    },
+    "7a0f429b-504c-48a8-a008-27ef6bec8e47": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "e5ae23b1-73f8-4e59-8aa8-0dcd18191fc5": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "4932d7a5-bb88-444a-a243-d5e3cb724b49": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "4df27cc6-92ae-4ab1-801d-4d79c8c11dbc": {
+      "season_id": "03-vespers-praises",
+      "removed": false
+    },
+    "d27c722e-e338-4fa8-87fc-9216a11baa1a": {
+      "season_id": "22-apostles-fast",
+      "removed": false
+    },
+    "c974b91b-b3cf-4280-b745-0475170d2db2": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "5363cb67-5aef-4d34-b36a-2c5b558960d7": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "9d736579-ab5c-4f41-a6cb-fba1ac3dad72": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "65ec2d1e-1dc6-4f5e-9b4e-fc399d34e401": {
+      "season_id": "veneration",
+      "removed": false
+    },
+    "96a4dae6-dc18-4e70-a118-7ae42966476e": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "0b1cd03c-7b53-40cf-8781-3c642ca15918": {
+      "season_id": "06-vespers-and-matins-priest-parts",
+      "removed": false
+    },
+    "cd6b56b8-bfcf-40f5-afc3-7eba05062b18": {
+      "season_id": "veneration",
+      "removed": false
+    },
+    "c85c5b6e-b325-429e-98ef-b6091a914cf8": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "295716bd-31e4-4421-ada3-d187496e0c2e": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "90eb1f67-908f-4889-b21b-d3da992e3a52": {
+      "season_id": "22-apostles-fast",
+      "removed": false
+    },
+    "6e5d6e4e-c60c-47a5-96c4-de5bac9c0be2": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "645e6bfb-29d2-4b1c-9ab9-0879651beb0d": {
+      "season_id": "21-pentecost-and-sagda",
+      "removed": false
+    },
+    "0bdb656b-f983-464b-b73b-d6dcb9c28db9": {
+      "season_id": "17-bright-saturday",
+      "removed": false
+    },
+    "5df75280-6d88-4647-acba-f03776e7704d": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "5a0d53f3-de3e-4b5c-bd3e-1c98851a325a": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "556f0fbe-3d99-4bdb-9210-033be46f69d0": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "840c433f-5da7-4290-88d9-61a093a8b570": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "3b9667ca-06ff-4af8-bcb8-46bd979c3f37": {
+      "season_id": "veneration",
+      "removed": false
+    },
+    "7b4cb588-f3b6-4948-9018-bce7374d4b68": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "64994e70-07ef-4e6f-b0c1-816443f85279": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "4a1ffe64-b750-4815-ac58-e82d650bc6ce": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "744c2e43-1a97-4e2c-9d67-b52961f09204": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "58a47106-6bc6-4e6a-9caa-09d616a3bdbc": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "00a1af68-7a22-4014-adb2-51ac783263cb": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "2ff3ce84-9a1e-4119-8319-c785950919a9": {
+      "season_id": "10-kiahk",
+      "removed": false
+    },
+    "7d18d6df-3397-4504-89de-e23c251f0652": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "175da61c-9293-485f-a24b-af120358c330": {
+      "season_id": "15-palm-sunday",
+      "removed": false
+    },
+    "3656c49e-9014-4899-b472-5df2fb587438": {
+      "season_id": "22-apostles-fast",
+      "removed": false
+    },
+    "0a61cd10-5fde-4a94-88a0-902f4adaad07": {
+      "season_id": "17-bright-saturday",
+      "removed": false
+    },
+    "32642c4a-324d-4ce0-b02f-f817176dd8ba": {
+      "season_id": "18-resurrection",
+      "removed": false
+    },
+    "075162ba-3de6-443d-b768-45b6950ffeed": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "a490a798-27a9-427a-81dd-42585d7919c0": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "8555f754-500d-47b0-afe0-5793f50cada4": {
+      "season_id": "12a-cana-of-galilee",
+      "removed": false
+    },
+    "7d6ab64c-7414-4641-a5fb-8ee2db52fd5b": {
+      "season_id": "22-apostles-fast",
+      "removed": false
+    },
+    "48657334-b551-4bfb-81ee-1b6f472388f7": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "4e3f9a3a-eee0-4bde-8ac9-18b6dd252947": {
+      "season_id": "11-nativity",
+      "removed": false
+    },
+    "7d46ef9e-b382-4b2b-98b3-a43088bf4035": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "76c253f3-ce2d-4b89-b7a4-433b0e08cabe": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "0416f13c-3608-4043-a6a7-b2045c451f8f": {
+      "season_id": "18-resurrection",
+      "removed": false
+    },
+    "3e270bda-cca4-4dc4-b62c-cadbb1171037": {
+      "season_id": null,
+      "removed": true
+    },
+    "fddb5209-a7df-4643-ae5f-ba923c323080": {
+      "season_id": null,
+      "removed": true
+    },
+    "6c4626f1-17e1-4782-aec4-fe69b20f42b3": {
+      "season_id": null,
+      "removed": true
+    },
+    "b01effe2-a86f-450e-abf3-6d5ab7514c74": {
+      "season_id": null,
+      "removed": true
+    },
+    "e4a9d28e-5f4b-44c7-b69a-362443f65003": {
+      "season_id": null,
+      "removed": true
+    },
+    "b5c2c473-66bb-45b0-8507-8ef73cfb4f0d": {
+      "season_id": null,
+      "removed": true
+    },
+    "601a274d-9439-49e1-808b-5710190005ad": {
+      "season_id": null,
+      "removed": true
+    },
+    "30b45deb-c7e6-4b1e-a451-fa49bfa8591d": {
+      "season_id": null,
+      "removed": true
+    },
+    "db8fb707-4640-4639-a8f5-cd4d4f4a54ba": {
+      "season_id": null,
+      "removed": true
+    },
+    "2cf2efe5-471f-4304-89d1-cb5e97c25a09": {
+      "season_id": null,
+      "removed": true
+    },
+    "1c544cb6-4b1a-4e49-acbd-b78f52c34593": {
+      "season_id": null,
+      "removed": true
+    },
+    "09c43f81-5655-4358-a4b0-2166c5ea9a2a": {
+      "season_id": null,
+      "removed": true
+    },
+    "129364f8-271c-4718-afd5-9b5ace5ecfb9": {
+      "season_id": null,
+      "removed": true
+    },
+    "bc8ce84f-4b68-4018-a75f-28ee35d79438": {
+      "season_id": null,
+      "removed": true
+    },
+    "2d059e30-1ae4-4fa0-8ecf-790947207b91": {
+      "season_id": null,
+      "removed": true
+    },
+    "7093baab-b19c-4a56-b59b-42bb577be818": {
+      "season_id": null,
+      "removed": true
+    },
+    "2bd48422-b470-405e-beaf-e71c04ac89e3": {
+      "season_id": null,
+      "removed": true
+    },
+    "3c120bb1-495a-4f77-9e16-9066c472a0a6": {
+      "season_id": null,
+      "removed": true
+    },
+    "2a9112f4-cef4-4cbb-9fe5-a55beb5c147e": {
+      "season_id": "03-vespers-praises",
+      "removed": false
+    },
+    "7443c622-fb17-462b-9c9f-7b371f99e1de": {
+      "season_id": "15-palm-sunday",
+      "removed": false
+    },
+    "e7a57202-d5f0-4c0b-a9ff-3eab09a99890": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "1cf829ff-63a3-4349-8243-e7307a47a4cb": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "fc1377c5-89da-4466-a1b1-07c45de5f054": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "ba16c9cd-8c2e-4d47-bed1-61f19fe80c1f": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "08c989d5-4ae8-4480-a702-0355752d0994": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "4c07b3f2-4d1b-45f9-9297-79682dcba47e": {
+      "season_id": "10-kiahk",
+      "removed": false
+    },
+    "0c77be53-855a-4e7e-8e9c-824183458204": {
+      "season_id": "17-bright-saturday",
+      "removed": false
+    },
+    "5c91551d-ee6a-40e0-afa9-1a647e500cc8": {
+      "season_id": "10-kiahk",
+      "removed": false
+    },
+    "32b1842b-2266-4736-8352-2083235ce724": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "c561878e-d908-41c9-b115-3634b5ccd10e": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "7b8cecf2-1ff3-4d2c-8084-291def8c2e05": {
+      "season_id": "17-bright-saturday",
+      "removed": false
+    },
+    "61ddc900-cbc7-4555-937a-723660cc66fa": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "cc65590a-2dd4-471c-a65a-f3a351e31816": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "c655a3d7-4501-4f98-80cc-7608ea3454ab": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "0136d1a2-f623-4823-ab6d-5829aa9d19a9": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "785110bc-8474-4653-ba28-d5b658369cf9": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "3be490a2-d666-4ee3-a644-129ec9eb9ec3": {
+      "season_id": "11-nativity",
+      "removed": false
+    },
+    "6587f9c4-cb37-41f4-9f68-e330fd9d50ef": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "7226892e-3711-4526-90b1-5ebec14097cc": {
+      "season_id": "18-resurrection",
+      "removed": false
+    },
+    "19b513af-dc4f-4c63-b588-28cb73e2c814": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "c60c8517-b0d6-409c-9708-2bf12fac5b7d": {
+      "season_id": "03-vespers-praises",
+      "removed": false
+    },
+    "84013805-a51a-4797-94df-47e9e0f1ea83": {
+      "season_id": "05-sunday-midnight-praise",
+      "removed": false
+    },
+    "c29243ff-e573-4b1c-98a0-df7e2db010ef": {
+      "season_id": "17-bright-saturday",
+      "removed": false
+    },
+    "9df72bd3-92d0-4c24-8e81-a89635470510": {
+      "season_id": "veneration",
+      "removed": false
+    },
+    "bf9a03d0-87e1-400b-8c60-5778bd03e125": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "1ef8f9e2-4d7a-4b31-b12b-1977be79a768": {
+      "season_id": "10-kiahk",
+      "removed": false
+    },
+    "84d4e75c-49e3-4aec-af86-fed896cce94b": {
+      "season_id": "03-vespers-praises",
+      "removed": false
+    },
+    "bb01becb-06f6-48a7-9c6a-814027f71364": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "bfa4e03e-0825-48f8-a3cb-061492faed97": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "2fb696b2-2ea4-461c-9827-1572f23c51f0": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "97ee21b2-f3eb-462a-acbb-344adf472eb4": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "71b2cf75-3add-49e5-a6be-ec4d5d7ed308": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "49bf9682-e558-413c-88b9-ea26a4e9deda": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "8221feef-de8e-46eb-b410-85a2bb69595e": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "c1fe08e8-cf6f-408d-9c25-54092a11f30f": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "883b8181-72e9-4874-b269-dde4cd4d0380": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "59fb9ada-e4ae-4eeb-b0b2-dca7cb8ed173": {
+      "season_id": "15-palm-sunday",
+      "removed": false
+    },
+    "bdf38acb-2f12-4cc8-8ab7-5c11babfc4c4": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "cc23ce78-7b55-4c57-8b25-3a53b9ded698": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "39fba8ba-b87c-486f-aeea-48e5e20db1f9": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "3e396d05-423e-4d84-93a8-7fe139a3218f": {
+      "season_id": "18-resurrection",
+      "removed": false
+    },
+    "2fb3f1d3-04d1-4f41-bef4-e4cda31b5e44": {
+      "season_id": "18-resurrection",
+      "removed": false
+    },
+    "275b16aa-fbc5-4982-a351-acf7ac2ec3b4": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "d6068a36-9d71-4a0e-b907-e0014132b3c3": {
+      "season_id": "02-feast-of-the-cross",
+      "removed": false
+    },
+    "413bed19-defa-4cac-b854-20f53caa1ed0": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "13ca4939-12d0-441b-b780-7b4047682bec": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "ada57c5e-c406-4354-b8c3-7e3de61d2d96": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "7a6addc6-0d13-4c72-926f-1cb3bdff8384": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "b0423cbf-06dc-4622-a3f6-c2146901d440": {
+      "season_id": "veneration",
+      "removed": false
+    },
+    "cb893371-0958-4800-85fa-a2c729fbd0a9": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "4f6fe487-c8b1-4ec7-b6ed-a3891c00658d": {
+      "season_id": "06-vespers-and-matins-priest-parts",
+      "removed": false
+    },
+    "0afd0d2b-eea8-4b59-902a-9e2a439a371c": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "68fd735c-772a-4182-b6c7-deba5e56272d": {
+      "season_id": "18-resurrection",
+      "removed": false
+    },
+    "f3a99a18-3cbc-4690-9e78-d7ef6b5a8e8a": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "01420712-251f-4e35-a040-354c0cedc6d1": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "66f1453f-9c18-4057-b54f-554d515e53c5": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "83391550-ac39-454c-ba02-25ca49e7fc31": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "86f1c08a-8d7b-4371-a6f1-a4e11a69d13c": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "8111e6b5-f903-4c21-a548-9a058389a8cb": {
+      "season_id": "11-nativity",
+      "removed": false
+    },
+    "676cc69b-367d-48e7-86d2-21df05a2646c": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "adcba507-8231-4a65-a255-70d5437db40a": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "4d4938fd-c20c-4ffe-8710-726a7c8d6e5b": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "4ea281fc-90a7-48e3-98aa-445fbc0a087f": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "51cafbec-17ee-4a37-97ad-89eb50db578c": {
+      "season_id": "21-pentecost-and-sagda",
+      "removed": false
+    },
+    "71716f61-6b5b-441d-9c1c-fa3f8c6ee4f1": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "070d69f4-e04a-4dae-a616-e04563242a00": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "5fc020ec-3595-49ca-b271-59199e307471": {
+      "season_id": "19-feast-of-the-lords-entry-into-egypt",
+      "removed": false
+    },
+    "6b01baed-2ed6-465e-888c-273e34a1db7e": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "9a9464cb-2cef-435f-989c-b4ab82c1e347": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "86ecf021-4953-4c36-8f18-04d088840daa": {
+      "season_id": "22-apostles-fast",
+      "removed": false
+    },
+    "ed8170d9-e25d-4562-99a0-9d6302ff1297": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "b9f48739-099d-4a35-8989-141cc573664a": {
+      "season_id": "03-vespers-praises",
+      "removed": false
+    },
+    "493546a1-eb08-401f-a81a-0bd09089cf5b": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "92117090-1cbe-4ca7-8da8-89d267a824b2": {
+      "season_id": "22-apostles-fast",
+      "removed": false
+    },
+    "bd162b57-086b-4358-959a-2f862ca803bc": {
+      "season_id": null,
+      "removed": true
+    },
+    "63b2c70c-53fc-4e52-b21c-17dde27b4260": {
+      "season_id": "veneration",
+      "removed": false
+    },
+    "023cedf8-8750-4886-a3fa-918bee26453d": {
+      "season_id": "22-apostles-fast",
+      "removed": false
+    },
+    "5a01185e-04e4-4711-83c6-4a4a46c391e2": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "128c4ad1-6426-4847-8eb1-335c97fc7273": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "bd786438-8c36-442d-8387-cef62c47c1df": {
+      "season_id": "10-kiahk",
+      "removed": false
+    },
+    "c3bba5e1-a831-4737-94f6-2f4a80fbd1d4": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "639722fa-05a1-4567-b2f3-14d83626aaea": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "327fa60b-6760-4107-9705-cc5378d360d9": {
+      "season_id": "10-kiahk",
+      "removed": false
+    },
+    "9485d777-9fb2-4ffd-9e57-0470f5695d2b": {
+      "season_id": null,
+      "removed": true
+    },
+    "1f132a15-4a6b-48bb-832c-91ddbfad051f": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "82d6910a-925e-4755-a61e-8b4ca5d6ed16": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "ae8b0471-c0bc-41d8-ba1d-e973bd370dd3": {
+      "season_id": "06-vespers-and-matins-priest-parts",
+      "removed": false
+    },
+    "80dae6ab-3940-45ec-b393-78542307c689": {
+      "season_id": "03-vespers-praises",
+      "removed": false
+    },
+    "5d9efb8f-a1c6-4b02-839d-1653b33b1ed8": {
+      "season_id": "10-kiahk",
+      "removed": false
+    },
+    "6ce561b6-9938-4c3c-9a22-8976bf5e7f69": {
+      "season_id": "05-sunday-midnight-praise",
+      "removed": false
+    },
+    "51ec73b9-ac65-4365-95ca-c59b18423e79": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "d8f7b37f-c062-43b4-996e-4401297fa330": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "7132bd19-6c58-41f3-bb26-6d1541aa272a": {
+      "season_id": "18-resurrection",
+      "removed": false
+    },
+    "b0278c69-db11-48d4-a0ef-c33d85fa4816": {
+      "season_id": "12a-cana-of-galilee",
+      "removed": false
+    },
+    "883496a1-9742-4f67-b13c-8c20931bfad9": {
+      "season_id": "12-epiphany",
+      "removed": false
+    },
+    "9b67d97d-b560-479b-8ec8-d95e5bce58ff": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "4eaed938-e9f9-4c02-95fa-2d1d4dd03240": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "e09ae7a7-0744-4a6e-8c35-bc887a38ff26": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "749836b8-039c-4e81-ad9f-bdd925cff0ba": {
+      "season_id": "10-kiahk",
+      "removed": false
+    },
+    "504d8faa-b4de-412e-95b4-152445f2af19": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "c2de9bad-5366-4fe0-b7b3-14f631806598": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "2f7290d0-0131-4dfd-ac5f-ade400b0611f": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "a65527c8-42a0-47b7-a671-3bbc33a4e948": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "788527bf-9474-472a-a061-aabae4709082": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "a89cb0be-91ff-4d8f-bd0b-7d2073c49540": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "3fd8b146-3ba2-48fe-bc58-784fcac05926": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "5e48b329-fc1b-4cc7-98f4-afef2faaf499": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "280b245d-f226-4e11-ae2d-433416924b73": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "ad649f84-3699-4723-b417-51df8a4f8b18": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "b8b73af2-0c88-4c3c-9360-b2383bdef513": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "c816e940-793b-4c79-b637-6224376f183a": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "eafe849b-96a3-482d-95ac-1271ca7caa51": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "0f33f386-34ee-4e27-883f-352ae967c0d4": {
+      "season_id": null,
+      "removed": true
+    },
+    "2a171eec-230a-423b-be82-f2d203679b2c": {
+      "season_id": null,
+      "removed": true
+    },
+    "72bf3342-fe1e-4a17-8d34-133ea516e260": {
+      "season_id": null,
+      "removed": true
+    },
+    "6ca35f7f-b3f4-4f1a-8b7c-05d5247967ea": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "24a559f6-ef7a-4bd6-8e64-0ec91144e4ea": {
+      "season_id": null,
+      "removed": true
+    },
+    "a475371f-15d2-4dc2-bdd2-fe6e843875dd": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "91c0024b-8b17-4134-943b-30884b5423e3": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "d1d6d004-443a-41e0-afaf-40e991e7949c": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "50b67f59-2ea2-4caf-ba0e-20c67abdaa0c": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "a27fe5c2-551d-434b-8ad9-0245b51f94ea": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "9877907f-30c3-48d3-9d02-5f82bfa8b5e9": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "a70803f5-4f01-4883-a315-0f539bad7383": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "04094706-8d38-48bc-9ca0-0cc11abff9a2": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "1d7e4517-40ac-4346-aa59-63808c9faed1": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "97b48ccd-b83d-45b1-a6a6-b668b3307ecb": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "3328932e-a1d0-44c9-8370-d19900bdd238": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "5e4ddb2e-95ed-49e2-b1ad-b51ae2e3e27f": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "856b8467-9b37-4f4c-a6a0-14353046253b": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "446bcd4b-5a19-43ce-a203-1643e8218b97": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "a73bbc0e-8d36-4adf-8018-f0c4078b4224": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "6404b540-587b-457f-b08f-bc12c70cef76": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "f7415091-6560-4672-91b8-215754366442": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "aeaaea34-0e92-41db-a8d4-3d6c14731a96": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "b9194462-e586-47f4-8eb5-479179af44ce": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "b0328944-2a6a-4c36-8d4b-f18654cf2390": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "7d797ee4-b469-4c61-acec-8c7ad8165046": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "e4f6d1e6-c97f-43f5-bd89-1db3292c078e": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "23fd6765-3a04-4910-8185-ca8719c26920": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "5f785843-61f3-42c7-a942-8d11ce074da1": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "48f71138-b6d7-4302-a2e1-87a5ab67a00d": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "b8f5cc7b-4760-48b1-981c-fd9a224cd142": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "b7a8f415-23b7-4a4a-b83d-7e91d120de45": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "d32630cb-d0c3-4944-a39b-8888c9fbc743": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "9101abc3-35fe-4434-b891-5b984309baff": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "4374ab7f-af25-4ee6-a086-186c387c8cb0": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "d17fb16b-a248-4db7-81b0-b225df4f6179": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "1dc642da-9ad5-4d4d-9a7c-e1b46928d4c6": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "5a413c12-bcc8-45b2-8236-20ef95323e7f": {
+      "season_id": "30-spiritual-songs-cds",
+      "removed": false
+    },
+    "3633c8e0-7e56-4562-8f1d-4781562b7727": {
+      "season_id": "27-coptic-melodies",
+      "removed": false
+    },
+    "a7688f5b-a53a-4ad9-abb6-a17efd615428": {
+      "season_id": "06-vespers-and-matins-priest-parts",
+      "removed": false
+    },
+    "a5e45303-6f8b-423e-9a91-4e7f110de0ae": {
+      "season_id": "06-vespers-and-matins-priest-parts",
+      "removed": false
+    },
+    "3b266b3c-c74c-4324-956d-4fd305e7039c": {
+      "season_id": "06-vespers-and-matins-priest-parts",
+      "removed": false
+    },
+    "8e8b82bf-fbea-4038-a6dd-c8e74fb828e3": {
+      "season_id": "06-vespers-and-matins-priest-parts",
+      "removed": false
+    },
+    "bb90f540-afcf-431d-a6ae-532484ca3191": {
+      "season_id": "06-vespers-and-matins-priest-parts",
+      "removed": false
+    },
+    "4455458d-3dca-4a95-9d2d-dea080825738": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "5e06ab16-7f3c-499f-a904-1724089e5904": {
+      "season_id": "liturgy-of-the-word",
+      "removed": false
+    },
+    "ee1ef4ce-5b28-4285-97da-e0747fd8b0e0": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "327695dd-7a70-42e5-8b55-7f1afffca7fe": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "af0b3db4-ab40-4093-bda3-39f6013d3673": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "4ce69d67-adc2-4bba-b64a-f62cb05c6469": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "53b1b4e5-3e67-44da-95dc-cd912aaa4ad7": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "4c48995e-71df-4b7e-8f06-2271cce3d2cf": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "0d4fe1bb-eb59-403b-a618-3df152c05ab0": {
+      "season_id": "07a-st-basil-liturgy",
+      "removed": false
+    },
+    "9e0fb564-d58c-45dc-aa6c-902879067140": {
+      "season_id": "27-coptic-melodies",
+      "removed": false
+    },
+    "9b9da172-2801-43b0-bd1a-cb498877b578": {
+      "season_id": "05-sunday-midnight-praise",
+      "removed": false
+    },
+    "99738f6c-b0fd-41e6-ba60-a5c9f88bb959": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "7e224444-00b7-4cc5-b7d4-bfbe5a7ff779": {
+      "season_id": "15-palm-sunday",
+      "removed": false
+    },
+    "066e3908-c0e5-4375-86c7-1dcb493d0e0e": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "65dd5fb8-eb90-40ce-ab7d-506ae650d298": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "fa215fe1-490f-407b-a95e-c0bf5ee3a917": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "f1d3d8b6-1ce9-440c-922c-43e4b845a7e8": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "e4168988-35c8-42a8-8dba-5b76b0df71b8": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "1109b622-0961-4af5-bee6-ee72c4d42100": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "1f149231-89b7-4415-8c2d-88f46ca98b38": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "7c13a05a-49dd-4652-8aee-ee907ed35717": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "8960c8ee-165d-4172-98f1-421f81c4227c": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "fcccd7c5-9f77-4c44-86d5-cb131c140394": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "d4ee69fb-820a-4ae9-950a-55b9bdf869fa": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "0d23872c-6cb2-4327-b288-c832c1335abf": {
+      "season_id": "17-bright-saturday",
+      "removed": false
+    },
+    "500204a2-75f9-4d63-bf9d-cde13f0eaa9b": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "230dd299-2d61-49f5-be74-02380863e1bf": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "bf8309f4-6d18-426e-bcd3-69c02a88d774": {
+      "season_id": "16-holy-week",
+      "removed": false
+    },
+    "9d519e11-31fb-4712-985a-53e29ce1e8ad": {
+      "season_id": "17-bright-saturday",
+      "removed": false
+    },
+    "58516143-d270-4c83-afe7-0eb477cacf30": {
+      "season_id": "18-resurrection",
+      "removed": false
+    },
+    "7b9b19ff-7912-4ea2-8865-2c5cc22ab7ea": {
+      "season_id": "13-great-lent",
+      "removed": false
+    },
+    "8e00feb8-5f64-404c-9c49-5ca7c77e470c": {
+      "season_id": "27-coptic-melodies",
+      "removed": false
+    },
+    "13290c1b-ca73-476c-878f-62bcdfe8e18e": {
+      "season_id": "27-coptic-melodies",
+      "removed": false
+    },
+    "50c996bd-5b1e-4c76-8305-3b0b00b3d4ab": {
+      "season_id": "27-coptic-melodies",
+      "removed": false
+    },
+    "16fdd1c9-b863-4643-be08-decba7815d7d": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "cb4449d2-f31b-4191-ba17-2776b3cc7b2f": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "86607537-aef5-43a9-902f-80e1c8a61763": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "6fc1c166-d1d1-4960-b583-6ea0efa6d161": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "93cbed93-259b-4bf0-a5dc-ae4e33356964": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "5d8b3ea5-bf25-4b44-8ba6-03e303726c34": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "ddac1326-f48c-43da-b167-a156a62c66b5": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "bc2b96b4-4d9e-4652-8598-98e96cbfe830": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "9e848c12-29fc-49bb-8101-7b9474b99f66": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "337a89f7-8963-40d5-811a-ebcb3bc17212": {
+      "season_id": "07b-st-gregory-liturgy",
+      "removed": false
+    },
+    "c3574e4c-7a84-4e97-abbb-ae4b5200073a": {
+      "season_id": "31-wedding",
+      "removed": false
+    },
+    "da7a38d5-b6af-451d-a451-378d968016ca": {
+      "season_id": "27-coptic-melodies",
+      "removed": false
+    },
+    "ef51aa1b-2539-43a7-8042-43fea6ebef02": {
+      "season_id": "27-coptic-melodies",
+      "removed": false
+    },
+    "5aa58ff2-0216-4dbc-b856-d87999618257": {
+      "season_id": "27-coptic-melodies",
+      "removed": false
+    },
+    "dffadb94-e4d2-4d64-994b-cc3927ca1b3e": {
+      "season_id": "27-coptic-melodies",
+      "removed": false
+    },
+    "c6fa2550-91f9-4ec1-a299-d0b5d05ec9dc": {
+      "season_id": "27-coptic-melodies",
+      "removed": false
+    },
+    "2d4d53d6-38a0-4758-82e0-d7c42848a1db": {
+      "season_id": "27-coptic-melodies",
+      "removed": false
+    },
+    "bd8d365e-e3b6-401e-9540-9408b5600606": {
+      "season_id": "06-vespers-and-matins-priest-parts",
+      "removed": false
+    }
+  }
+}

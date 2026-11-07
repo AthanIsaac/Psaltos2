@@ -1,3 +1,4 @@
+import { hymnPath } from '../utils/routes.js';
 import React, { useState } from 'react';
 import HymnItem from '../HymnItem.js';
 import { HeaderComponent, BackButton } from './SharedComponents.js';
@@ -163,7 +164,7 @@ export const HymnsList = ({ hymns, expandedHymns, toggleHymnExpansion, navigate 
             index={index}
             isExpanded={expandedHymns.has(hymnId)}
             onExpand={toggleHymnExpansion}
-            onGoto={() => navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}/${encodeURIComponent(hymn.mp3)}`)}
+            onGoto={() => navigate(hymnPath(hymn))}
           />
         );
       })}
@@ -235,7 +236,7 @@ export const CantorsForHymn = ({ selectedHymn, selectedSeason, cantorsForHymn, e
               index={index}
               isExpanded={expandedHymns.has(hymnId)}
               onExpand={toggleHymnExpansion}
-              onGoto={() => navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}/${encodeURIComponent(hymn.mp3)}`)}
+              onGoto={() => navigate(hymnPath(hymn))}
             />
           );
         })}

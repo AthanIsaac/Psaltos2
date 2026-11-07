@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { hymnPath } from '../utils/routes.js';
 import HymnItem from '../HymnItem.js';
 import Audio from '../Audio.js';
 import ArtistData from '../artists.json';
@@ -7,8 +7,14 @@ const isDebugMode = () =>
   process.env.NODE_ENV === 'development' &&
   new URLSearchParams(window.location.search).has('showScores');
 
-export const SearchItem = ({ hymn, index, onClick }) => (
-  <div key={index} className="main-search-result" onClick={onClick}>
+export const SearchItem = ({ hymn, index, onClick, isActive = false }) => (
+  <div
+    id={`main-search-option-${index}`}
+    role="option"
+    aria-selected={isActive}
+    className={`main-search-result${isActive ? ' is-active' : ''}`}
+    onClick={onClick}
+  >
     <div className="main-search-result-title">{hymn.name}</div>
     <div className="main-search-result-meta">
       <span className="main-search-result-artist">{hymn.artist}</span>
@@ -66,7 +72,7 @@ export const SearchResults = ({
                 score={hymn._swScore}
                 showScore={isDebugMode()}
                 onExpand={toggleHymnExpansion}
-                onGoto={() => navigate(`/hymn/${encodeURIComponent(hymn.name)}/${encodeURIComponent(hymn.artist)}/${encodeURIComponent(hymn.mp3)}`)}
+                onGoto={() => navigate(hymnPath(hymn))}
               />
             );
           })}
@@ -82,7 +88,7 @@ export const SearchResults = ({
   </div>
 );
 
-export const IndividualHymn = ({ selectedHymn, setSelectedHymn, navigate }) => {
+export const IndividualHymn = ({ selectedHymn, navigate }) => {
   if (!selectedHymn || typeof selectedHymn !== 'object') return null;
 
   const artistInfo = ArtistData.find(a => a.artistName === selectedHymn.artist);
@@ -91,7 +97,7 @@ export const IndividualHymn = ({ selectedHymn, setSelectedHymn, navigate }) => {
     <div className="individual-hymn-page">
       <button
         className="individual-hymn-back"
-        onClick={() => { setSelectedHymn(null); navigate('/'); }}
+        onClick={() => navigate('/')}
       >
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
           <path d="M10 13L5 8L10 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -126,28 +132,21 @@ export const IndividualHymn = ({ selectedHymn, setSelectedHymn, navigate }) => {
 export const SearchDropdown = ({
   showDropdown,
   filteredHymns,
-  setShowDropdown,
-  setHymn,
-  setIsUserTypingMain,
-  navigate,
+  activeIndex = -1,
+  onSelect,
 }) => {
-  const handleSearchItemClick = useCallback((hymnItem) => {
-    setShowDropdown(false);
-    setHymn('');
-    setIsUserTypingMain(false);
-    navigate(`/hymn/${encodeURIComponent(hymnItem.name)}/${encodeURIComponent(hymnItem.artist)}/${encodeURIComponent(hymnItem.mp3)}`);
-  }, [setShowDropdown, setHymn, setIsUserTypingMain, navigate]);
-
   if (!showDropdown || filteredHymns.length === 0) return null;
 
   return (
-    <div>
+    // preventDefault on mousedown keeps focus in the input so the click lands before blur closes the list
+    <div id="main-search-listbox" role="listbox" onMouseDown={(e) => e.preventDefault()}>
       {filteredHymns.slice(0, 8).map((hymnItem, index) => (
         <SearchItem
           key={index}
           hymn={hymnItem}
           index={index}
-          onClick={() => handleSearchItemClick(hymnItem)}
+          isActive={index === activeIndex}
+          onClick={() => onSelect(hymnItem)}
         />
       ))}
     </div>

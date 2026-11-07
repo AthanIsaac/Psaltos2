@@ -149,12 +149,37 @@
 }
 
 .hymn-card:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: var(--shadow-2xl);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
     border-color: var(--primary-color);
 }
 
 .hymn-card:hover::before { opacity: 1; }
+
+.hymn-card-static {
+    cursor: default;
+}
+
+.hymn-card-static:hover {
+    transform: none;
+    box-shadow: none;
+    border-color: var(--border-light);
+}
+
+.hymn-card-static:hover::before { opacity: 0; }
+
+.hymn-card-static:hover .hymn-card-icon {
+    transform: none;
+    box-shadow: var(--shadow-lg);
+}
+
+.hymn-card-static:hover .hymn-card-overlay { opacity: 0; }
+
+.hymn-card-static:hover .hymn-card-arrow {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--primary-color);
+    transform: none;
+}
 
 
 .hymn-card-header {
@@ -177,7 +202,7 @@
     transition: all var(--transition-normal);
 }
 
-.hymn-card:hover .hymn-card-icon { transform: scale(1.1) rotate(5deg); box-shadow: var(--shadow-xl); }
+.hymn-card:hover .hymn-card-icon { transform: scale(1.05); box-shadow: var(--shadow-xl); }
 
 .hymn-card-badge {
     background: rgba(59, 130, 246, 0.1);
@@ -269,6 +294,56 @@
 }
 
 .hymn-card:hover .hymn-card-overlay { opacity: 1; }
+
+/* About page list and scripture */
+
+.hymn-card-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    color: var(--text-secondary);
+}
+
+.hymn-card-list li {
+    position: relative;
+    padding-left: var(--space-5);
+    font-size: var(--text-base);
+    line-height: 1.6;
+}
+
+.hymn-card-list li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.about-scripture-text {
+    font-style: italic;
+    font-size: 1.05rem !important;
+    line-height: 1.8 !important;
+    text-align: center;
+}
+
+.about-scripture-ref {
+    text-align: center;
+    margin-top: var(--space-4);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: var(--text-sm);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.about-scripture-card {
+    min-height: unset;
+    padding: var(--space-6) var(--space-10);
+    cursor: default;
+}
 
 /* Contact form inside hymn card */
 .hymn-card .contact-form {
