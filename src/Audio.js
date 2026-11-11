@@ -21,12 +21,16 @@ function Audio({ hymn, autoPlay = false }) {
         formatTime,
         setMainPlayerVisible,
         audioError,
+        queue,
+        nextTrack,
+        prevTrack,
         playbackSpeed,
         setPlaybackSpeed,
     } = useAudio();
     const { currentTime, duration } = useAudioTime();
 
     const isThisHymn = currentHymn?.mp3 === hymn?.mp3;
+    const hasQueue = queue.items.length > 1;
 
     const [isBuffering, setIsBuffering] = useState(false);
     const [showSpeedSlider, setShowSpeedSlider] = useState(false);
@@ -163,6 +167,11 @@ function Audio({ hymn, autoPlay = false }) {
 
                 {/* Play / skip */}
                 <div className="audio-controls-center">
+                    {hasQueue && isThisHymn && (
+                        <button className="audio-control-btn" onClick={prevTrack} title="Previous hymn" aria-label="Previous hymn">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 3h2v10H3zM14 3v10L6.5 8z" /></svg>
+                        </button>
+                    )}
                     <button
                         className="audio-control-btn"
                         onClick={isThisHymn ? skipBackward : undefined}
@@ -190,6 +199,11 @@ function Audio({ hymn, autoPlay = false }) {
                     >
                         <img src={forwardIcon} alt="Forward" width="18" height="18" />
                     </button>
+                    {hasQueue && isThisHymn && (
+                        <button className="audio-control-btn" onClick={nextTrack} title="Next hymn" aria-label="Next hymn">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M11 3h2v10h-2zM2 3v10l7.5-5z" /></svg>
+                        </button>
+                    )}
                 </div>
 
                 {/* Volume + Speed */}

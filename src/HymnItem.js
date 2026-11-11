@@ -1,5 +1,6 @@
 import React from 'react';
 import Audio from './Audio.js';
+import { FavoriteButton, AddToQueueButton } from './components/PlaybackControls.js';
 import ArtistData from './artists.json';
 
 const HymnItem = ({
@@ -115,6 +116,12 @@ const HymnItem = ({
         </div>
         <div className="hymn-item-actions">
           {renderCantorStrip()}
+          {type !== 'hymnList' && itemData.mp3 && (
+            <>
+              <AddToQueueButton hymn={itemData} />
+              <FavoriteButton hymn={itemData} />
+            </>
+          )}
           {onGoto && (
             <button
               className="hymn-item-goto"

@@ -1,3 +1,4 @@
+import { PlayAllButton } from './PlaybackControls.js';
 import { hymnPath } from '../utils/routes.js';
 import React, { useState } from 'react';
 import HymnItem from '../HymnItem.js';
@@ -153,6 +154,7 @@ export const AllSeasons = ({ allSeasons, onSeasonSelect }) => {
 
 export const HymnsList = ({ hymns, expandedHymns, toggleHymnExpansion, navigate }) => (
   <div className="search-results-compact">
+    <div className="list-toolbar"><PlayAllButton hymns={hymns} /></div>
     <div className="search-results-list">
       {hymns.map((hymn, index) => {
         const hymnId = `${hymn.name}-${hymn.artist}-${hymn.season || 'unknown'}-${index}`;
@@ -225,6 +227,7 @@ export const CantorsForHymn = ({ selectedHymn, selectedSeason, cantorsForHymn, e
     />
 
     <div className="search-results-compact">
+      <div className="list-toolbar"><PlayAllButton hymns={cantorsForHymn} label="Play all cantors" /></div>
       <div className="search-results-list">
         {cantorsForHymn.map((hymn, index) => {
           const hymnId = `${hymn.name}-${hymn.artist}-${hymn.season || 'unknown'}-${index}`;
@@ -244,3 +247,32 @@ export const CantorsForHymn = ({ selectedHymn, selectedSeason, cantorsForHymn, e
     </div>
   </div>
 );
+
+// Placeholder until real biographies are added; set a `bio` field on an artist in artists.json to override it
+const PLACEHOLDER_BIO =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.';
+
+export const CantorProfile = ({ artist, hymnData }) => {
+  const hymns = hymnData.filter(h => h.artist === artist.artistName);
+  const seasonCount = new Set(hymns.map(h => h.season)).size;
+
+  return (
+    <section className="cantor-profile" aria-label={`About ${artist.artistName}`}>
+      <div className="cantor-profile-top">
+        <div className="cantor-profile-avatar">
+          {artist.img
+            ? <img src={artist.img} alt="" />
+            : <span>{artist.artistName.charAt(0)}</span>}
+        </div>
+        <div>
+          <h2 className="cantor-profile-name">{artist.artistName}</h2>
+          <p className="cantor-profile-stats">
+            {hymns.length} hymn{hymns.length !== 1 ? 's' : ''} · {seasonCount} season{seasonCount !== 1 ? 's' : ''}
+          </p>
+        </div>
+      </div>
+      <p className="cantor-profile-bio">{artist.bio || PLACEHOLDER_BIO}</p>
+      <PlayAllButton hymns={hymns} label="Play all hymns" />
+    </section>
+  );
+};

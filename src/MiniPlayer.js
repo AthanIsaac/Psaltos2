@@ -1,5 +1,5 @@
 import { hymnPath } from './utils/routes.js';
-import React, { memo, useCallback, useRef } from 'react';
+import React, { memo, useCallback, useRef, useState, useEffect } from 'react';
 import { useAudio, useAudioTime, SKIP_SECONDS } from './AudioContext';
 import VolumeControl from './VolumeControl.js';
 import { useNavigate } from 'react-router-dom';
@@ -9,6 +9,7 @@ import forwardIcon from './img/icons/15Forward.svg';
 import rewindIcon from './img/icons/15Rewind.svg';
 import ArtistIcon from './img/icons/artistIcon.js';
 import './styles/audio.css';
+import './styles/library.css';
 
 const MiniPlayer = () => {
   const {
@@ -22,7 +23,23 @@ const MiniPlayer = () => {
     formatTime,
     stopHymn,
     audioError,
+    queue,
+    nextTrack,
+    prevTrack,
+    playQueueItem,
+    removeFromQueue,
+    clearQueue,
   } = useAudio();
+  const [showQueue, setShowQueue] = useState(false);
+  const hasQueue = queue.items.length > 1;
+
+  // Close the queue with Escape
+  useEffect(() => {
+    if (!showQueue) return;
+    const onKey = (e) => { if (e.key === 'Escape') setShowQueue(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [showQueue]);
   const { currentTime, duration } = useAudioTime();
   const navigate = useNavigate();
 
@@ -60,6 +77,26 @@ const MiniPlayer = () => {
   const fillPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
+    <>
+    {showQueue && (
+      <div className="queue-panel" role="dialog" aria-label="Queue">
+        <div className="queue-panel-header">
+          <span>Up next · {queue.items.length}</span>
+          {hasQueue && <button className="queue-panel-clear" onClick={clearQueue}>Clear</button>}
+        </div>
+        {queue.items.map((item, i) => (
+          <div key={`${item.mp3}-${i}`} className={`queue-item${i === queue.index ? ' is-current' : ''}`}>
+            <button className="queue-item-main" onClick={() => playQueueItem(i)}>
+              <span className="queue-item-title">{item.name}</span>
+              <span className="queue-item-artist">{item.artist}</span>
+            </button>
+            {i !== queue.index && (
+              <button className="queue-item-remove" onClick={() => removeFromQueue(i)} aria-label={`Remove ${item.name} from queue`}>×</button>
+            )}
+          </div>
+        ))}
+      </div>
+    )}
     <div
       className="mini-player"
       onTouchStart={handleTouchStart}
@@ -78,6 +115,11 @@ const MiniPlayer = () => {
 
         {/* Playback controls */}
         <div className="mini-player-controls">
+          {hasQueue && (
+            <button className="mini-control-btn" onClick={prevTrack} title="Previous hymn" aria-label="Previous hymn">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3 3h2v10H3zM14 3v10L6.5 8z" /></svg>
+            </button>
+          )}
           <button className="mini-control-btn" onClick={handleSkipBackward} title={`Skip back ${SKIP_SECONDS}s`}>
             <img src={rewindIcon} alt="Rewind" width="16" height="16" />
           </button>
@@ -90,6 +132,11 @@ const MiniPlayer = () => {
           <button className="mini-control-btn" onClick={handleSkipForward} title={`Skip forward ${SKIP_SECONDS}s`}>
             <img src={forwardIcon} alt="Forward" width="16" height="16" />
           </button>
+          {hasQueue && (
+            <button className="mini-control-btn" onClick={nextTrack} title="Next hymn" aria-label="Next hymn">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M11 3h2v10h-2zM2 3v10l7.5-5z" /></svg>
+            </button>
+          )}
         </div>
 
         {/* Time */}
@@ -100,6 +147,20 @@ const MiniPlayer = () => {
         </div>
 
         <VolumeControl prefix="mini" />
+
+        {/* Queue */}
+        <button
+          className="mini-control-btn mini-queue-btn"
+          onClick={() => setShowQueue(v => !v)}
+          title="Queue"
+          aria-label="Show queue"
+          aria-expanded={showQueue}
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M3 6h14M3 12h14M3 18h8M19 15v6M16 18h6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          </svg>
+          {hasQueue && <span className="mini-queue-count">{queue.items.length}</span>}
+        </button>
 
         {/* Close */}
         <button className="mini-player-close" onClick={handleStop} title="Stop and close">
@@ -122,6 +183,7 @@ const MiniPlayer = () => {
         aria-label="Seek"
       />
     </div>
+    </>
   );
 };
 

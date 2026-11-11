@@ -419,6 +419,7 @@
 }
 
 .individual-hymn-artist {
+    text-decoration: none;
     font-size: var(--text-sm);
     font-weight: 600;
     color: var(--text-secondary);

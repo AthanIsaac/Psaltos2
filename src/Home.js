@@ -17,6 +17,8 @@ import Navbar from "./Navbar.js";
 import Footer from "./Footer.js";
 import HymnItem from "./HymnItem.js";
 import { useAudio } from "./AudioContext.js";
+import { useFavorites } from "./FavoritesContext.js";
+import { HymnShelfHeader } from "./components/PlaybackControls.js";
 
 // Custom hooks
 import { useScrollDetection } from "./hooks/useScrollDetection.js";
@@ -47,6 +49,7 @@ import {
   AllSeasons,
   HymnsForSeason,
   CantorsForHymn,
+  CantorProfile,
   SelectedChip
 } from "./components/BrowseComponents.js";
 
@@ -61,6 +64,7 @@ const getStickyOffset = () =>
 
 function Home() {
   const { recentlyPlayed } = useAudio();
+  const { favorites } = useFavorites();
 
   // Data is bundled, so it's available on the first render
   const hymnData = HymnsData;
@@ -246,6 +250,8 @@ function Home() {
       getCantorsForHymn(hymnData, selectedHymn, selectedSeason) : []
   , [hymnData, selectedHymn, selectedSeason]);
 
+  const showShelves = !showSearchResults && !selectedHymn && !individualHymn;
+
   // Render main content based on current state
   const renderMainContent = () => {
     if (showSearchResults) {
@@ -309,6 +315,7 @@ function Home() {
             selectedArtist={selectedArtist}
             onArtistSelect={handleArtistSelect}
           />
+          {selectedArtist && <CantorProfile artist={selectedArtist} hymnData={hymnData} />}
           {selectedArtist && (
             <SeasonsForArtist
               seasons={seasonsForArtist}
@@ -462,13 +469,24 @@ function Home() {
 
         {renderMainContent()}
 
-        {!showSearchResults && !selectedHymn && !individualHymn && recentlyPlayed?.length > 0 && (
+        {showShelves && favorites.length > 0 && (
+          <div className="recently-played-section favorites-section">
+            <HymnShelfHeader title="Favorites" hymns={favorites} />
+            <div className="search-results-list">
+              {favorites.map((item, i) => (
+                <HymnItem key={item.mp3} hymn={item} type="hymn" index={i} onClick={() => go.hymn(item)} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {showShelves && recentlyPlayed?.length > 0 && (
           <div className="recently-played-section">
-            <h2 className="recently-played-title">Recently Played</h2>
+            <HymnShelfHeader title="Recently Played" hymns={recentlyPlayed} />
             <div className="search-results-list">
               {recentlyPlayed.map((item, i) => (
                 <HymnItem
-                  key={i}
+                  key={item.mp3}
                   hymn={item}
                   type="hymn"
                   index={i}

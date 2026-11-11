@@ -1,0 +1,209 @@
+/* ── Playback shortcuts: favorites, queue, play all ─────────── */
+
+.icon-action-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.icon-action-btn:hover { background: var(--bg-secondary); color: var(--text-primary); }
+.icon-action-btn:focus-visible,
+.play-all-btn:focus-visible { outline: 2px solid var(--border-focus); outline-offset: 2px; }
+.favorite-btn.is-active { color: var(--error-color); }
+
+.play-all-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-2) var(--space-4);
+    border: none;
+    border-radius: var(--radius-full);
+    background: var(--primary-color);
+    color: var(--text-on-primary);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--transition-fast);
+}
+
+.play-all-btn:hover { background: var(--primary-hover); }
+
+.shelf-header,
+.list-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+}
+
+.shelf-header .recently-played-title { margin-bottom: 0; }
+
+.favorites-section { width: 100%; margin-bottom: var(--space-8); }
+
+/* ── Other recordings (hymn page) ───────────────────────────── */
+
+.other-recordings { margin-top: var(--space-8); }
+
+/* ── Cantor profile ─────────────────────────────────────────── */
+
+.cantor-profile {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto var(--space-6);
+    padding: var(--space-5);
+    background: var(--bg-card);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+}
+
+.cantor-profile-top {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-3);
+}
+
+.cantor-profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--bg-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: var(--text-2xl);
+    color: var(--text-tertiary);
+}
+
+.cantor-profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.cantor-profile-name { margin: 0; font-size: var(--text-xl); color: var(--text-primary); }
+
+.cantor-profile-stats {
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+}
+
+.cantor-profile-bio {
+    margin: 0 0 var(--space-3);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--text-tertiary);
+}
+
+/* ── Queue panel (mini player) ──────────────────────────────── */
+
+.queue-panel {
+    position: fixed;
+    bottom: 96px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1001;
+    width: min(420px, calc(100vw - 24px));
+    max-height: 50vh;
+    overflow-y: auto;
+    background: rgba(13, 27, 42, 0.97);
+    color: white;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-xl);
+    padding: var(--space-2);
+}
+
+.queue-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.queue-panel-clear {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: var(--text-xs);
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.queue-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    border-radius: var(--radius-md);
+}
+
+.queue-item.is-current { background: rgba(255, 255, 255, 0.12); }
+.queue-item:not(.is-current):hover { background: rgba(255, 255, 255, 0.06); }
+
+.queue-item-main {
+    flex: 1;
+    min-width: 0;
+    background: none;
+    border: none;
+    color: inherit;
+    text-align: left;
+    padding: var(--space-2) var(--space-3);
+    cursor: pointer;
+}
+
+.queue-item-title,
+.queue-item-artist {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.queue-item-title { font-size: var(--text-sm); font-weight: 600; }
+.queue-item-artist { font-size: var(--text-xs); color: rgba(255, 255, 255, 0.6); }
+
+.queue-item-remove {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.55);
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+
+.queue-item-remove:hover { background: rgba(255, 255, 255, 0.12); color: white; }
+.queue-empty { padding: var(--space-3); font-size: var(--text-sm); color: rgba(255, 255, 255, 0.6); }
+
+.mini-queue-btn { position: relative; }
+.mini-queue-count {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 14px;
+    height: 14px;
+    padding: 0 3px;
+    border-radius: 7px;
+    background: var(--accent-color);
+    color: var(--text-on-accent);
+    font-size: 9px;
+    font-weight: 700;
+    line-height: 14px;
+    text-align: center;
+}

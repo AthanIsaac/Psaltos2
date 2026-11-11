@@ -4,6 +4,7 @@ import { lazy, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './ThemeContext.js';
 import { AudioProvider } from './AudioContext.js';
+import { FavoritesProvider } from './FavoritesContext.js';
 import { useKeyboardControls } from './useKeyboardControls.js';
 import ErrorBoundary from './ErrorBoundary.js';
 import Home from './Home.js';
@@ -69,9 +70,11 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider>
         <AudioProvider>
-          <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <AppContent />
-          </Router>
+          <FavoritesProvider>
+            <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+              <AppContent />
+            </Router>
+          </FavoritesProvider>
         </AudioProvider>
       </ThemeProvider>
     </ErrorBoundary>

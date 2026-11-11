@@ -1,4 +1,7 @@
-import { hymnPath } from '../utils/routes.js';
+import { FavoriteButton, PlayAllButton } from './PlaybackControls.js';
+import HymnsData from '../hymns.json';
+import { hymnPath, browsePath } from '../utils/routes.js';
+import { Link } from 'react-router-dom';
 import HymnItem from '../HymnItem.js';
 import Audio from '../Audio.js';
 import ArtistData from '../artists.json';
@@ -47,6 +50,9 @@ export const SearchResults = ({
       </div>
     </div>
 
+    {searchResults.length > 0 && (
+      <div className="list-toolbar"><PlayAllButton hymns={searchResults} /></div>
+    )}
     <div className="search-results-list">
       {searchResults.length === 0 ? (
         <div className="search-no-results">
@@ -88,10 +94,14 @@ export const SearchResults = ({
   </div>
 );
 
+const normalizeName = (name) => name.toLowerCase().replace(/[^a-z0-9\u0080-\uffff]+/g, ' ').trim();
+
 export const IndividualHymn = ({ selectedHymn, navigate }) => {
   if (!selectedHymn || typeof selectedHymn !== 'object') return null;
 
   const artistInfo = ArtistData.find(a => a.artistName === selectedHymn.artist);
+  const key = normalizeName(selectedHymn.name);
+  const otherRecordings = HymnsData.filter(h => h.mp3 !== selectedHymn.mp3 && normalizeName(h.name) === key);
 
   return (
     <div className="individual-hymn-page">
@@ -114,9 +124,16 @@ export const IndividualHymn = ({ selectedHymn, navigate }) => {
         </div>
         <div className="individual-hymn-info">
           <div className="individual-hymn-label">Hymn</div>
-          <h1 className="individual-hymn-title">{selectedHymn.name}</h1>
+          <h1 className="individual-hymn-title">
+            {selectedHymn.name} <FavoriteButton hymn={selectedHymn} />
+          </h1>
           <div className="individual-hymn-meta">
-            <span className="individual-hymn-artist">{selectedHymn.artist}</span>
+            <Link
+              className="individual-hymn-artist"
+              to={browsePath('cantor', ArtistData.find(a => a.artistName === selectedHymn.artist))}
+            >
+              {selectedHymn.artist}
+            </Link>
             <span className="individual-hymn-season-pill">{selectedHymn.season}</span>
           </div>
         </div>
@@ -125,6 +142,28 @@ export const IndividualHymn = ({ selectedHymn, navigate }) => {
       <div className="individual-hymn-player">
         <Audio hymn={selectedHymn} autoPlay={true} />
       </div>
+
+      {otherRecordings.length > 0 && (
+        <section className="other-recordings">
+          <div className="shelf-header">
+            <h2 className="recently-played-title">
+              Other recordings · {otherRecordings.length}
+            </h2>
+            <PlayAllButton hymns={[selectedHymn, ...otherRecordings]} label="Play all recordings" />
+          </div>
+          <div className="search-results-list">
+            {otherRecordings.map((h, i) => (
+              <HymnItem
+                key={h.mp3}
+                hymn={h}
+                type="cantor"
+                index={i}
+                onClick={() => navigate(hymnPath(h))}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 };
