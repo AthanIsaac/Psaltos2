@@ -21,3 +21,14 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Admin library: generated media and the working database
+data/previews/
+data/psaltos.db
+data/psaltos.db-shm
+data/psaltos.db-wal
+data/process.log
+data/backups/snapshots/
+
+# Source audio library (tens of GB), never commit
+AllHymns/

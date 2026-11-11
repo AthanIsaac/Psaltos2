@@ -2,12 +2,10 @@ import { NavLink, Outlet } from 'react-router-dom';
 import './admin.css';
 
 const NAV_ITEMS = [
-  { to: '/admin', label: 'Overview', end: true },
-  { to: '/admin/seasons', label: 'Season Manager' },
-  { to: '/admin/duplicates', label: 'Duplicate Review' },
-  { to: '/admin/tapes', label: 'Tape Splitter' },
-  { to: '/admin/season-assign', label: 'Season Assigner' },
-  { to: '/admin/enrich', label: 'Metadata Enricher' },
+  { to: '/admin/triage', label: 'Folder Triage' },
+  { to: '/admin/duplicates', label: 'Audio Duplicates' },
+  { to: '/admin/naming', label: 'Naming Queue' },
+  { to: '/admin/seasons', label: 'Seasons' },
 ];
 
 export default function AdminLayout() {

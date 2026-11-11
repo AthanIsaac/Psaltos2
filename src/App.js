@@ -1,7 +1,7 @@
 import './styles/tokens.css';
 import './styles/base.css';
 import { lazy, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { ThemeProvider } from './ThemeContext.js';
 import { AudioProvider } from './AudioContext.js';
 import { FavoritesProvider } from './FavoritesContext.js';
@@ -12,16 +12,12 @@ import About from './About.js';
 import Contact from './Contact.js';
 import MiniPlayer from './MiniPlayer.js';
 
-// Admin and importer tools are large and unused by visitors, so load them on demand
-const MikhailImporter = lazy(() => import('./importing/MikhailImporter.js'));
-const SimpleImporter = lazy(() => import('./importing/SimpleImporter.js'));
+// The admin area is large and unused by visitors, so load it on demand
 const AdminLayout = lazy(() => import('./admin/AdminLayout.js'));
-const Overview = lazy(() => import('./admin/Overview.js'));
-const SeasonManager = lazy(() => import('./admin/SeasonManager.js'));
-const DuplicateReview = lazy(() => import('./admin/DuplicateReview.js'));
-const TapeSplitter = lazy(() => import('./admin/TapeSplitter.js'));
-const SeasonAssigner = lazy(() => import('./admin/SeasonAssigner.js'));
-const MetadataEnricher = lazy(() => import('./admin/MetadataEnricher.js'));
+const Triage = lazy(() => import('./admin/Triage.js'));
+const Naming = lazy(() => import('./admin/Naming.js'));
+const Seasons = lazy(() => import('./admin/Seasons.js'));
+const Duplicates = lazy(() => import('./admin/Duplicates.js'));
 
 const HOME_ROUTES = [
   '/',
@@ -48,15 +44,12 @@ function AppContent() {
         {HOME_ROUTES.map((path) => <Route key={path} path={path} element={<Home />} />)}
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/mikhail-importer" element={<MikhailImporter />} />
-        <Route path="/simple-importer" element={<SimpleImporter />} />
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Overview />} />
-          <Route path="seasons" element={<SeasonManager />} />
-          <Route path="duplicates" element={<DuplicateReview />} />
-          <Route path="tapes" element={<TapeSplitter />} />
-          <Route path="season-assign" element={<SeasonAssigner />} />
-          <Route path="enrich" element={<MetadataEnricher />} />
+          <Route index element={<Navigate to="triage" replace />} />
+          <Route path="triage" element={<Triage />} />
+          <Route path="naming" element={<Naming />} />
+          <Route path="duplicates" element={<Duplicates />} />
+          <Route path="seasons" element={<Seasons />} />
         </Route>
       </Routes>
       </Suspense>

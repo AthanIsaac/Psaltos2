@@ -5,7 +5,9 @@ const axios = require('axios');
 const nodemailer = require('nodemailer');
 const multer = require('multer');
 const path = require('path');
-const adminRoutes = require('./routes/admin');
+const libraryRoutes = require('./routes/library');
+const namingRoutes = require('./routes/naming');
+const dupeRoutes = require('./routes/dupes');
 
 const app = express();
 const PORT = process.env.PORT || 5002;
@@ -54,7 +56,9 @@ app.get('/api/health', (req, res) => {
 });
 
 // Admin routes (local use only)
-app.use('/api/admin', adminRoutes);
+app.use('/api/library', libraryRoutes);
+app.use('/api/library', namingRoutes);
+app.use('/api/library', dupeRoutes);
 
 // Audio proxy endpoint
 app.get('/api/audio/proxy', async (req, res) => {
